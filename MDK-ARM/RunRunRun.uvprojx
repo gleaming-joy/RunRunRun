@@ -338,7 +338,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\USER\Chassis;..\USER\Motor;..\USER\PID;..\USER\Steer</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\USER\Chassis;..\USER\Motor;..\USER\PID;..\USER\Steer;..\USER\LinePatrol</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -441,6 +441,11 @@
               <FileName>steer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\USER\Steer\steer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>LinePatrol.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\LinePatrol\LinePatrol.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -25,6 +25,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "chassis.hpp"
+#include "LinePatrol.hpp"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +48,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+Class_Chassis Chassis;
+uint16_t ADC_Value[4];
+uint8_t ADC_Bool[4];
 
 /* USER CODE END PV */
 
@@ -93,6 +100,16 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
+  //底盘初始化
+  Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
+  Chassis.Set_Control_Method(Control_Method_OPENLOOP);
+
+  //使能计算时钟
+  HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
+
+  //使能ADC
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_Value, 4);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,6 +119,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+    //巡线模块判断
+    LinePatrol_Judge(ADC_Value, ADC_Bool);
+
+    //根据巡线模块决定前进方向
+    LinePatrol_Decide(ADC_Bool);
   }
   /* USER CODE END 3 */
 }
