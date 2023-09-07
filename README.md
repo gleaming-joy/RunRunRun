@@ -2,6 +2,8 @@
 ## 电机
 
 ### 麦轮电机
+PWM：绿  
+GPIO_Output：蓝 紫
 - 0: 麦轮左前 Motor[0]    
 tim4 CH1: PD12/H  
 GPIO_Output: PF1/I1  PF0/I2  
@@ -25,10 +27,7 @@ GPIO_Output: PC2/L1  PB0/L2
 
 ## 巡线  
 
-ADC1_IN0: PA0/S  
-ADC1_IN1: PA1/T  
-ADC1_IN2: PA2/U  
-ADC1_IN3: PA3/V
+GPIO_Input: PC3/M1  PB1/M2  PC4/N1  PC0/N2  
 
 ## 舵机
 

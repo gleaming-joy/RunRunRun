@@ -50,8 +50,7 @@
 /* USER CODE BEGIN PV */
 
 Class_Chassis Chassis;
-uint16_t ADC_Value[4];
-uint8_t ADC_Bool[4];
+uint8_t LP_Detect_Bool[4];
 
 /* USER CODE END PV */
 
@@ -100,15 +99,15 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
-  //åº•ç›˜åˆå§‹åŒ–
+  //µ×ÅÌ³õÊ¼»¯
   Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   Chassis.Set_Control_Method(Control_Method_OPENLOOP);
 
-  //ä½¿èƒ½è®¡ç®—æ—¶é’Ÿ
+  //Ê¹ÄÜ¼ÆËãÊ±ÖÓ
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
-  //ä½¿èƒ½ADC
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_Value, 4);
+  // //Ê¹ÄÜADC
+  // HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_Value, 4);
 
   /* USER CODE END 2 */
 
@@ -120,11 +119,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    //å·¡çº¿æ¨¡å—åˆ¤æ–­
-    LinePatrol_Judge(ADC_Value, ADC_Bool);
+    //Ñ²ÏßÄ£¿éÅĞ¶Ï
+    LinePatrol_Judge(LP_Detect_Bool);
 
-    //æ ¹æ®å·¡çº¿æ¨¡å—å†³å®šå‰è¿›æ–¹å‘
-    LinePatrol_Decide(ADC_Bool);
+    //¸ù¾İÑ²ÏßÄ£¿é¾ö¶¨Ç°½ø·½Ïò
+    LinePatrol_Decide(LP_Detect_Bool);
   }
   /* USER CODE END 3 */
 }

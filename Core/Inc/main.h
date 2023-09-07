@@ -96,7 +96,7 @@ void Error_Handler(void);
 #define Pin_Exti_HallEncoderA4_Pin GPIO_PIN_15
 #define Pin_Exti_HallEncoderA4_GPIO_Port GPIOE
 #define Pin_Exti_HallEncoderA4_EXTI_IRQn EXTI15_IRQn
-// 霍尔编码器GPIO（乱设的）
+// 霍尔编码器GPIO（乱设的�?
 #define Pin_PullDown_HallEncoderB1_Pin GPIO_PIN_11
 #define Pin_PullDown_HallEncoderB1_GPIO_Port GPIOF
 #define Pin_PullDown_HallEncoderB2_Pin GPIO_PIN_8

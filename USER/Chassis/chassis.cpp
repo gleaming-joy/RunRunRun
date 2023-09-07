@@ -61,10 +61,10 @@ void Class_Chassis::Init(TIM_HandleTypeDef __Driver_PWM_TIM, TIM_HandleTypeDef _
     Motor[0].Set_Rotate_Direction_Flag(CW);
 
     Motor[1].Init(__Driver_PWM_TIM, TIM_CHANNEL_2, Pin_Pushpull_MotorDirectionA2_Pin, Pin_Pushpull_MotorDirectionA2_GPIO_Port, Pin_Pushpull_MotorDirectionB2_Pin, Pin_Pushpull_MotorDirectionB2_GPIO_Port, __Calculate_EXTI_TIM, Pin_Exti_HallEncoderA2_Pin, Pin_Exti_HallEncoderA2_GPIO_Port, Pin_PullDown_HallEncoderB2_Pin, Pin_PullDown_HallEncoderB2_GPIO_Port);
-    Motor[1].Set_Rotate_Direction_Flag(CCW);
+    Motor[1].Set_Rotate_Direction_Flag(CW);
 
     Motor[2].Init(__Driver_PWM_TIM, TIM_CHANNEL_3, Pin_Pushpull_MotorDirectionA3_Pin, Pin_Pushpull_MotorDirectionA3_GPIO_Port, Pin_Pushpull_MotorDirectionB3_Pin, Pin_Pushpull_MotorDirectionB3_GPIO_Port, __Calculate_EXTI_TIM, Pin_Exti_HallEncoderA3_Pin, Pin_Exti_HallEncoderA3_GPIO_Port, Pin_PullDown_HallEncoderB3_Pin, Pin_PullDown_HallEncoderB3_GPIO_Port);
-    Motor[2].Set_Rotate_Direction_Flag(CCW);
+    Motor[2].Set_Rotate_Direction_Flag(CW);
 
     Motor[3].Init(__Driver_PWM_TIM, TIM_CHANNEL_4, Pin_Pushpull_MotorDirectionA4_Pin, Pin_Pushpull_MotorDirectionA4_GPIO_Port, Pin_Pushpull_MotorDirectionB4_Pin, Pin_Pushpull_MotorDirectionB4_GPIO_Port, __Calculate_EXTI_TIM, Pin_Exti_HallEncoderA4_Pin, Pin_Exti_HallEncoderA4_GPIO_Port, Pin_PullDown_HallEncoderB4_Pin, Pin_PullDown_HallEncoderB4_GPIO_Port);
     Motor[3].Set_Rotate_Direction_Flag(CW);
@@ -139,10 +139,10 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
     Math_Constrain(&Velocity.X, -X_MAX, X_MAX);
     Math_Constrain(&Velocity.Y, -Y_MAX, Y_MAX);
     Math_Constrain(&Velocity.Omega, -OMEGA_MAX, OMEGA_MAX);
-    Motor[0].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega + Velocity.X - Velocity.Y) / WHEEL_RADIUS * ((Motor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[1].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega - Velocity.X - Velocity.Y) / WHEEL_RADIUS * ((Motor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[2].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega + Velocity.X - Velocity.Y) / WHEEL_RADIUS * ((Motor[2].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[3].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega - Velocity.X - Velocity.Y) / WHEEL_RADIUS * ((Motor[3].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[0].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega + Velocity.Y - Velocity.X) / WHEEL_RADIUS * ((Motor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[1].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega + Velocity.Y + Velocity.X) / WHEEL_RADIUS * ((Motor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[2].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega + Velocity.Y + 1.7f * Velocity.X) / WHEEL_RADIUS * ((Motor[2].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[3].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega + Velocity.Y - 1.7f * Velocity.X) / WHEEL_RADIUS * ((Motor[3].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
 
     //电机输出值设定并输出
     for (int i = 0; i < 4; i++)
