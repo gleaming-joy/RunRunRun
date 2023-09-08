@@ -49,9 +49,10 @@ extern TIM_HandleTypeDef htim4;
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
-//搴曠洏楹﹁疆鐢垫満鐨勮鏃跺櫒
+//底盘麦轮电机的计时器
 #define CHASSIS_MOTOR_PWM_DRIVER_TIM htim4
 #define CHASSIS_MOTOR_CALCULATE_TIM htim4
+
 
 /* USER CODE END EM */
 
@@ -66,7 +67,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-// 楹﹁疆鐢垫満GPIO
+// 麦轮电机GPIO
 #define Pin_Pushpull_MotorDirectionA1_Pin GPIO_PIN_1
 #define Pin_Pushpull_MotorDirectionA1_GPIO_Port GPIOF
 #define Pin_Pushpull_MotorDirectionA2_Pin GPIO_PIN_5
@@ -83,7 +84,7 @@ void Error_Handler(void);
 #define Pin_Pushpull_MotorDirectionB3_GPIO_Port GPIOE
 #define Pin_Pushpull_MotorDirectionB4_Pin GPIO_PIN_0
 #define Pin_Pushpull_MotorDirectionB4_GPIO_Port GPIOB
-// 闇嶅皵缂栫爜鍣ㄤ腑鏂紙涔辫鐨勶級
+// 霍尔编码器中断（乱设的）
 #define Pin_Exti_HallEncoderA1_Pin GPIO_PIN_7
 #define Pin_Exti_HallEncoderA1_GPIO_Port GPIOF
 #define Pin_Exti_HallEncoderA1_EXTI_IRQn EXTI7_IRQn
@@ -96,7 +97,7 @@ void Error_Handler(void);
 #define Pin_Exti_HallEncoderA4_Pin GPIO_PIN_15
 #define Pin_Exti_HallEncoderA4_GPIO_Port GPIOE
 #define Pin_Exti_HallEncoderA4_EXTI_IRQn EXTI15_IRQn
-// 闇嶅皵缂栫爜鍣℅PIO锛堜贡璁剧殑锛?
+// 霍尔编码器GPIO（乱设的）
 #define Pin_PullDown_HallEncoderB1_Pin GPIO_PIN_11
 #define Pin_PullDown_HallEncoderB1_GPIO_Port GPIOF
 #define Pin_PullDown_HallEncoderB2_Pin GPIO_PIN_8

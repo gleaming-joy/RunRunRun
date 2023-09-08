@@ -41,3 +41,4 @@ runrunrun\main.o: ..\USER\Motor\motor.hpp
 runrunrun\main.o: ..\USER\PID\PID.hpp
 runrunrun\main.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h
 runrunrun\main.o: ..\USER\LinePatrol\LinePatrol.hpp
+runrunrun\main.o: ..\USER\Steer\steer.hpp

@@ -66,7 +66,7 @@ void Class_Steer::Set_Out(float __Out)
 {
     //占空比对应时间, 占空比
     float time;
-    time = STEER_PWM_MIDDLE + (__Out - Max_Angle / 2) / (Max_Angle / 2) * STEER_PWM_EXTREME_TO_MIDDLE;
+    time = STEER_PWM_MIDDLE + (__Out) / (Max_Angle / 2) * STEER_PWM_EXTREME_TO_MIDDLE;
     Out = time / STEER_PWM_PERIOD * STEER_PWM_PRESCALER;
 }
 
@@ -76,7 +76,7 @@ void Class_Steer::Set_Out(float __Out)
  */
 void Class_Steer::Output()
 {
-    Math_Constrain(&Out, (int32_t)(STEER_PWM_PRESCALER * STEER_PWM_LEFT), (int32_t)(STEER_PWM_PRESCALER * STEER_PWM_RIGHT));
+    Math_Constrain(&Out, (int32_t)(STEER_PWM_PRESCALER * (STEER_PWM_LEFT / STEER_PWM_PERIOD)), (int32_t)(STEER_PWM_PRESCALER * (STEER_PWM_RIGHT / STEER_PWM_PERIOD)));
     __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Out);
 }
 

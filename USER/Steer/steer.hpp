@@ -8,13 +8,13 @@
 /* Exported macros -----------------------------------------------------------*/
 
 //圆周率
-const float PI = 3.14159f;
+extern const float PI;
 
 //舵机PWM周期
-const float STEER_PWM_PERIOD = 0.020f;
+const float STEER_PWM_PERIOD = 0.003f;
 
 //舵机PWM满占空比对应的数值
-const int32_t STEER_PWM_PRESCALER = 10000;
+const int32_t STEER_PWM_PRESCALER = 2999;
 
 //舵机中心对应时间
 const float STEER_PWM_MIDDLE = 0.0015;
