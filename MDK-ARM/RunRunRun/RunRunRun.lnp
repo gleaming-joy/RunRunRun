@@ -2,7 +2,6 @@
 "runrunrun\startup_stm32f427xx.o"
 "runrunrun\main.o"
 "runrunrun\gpio.o"
-"runrunrun\adc.o"
 "runrunrun\tim.o"
 "runrunrun\stm32f4xx_it.o"
 "runrunrun\stm32f4xx_hal_msp.o"

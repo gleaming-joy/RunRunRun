@@ -47,7 +47,7 @@ Type Math_Abs(Type x)
 /**
  * @brief 初始化底盘
  *
- * @param __Driver_PWM_TIM 电机驱动定时器编号
+ * @param __Driver_PWM_TIM 麦轮电机驱动定时器编号
  * @param __Calculate_EXTI_TIM 速度计算定时器编号
  */
 void Class_Chassis::Init(TIM_HandleTypeDef __Driver_PWM_TIM, TIM_HandleTypeDef __Calculate_EXTI_TIM)
@@ -77,6 +77,23 @@ void Class_Chassis::Init(TIM_HandleTypeDef __Driver_PWM_TIM, TIM_HandleTypeDef _
 }
 
 /**
+ * @brief 初始化胶轮
+ *
+ * @param __RDriver_PWM_TIM 胶轮电机驱动定时器编号
+ * @param __Calculate_EXTI_TIM 速度计算定时器编号
+ */
+void Class_Chassis::R_Init(TIM_HandleTypeDef __RDriver_PWM_TIM, TIM_HandleTypeDef __Calculate_EXTI_TIM)
+{
+    RDriver_PWM_TIM = __RDriver_PWM_TIM;
+    Calculate_TIM = __Calculate_EXTI_TIM;
+
+    RMotor[0].Init(__RDriver_PWM_TIM, TIM_CHANNEL_1, RMotorDirectionA1_Pin, RMotorDirectionA1_GPIO_Port, RMotorDirectionB1_Pin, RMotorDirectionB1_GPIO_Port);
+    RMotor[0].Set_Rotate_Direction_Flag(CW);
+    RMotor[1].Init(__RDriver_PWM_TIM, TIM_CHANNEL_2, RMotorDirectionA2_Pin, RMotorDirectionA2_GPIO_Port, RMotorDirectionB2_Pin, RMotorDirectionB2_GPIO_Port);
+    RMotor[1].Set_Rotate_Direction_Flag(CW);
+}
+
+/**
  * @brief 设定底盘速度
  *
  * @param __Velocity 底盘速度
@@ -86,6 +103,15 @@ void Class_Chassis::Set_Velocity(SpeedTypeDef __Velocity)
     Velocity = __Velocity;
 }
 
+/**
+ * @brief 设定胶轮速度
+ *
+ * @param __RVelocity 胶轮速度
+ */
+void Class_Chassis::R_Set_Velocity(float __RVelocity)
+{
+    RVelocity = __RVelocity;
+}
 
 
 /**
@@ -151,5 +177,19 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
     }
 
 }
+
+void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
+{
+    Math_Constrain(&RVelocity, -R_MAX, R_MAX);
+    RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+
+    //输出
+    for (int i = 0; i < 2; i++)
+    {
+        RMotor[i].R_Output();
+    }
+}
+
 
 /* Function prototypes -------------------------------------------------------*/

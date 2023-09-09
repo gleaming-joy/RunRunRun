@@ -22,8 +22,12 @@ GPIO_Output: PC2/L1  PB0/L2
 
 ### 胶轮电机  
 - 0: 左胶轮  
+tim2 CH1: PA0/S  
+GPIO_Output: PC5/O1  PC1/O2  
 
-- 1: 右胶轮
+- 1: 右胶轮  
+tim2 CH2: PA1/T  
+GPIO_Output: PA5/P1  PA4/P2  
 
 ## 巡线  
 
@@ -34,20 +38,21 @@ GPIO_Input: PC3/M1  PB1/M2  PC4/N1  PC0/N2
 ### 机械爪
 机械爪舵机由下往上编号  
 舵机棕色地线，红色vcc，黄色信号线   
-- 机械爪4  
+- 机械爪4 Steer[4]  
 tim8 CH1: PI5/W  
 
-- 机械爪3
+- 机械爪3 Steer[3]  
 tim8 CH2: PI6/X  
 
-- 机械爪2  
+- 机械爪2 Steer[2]  
 tim8 CH3: PI7/Y  
 
-- 机械爪1  
+- 机械爪1 Steer[1]  
 tim8 CH4: PI2/Z  
 
-- 机械爪0  
+- 机械爪0 Steer[0]  
 tim5 CH1: PH10/D
 
-### 存储装置  
+### 存储装置
+Steer[5]    
 tim5 CH2: PH11/C

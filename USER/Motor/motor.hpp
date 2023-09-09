@@ -56,13 +56,16 @@ public:
     void Set_Motor_Full_Omega(float __Motor_Full_Omega);
     void Set_Motor_PWM_Period(int32_t __Motor_PWM_Period);
     void Set_Out(int32_t __Out);
+    void R_Set_Out(int32_t __ROut);
 
     Enum_Rotate_Direction Get_Rotate_Direction_Flag();
     float Get_Motor_Full_Omega();
     int32_t Get_Motor_PWM_Period();
     int32_t Get_Out();
+    int32_t R_Get_Out();
 
     void Output();
+    void R_Output();
 
 protected:
 
@@ -85,6 +88,7 @@ protected:
     int32_t Motor_PWM_Period = MOTOR_CALCULATE_PRESCALER;
     //电机目标输出强度, 即电机PWM占空比的分子
     int32_t Out = 0;
+    int32_t ROut = 0;
 
 };
 

@@ -108,6 +108,16 @@ void Class_Motor::Set_Out(int32_t __Out)
 }
 
 /**
+ * @brief 设定胶轮电机目标输出强度, 即电机PWM占空比的分子
+ *
+ * @param __ROut 电机目标输出强度, 即电机PWM占空比的分子
+ */
+void Class_Motor::R_Set_Out(int32_t __ROut)
+{
+    ROut = __ROut;
+}
+
+/**
  * @brief 获取电机正向旋转方向
  *
  * @return Enum_Rotate_Direction 电机正向旋转方向
@@ -148,7 +158,17 @@ int32_t Class_Motor::Get_Out()
 }
 
 /**
- * @brief 设定电机占空比, 确定输出
+ * @brief 获取胶轮电机目标输出强度, 即电机PWM占空比的分子
+ *
+ * @return int32_t 电机目标输出强度, 即电机PWM占空比的分子
+ */
+int32_t Class_Motor::R_Get_Out()
+{
+    return(ROut);
+}
+
+/**
+ * @brief 设定麦轮电机占空比, 确定输出
  *
  */
 void Class_Motor::Output()
@@ -169,6 +189,30 @@ void Class_Motor::Output()
         HAL_GPIO_WritePin(Output_B_GPIOx, Output_B_GPIO_Pin, GPIO_PIN_SET);
     }
     __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Math_Abs(Out));
+}
+
+/**
+ * @brief 设定胶轮电机占空比, 确定输出
+ *
+ */
+void Class_Motor::R_Output()
+{
+    if (ROut == 0)
+    {
+        HAL_GPIO_WritePin(Output_A_GPIOx, Output_A_GPIO_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(Output_B_GPIOx, Output_B_GPIO_Pin, GPIO_PIN_RESET);
+    }
+    else if (ROut > 0)
+    {
+        HAL_GPIO_WritePin(Output_A_GPIOx, Output_A_GPIO_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(Output_B_GPIOx, Output_B_GPIO_Pin, GPIO_PIN_RESET);
+    }
+    else if (ROut < 0)
+    {
+        HAL_GPIO_WritePin(Output_A_GPIOx, Output_A_GPIO_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(Output_B_GPIOx, Output_B_GPIO_Pin, GPIO_PIN_SET);
+    }
+    __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Math_Abs(ROut));
 }
 
 /**

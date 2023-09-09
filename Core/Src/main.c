@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -51,6 +50,7 @@
 /* USER CODE BEGIN PV */
 
 Class_Chassis Chassis;
+Class_Chassis RChassis;
 Class_Steer Steer[6];
 uint8_t LP_Detect_Bool[4];
 
@@ -96,17 +96,23 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM4_Init();
-  MX_ADC1_Init();
   MX_TIM5_Init();
   MX_TIM8_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   //底盘初始化
   Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   Chassis.Set_Control_Method(Control_Method_OPENLOOP);
-
+  //胶轮初始化
+  RChassis.R_Init(RMOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   //舵机初始化
-  Steer[0].Init(htim8, TIM_CHANNEL_1);
+  Steer[0].Init(htim5, TIM_CHANNEL_1);
+  Steer[1].Init(htim8, TIM_CHANNEL_4);
+  Steer[2].Init(htim8, TIM_CHANNEL_3);
+  Steer[3].Init(htim8, TIM_CHANNEL_2);
+  Steer[4].Init(htim8, TIM_CHANNEL_1);
+  Steer[5].Init(htim5, TIM_CHANNEL_2);
 
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
@@ -127,8 +133,13 @@ int main(void)
     // //根据巡线模块决定前进方向
     // LinePatrol_Decide(LP_Detect_Bool);
 
-    Steer[0].Set_Out(0.0f);
-    Steer[0].Output();
+    // // 控制舵机
+    // Steer[0].Set_Out(0.0f);
+    // Steer[0].Output();
+
+    // 控制胶轮
+    RChassis.R_Set_Velocity(0.3f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
   }
   /* USER CODE END 3 */
 }

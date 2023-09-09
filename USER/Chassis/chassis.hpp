@@ -10,6 +10,7 @@
 
 //轮半径, m
 const float WHEEL_RADIUS = 0.0635f;
+const float R_WHEEL_RADIUS = 0.0625f;
 
 //轮组满转线速度, m/s
 const float WHEEL_FULL_V = (MOTOR_FULL_OMEGA * WHEEL_RADIUS);
@@ -24,6 +25,8 @@ const float X_MAX = 1.0f;
 const float Y_MAX = 1.0f;
 //旋转速度上限, rad/s
 const float OMEGA_MAX = 2.0f;
+//胶轮速度上限，m/s
+const float R_MAX = 1.0f;
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -47,19 +50,25 @@ public:
 
     //底盘对应的电机
     Class_Motor_With_Hall_Encoder Motor[4];
+    //胶轮电机
+    Class_Motor RMotor[2];
 
     void Init(TIM_HandleTypeDef __Driver_PWM_TIM, TIM_HandleTypeDef __Calculate_EXTI_TIM);
+    void R_Init(TIM_HandleTypeDef __RDriver_PWM_TIM, TIM_HandleTypeDef __Calculate_EXTI_TIM);
 
     void Set_Velocity(SpeedTypeDef __Velocity);
     void Set_Control_Method(Enum_Control_Method __Control_Method);
+    void R_Set_Velocity(float __RVelocity);
 
     void Hall_Encoder_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
     void Calculate_TIM_PeriodElapsedCallback();
+    void R_Calculate_TIM_PeriodElapsedCallback();
 
 protected:
 
     //电机PWM驱动定时器
     TIM_HandleTypeDef Driver_PWM_TIM;
+    TIM_HandleTypeDef RDriver_PWM_TIM;
     //电机计算定时器中断
     TIM_HandleTypeDef Calculate_TIM;
 
@@ -73,10 +82,13 @@ protected:
         0,
         0
     };
+    //胶轮速度
+    float RVelocity = 0;
 
 };
 
 extern Class_Chassis Chassis;
+extern Class_Chassis RChassis;
 
 /* Exported variables --------------------------------------------------------*/
 

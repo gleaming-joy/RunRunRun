@@ -52,7 +52,7 @@ extern TIM_HandleTypeDef htim4;
 //底盘麦轮电机的计时器
 #define CHASSIS_MOTOR_PWM_DRIVER_TIM htim4
 #define CHASSIS_MOTOR_CALCULATE_TIM htim4
-
+#define RMOTOR_PWM_DRIVER_TIM htim2
 
 /* USER CODE END EM */
 
@@ -84,6 +84,16 @@ void Error_Handler(void);
 #define Pin_Pushpull_MotorDirectionB3_GPIO_Port GPIOE
 #define Pin_Pushpull_MotorDirectionB4_Pin GPIO_PIN_0
 #define Pin_Pushpull_MotorDirectionB4_GPIO_Port GPIOB
+// 胶轮电机GPIO
+#define RMotorDirectionA1_Pin GPIO_PIN_5
+#define RMotorDirectionA1_GPIO_Port GPIOC
+#define RMotorDirectionA2_Pin GPIO_PIN_5
+#define RMotorDirectionA2_GPIO_Port GPIOA
+#define RMotorDirectionB1_Pin GPIO_PIN_1
+#define RMotorDirectionB1_GPIO_Port GPIOC
+#define RMotorDirectionB2_Pin GPIO_PIN_4
+#define RMotorDirectionB2_GPIO_Port GPIOA
+
 // 霍尔编码器中断（乱设的）
 #define Pin_Exti_HallEncoderA1_Pin GPIO_PIN_7
 #define Pin_Exti_HallEncoderA1_GPIO_Port GPIOF
