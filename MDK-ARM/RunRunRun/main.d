@@ -30,7 +30,9 @@ runrunrun\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 runrunrun\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 runrunrun\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 runrunrun\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+runrunrun\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 runrunrun\main.o: ../Core/Inc/tim.h
+runrunrun\main.o: ../Core/Inc/usart.h
 runrunrun\main.o: ../Core/Inc/gpio.h
 runrunrun\main.o: ..\USER\Chassis\chassis.hpp
 runrunrun\main.o: ..\USER\Motor\motor.hpp
@@ -38,3 +40,5 @@ runrunrun\main.o: ..\USER\PID\PID.hpp
 runrunrun\main.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h
 runrunrun\main.o: ..\USER\LinePatrol\LinePatrol.hpp
 runrunrun\main.o: ..\USER\Steer\steer.hpp
+runrunrun\main.o: ..\USER\Arm\arm.hpp
+runrunrun\main.o: ..\USER\StepMotor\StepMotor.h

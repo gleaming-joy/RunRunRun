@@ -10,22 +10,22 @@
 
   SpeedTypeDef v_front=
   {
-    0, 0.3, 0
+    0, 0.6, 0
   };
   
   SpeedTypeDef v_back=
   {
-    0, -0.3, 0
+    0, -0.6, 0
   };
 
   SpeedTypeDef v_right=
   {
-    -0.3, 0, 0
+    -0.6, 0, 0
   };  
   
   SpeedTypeDef v_left=
   {
-    0.3, 0, 0
+    0.6, 0, 0
   }; 
   
   SpeedTypeDef v_rotate=
@@ -76,31 +76,41 @@ void LinePatrol_Decide(uint8_t __LP_Detect_Bool[])
     {
       Chassis.Set_Velocity(v_crotate);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
-      HAL_Delay(1500);
+      HAL_Delay(4000);
       Chassis.Set_Velocity(v_right);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(1500);
+      // while (1)
+      // {
+      //   LinePatrol_Judge(__LP_Detect_Bool);
+      //   if(__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
+      //     break;
+      // }
+      // HAL_Delay(30);
+      
     }
     //右转弯
     else if (__LP_Detect_Bool[0] == 1 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
     {
       Chassis.Set_Velocity(v_rotate);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
-      HAL_Delay(1500);
+      HAL_Delay(4000);
       Chassis.Set_Velocity(v_left);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(1500);
     }
-    //车头向右转
-    else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 0 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
-    {
-      Chassis.Set_Velocity(v_crotate);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-    }
-    //车头向左转
-    else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 0 && __LP_Detect_Bool[3] == 0)
-    {
-      Chassis.Set_Velocity(v_rotate);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-    }
+    // //车头向右转
+    // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 0 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
+    // {
+    //   Chassis.Set_Velocity(v_crotate);
+    //   Chassis.Calculate_TIM_PeriodElapsedCallback();
+    // }
+    // //车头向左转
+    // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 0 && __LP_Detect_Bool[3] == 0)
+    // {
+    //   Chassis.Set_Velocity(v_rotate);
+    //   Chassis.Calculate_TIM_PeriodElapsedCallback();
+    // }
     // //停下
     // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 0 && __LP_Detect_Bool[2] == 0 && __LP_Detect_Bool[3] == 0)
     // {

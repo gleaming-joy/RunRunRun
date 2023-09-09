@@ -31,5 +31,6 @@ runrunrun\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 runrunrun\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 runrunrun\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 runrunrun\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+runrunrun\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 runrunrun\motor.o: ..\USER\PID\PID.hpp
 runrunrun\motor.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h

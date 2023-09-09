@@ -31,6 +31,7 @@ runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 runrunrun\linepatrol.o: ..\USER\Chassis\chassis.hpp
 runrunrun\linepatrol.o: ..\USER\Motor\motor.hpp
 runrunrun\linepatrol.o: ..\USER\PID\PID.hpp

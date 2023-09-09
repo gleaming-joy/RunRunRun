@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -27,6 +28,8 @@
 #include "chassis.hpp"
 #include "LinePatrol.hpp"
 #include "steer.hpp"
+#include "arm.hpp"
+#include "StepMotor.h"
 
 /* USER CODE END Includes */
 
@@ -51,8 +54,36 @@
 
 Class_Chassis Chassis;
 Class_Chassis RChassis;
-Class_Steer Steer[6];
+Class_Steer Arm_Steer[4];
+Class_Steer Claw_Steer;
+Class_Steer Box_Steer;
+
 uint8_t LP_Detect_Bool[4];
+
+SpeedTypeDef v0=
+  {
+    0, 0.6, 0
+  };
+SpeedTypeDef v1=
+  {
+    0, 0, 1
+  };
+SpeedTypeDef v2=
+  {
+    0, 0, -1
+  };
+SpeedTypeDef v3=
+  {
+    0.6, 0, 0
+  };	
+SpeedTypeDef v4=
+  {
+    -0.6, 0, 0
+  };
+SpeedTypeDef v5=
+  {
+    0, -0.6, 0
+  };
 
 /* USER CODE END PV */
 
@@ -99,6 +130,8 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM2_Init();
+  MX_USART2_UART_Init();
+  MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
   //底盘初始化
@@ -107,15 +140,18 @@ int main(void)
   //胶轮初始化
   RChassis.R_Init(RMOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   //舵机初始化
-  Steer[0].Init(htim5, TIM_CHANNEL_1);
-  Steer[1].Init(htim8, TIM_CHANNEL_4);
-  Steer[2].Init(htim8, TIM_CHANNEL_3);
-  Steer[3].Init(htim8, TIM_CHANNEL_2);
-  Steer[4].Init(htim8, TIM_CHANNEL_1);
-  Steer[5].Init(htim5, TIM_CHANNEL_2);
+  Arm_Steer[0].Init(htim5, TIM_CHANNEL_1);
+  Arm_Steer[1].Init(htim8, TIM_CHANNEL_4);
+  Arm_Steer[2].Init(htim8, TIM_CHANNEL_3);
+  Arm_Steer[3].Init(htim8, TIM_CHANNEL_2);
+  Claw_Steer.Init(htim8, TIM_CHANNEL_1);
+  Box_Steer.Init(htim5, TIM_CHANNEL_2);
+	//步进电机初始化
+	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
 
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
+
 
   /* USER CODE END 2 */
 
@@ -127,19 +163,69 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    // //巡线模块判断
-    // LinePatrol_Judge(LP_Detect_Bool);
+    //巡线模块判断
+    LinePatrol_Judge(LP_Detect_Bool);
 
-    // //根据巡线模块决定前进方向
-    // LinePatrol_Decide(LP_Detect_Bool);
+    //根据巡线模块决定前进方向
+    LinePatrol_Decide(LP_Detect_Bool);
+
+    // Chassis.Set_Velocity(v0);
+    // Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(1000);
+		// Chassis.Set_Velocity(v1);
+		// Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(4000);
+    // Chassis.Set_Velocity(v2);
+		// Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(4000);
+    // Chassis.Set_Velocity(v3);
+		// Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(1000);
+    // Chassis.Set_Velocity(v4);
+		// Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(1000);
+    // Chassis.Set_Velocity(v5);
+		// Chassis.Calculate_TIM_PeriodElapsedCallback();
+		// HAL_Delay(3000);
 
     // // 控制舵机
-    // Steer[0].Set_Out(0.0f);
-    // Steer[0].Output();
 
-    // 控制胶轮
-    RChassis.R_Set_Velocity(0.3f);
-    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+
+    // Box_Steer_Rotate(Box_Steer, 200.0f);
+    // HAL_Delay(3000);
+    // Arm_Steer_Output_Get_Locate(Arm_Steer);
+		// HAL_Delay(3000);
+    // Claw_Steer_Close(Claw_Steer);
+    // HAL_Delay(2000);
+    // Arm_Steer_Output_Store_Locate(Arm_Steer);
+    // HAL_Delay(3000);
+    // Claw_Steer_Open(Claw_Steer);
+    // HAL_Delay(2000);
+		// Arm_Steer_Output_Get_Locate(Arm_Steer);
+		// HAL_Delay(2000);
+    
+    // Box_Steer_Rotate(Box_Steer, 90.0f);
+    // HAL_Delay(2000);
+    // Box_Steer_Rotate(Box_Steer, 0.0f);
+    // HAL_Delay(2000);
+    // Box_Steer_Rotate(Box_Steer, -90.0f);
+    // HAL_Delay(2000);
+		// Box_Steer_Rotate(Box_Steer, -180.0f);
+		// HAL_Delay(2000);
+		
+		// //控制步进电机
+		// TestMotor1.Set_Motor_Running_Status(6400, 6400, 1);
+		// HAL_Delay(1000);
+		// HAL_Delay(1000);
+    // TestMotor1.Set_Motor_Running_Status(6400, 6400, 0);
+		// HAL_Delay(1000);
+		// HAL_Delay(1000);
+
+    // // 控制胶轮
+    // RChassis.R_Set_Velocity(1.0f);
+    // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+
+
   }
   /* USER CODE END 3 */
 }

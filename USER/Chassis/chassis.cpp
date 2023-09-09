@@ -90,7 +90,7 @@ void Class_Chassis::R_Init(TIM_HandleTypeDef __RDriver_PWM_TIM, TIM_HandleTypeDe
     RMotor[0].Init(__RDriver_PWM_TIM, TIM_CHANNEL_1, RMotorDirectionA1_Pin, RMotorDirectionA1_GPIO_Port, RMotorDirectionB1_Pin, RMotorDirectionB1_GPIO_Port);
     RMotor[0].Set_Rotate_Direction_Flag(CW);
     RMotor[1].Init(__RDriver_PWM_TIM, TIM_CHANNEL_2, RMotorDirectionA2_Pin, RMotorDirectionA2_GPIO_Port, RMotorDirectionB2_Pin, RMotorDirectionB2_GPIO_Port);
-    RMotor[1].Set_Rotate_Direction_Flag(CW);
+    RMotor[1].Set_Rotate_Direction_Flag(CCW);
 }
 
 /**
@@ -165,10 +165,10 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
     Math_Constrain(&Velocity.X, -X_MAX, X_MAX);
     Math_Constrain(&Velocity.Y, -Y_MAX, Y_MAX);
     Math_Constrain(&Velocity.Omega, -OMEGA_MAX, OMEGA_MAX);
-    Motor[0].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega + Velocity.Y - Velocity.X) / WHEEL_RADIUS * ((Motor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[1].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega + Velocity.Y + Velocity.X) / WHEEL_RADIUS * ((Motor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[2].Set_Omega_Target((-OMEGA_TO_MS * Velocity.Omega + Velocity.Y + 1.7f * Velocity.X) / WHEEL_RADIUS * ((Motor[2].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    Motor[3].Set_Omega_Target((OMEGA_TO_MS * Velocity.Omega + Velocity.Y - 1.7f * Velocity.X) / WHEEL_RADIUS * ((Motor[3].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[0].Set_Omega_Target((-OMEGA_TO_MS * 0.8f * Velocity.Omega + Velocity.Y - Velocity.X) / WHEEL_RADIUS * ((Motor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[1].Set_Omega_Target((OMEGA_TO_MS * 0.8f * Velocity.Omega + Velocity.Y + Velocity.X) / WHEEL_RADIUS * ((Motor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[2].Set_Omega_Target((-OMEGA_TO_MS * 1.4f * Velocity.Omega + Velocity.Y + 1.5f * Velocity.X) / WHEEL_RADIUS * ((Motor[2].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    Motor[3].Set_Omega_Target((OMEGA_TO_MS * 1.6f * Velocity.Omega + Velocity.Y - 1.5f * Velocity.X) / WHEEL_RADIUS * ((Motor[3].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
 
     //电机输出值设定并输出
     for (int i = 0; i < 4; i++)
@@ -181,8 +181,8 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
 void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
 {
     Math_Constrain(&RVelocity, -R_MAX, R_MAX);
-    RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
-    RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)));
+    RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+    RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
 
     //输出
     for (int i = 0; i < 2; i++)

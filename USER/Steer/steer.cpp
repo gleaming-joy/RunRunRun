@@ -62,11 +62,11 @@ void Class_Steer::Init(TIM_HandleTypeDef __Driver_PWM_TIM, uint8_t __Driver_PWM_
  *
  * @param output 舵机的角度
  */
-void Class_Steer::Set_Out(float __Out)
+void Class_Steer::Set_Out(float __Out, float __Max_Angle)
 {
     //占空比对应时间, 占空比
     float time;
-    time = STEER_PWM_MIDDLE + (__Out) / (Max_Angle / 2) * STEER_PWM_EXTREME_TO_MIDDLE;
+    time = STEER_PWM_MIDDLE + (__Out) / (__Max_Angle / 2) * STEER_PWM_EXTREME_TO_MIDDLE;
     Out = time / STEER_PWM_PERIOD * STEER_PWM_PRESCALER;
 }
 

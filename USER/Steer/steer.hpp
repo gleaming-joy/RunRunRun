@@ -37,7 +37,7 @@ public:
 
     void Init(TIM_HandleTypeDef __Driver_PWM_TIM, uint8_t __Driver_PWM_TIM_Channel_x);
 
-    void Set_Out(float output);
+    void Set_Out(float output, float Max_Angle);
 
     void Output();
 
@@ -48,8 +48,8 @@ protected:
     //定时器通道
     uint8_t Driver_PWM_TIM_Channel_x;
 
-    //舵机角度范围, 默认PI度舵机
-    float Max_Angle = PI;
+    //舵机角度范围, 默认270度舵机
+    //float Max_Angle = 270;
     //设置输出级别
     int32_t Out;
 

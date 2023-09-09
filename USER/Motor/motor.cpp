@@ -212,7 +212,7 @@ void Class_Motor::R_Output()
         HAL_GPIO_WritePin(Output_A_GPIOx, Output_A_GPIO_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(Output_B_GPIOx, Output_B_GPIO_Pin, GPIO_PIN_SET);
     }
-    __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Math_Abs(ROut));
+    __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Math_Abs(999));
 }
 
 /**
