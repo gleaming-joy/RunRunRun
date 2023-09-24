@@ -4,13 +4,15 @@ StepMotor TestMotor1;
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if(htim == TestMotor1.Get_htim()){
+    if(htim == TestMotor1.Get_htim())
+    {
         TestMotor1.Set_Timer_Output();
     }
 }
 
-
-void StepMotor::Set_Motor_Running_Status(uint32_t step_per_second, uint32_t max_running_steps, uint8_t direction){
+//设置步进电机的运动状态，包括步进电机的速度、最大步数和旋转方向
+void StepMotor::Set_Motor_Running_Status(uint32_t step_per_second, uint32_t max_running_steps, uint8_t direction)
+{
     this->remain_half_pulse = 2 * max_running_steps;
     this->tim_counts_per_half_pulse = TIM_Rate / (step_per_second * 2);
     HAL_GPIO_WritePin(this->EnableGPIOx, this->EnableGPIO_Pin, GPIO_PIN_RESET);
@@ -18,12 +20,15 @@ void StepMotor::Set_Motor_Running_Status(uint32_t step_per_second, uint32_t max_
     {
         HAL_GPIO_WritePin(this->DirectionGPIOx, this->DirectionGPIO_Pin, GPIO_PIN_RESET);
     }
-    else{
+    else
+    {
         HAL_GPIO_WritePin(this->DirectionGPIOx, this->DirectionGPIO_Pin, GPIO_PIN_SET);
     }
 }
 
-void StepMotor::Set_Timer_Output(){
+//控制步进电机生成脉冲信号，驱动电机旋转
+void StepMotor::Set_Timer_Output()
+{
     if (this->remain_half_pulse == 0)
     {
         HAL_GPIO_WritePin(this->EnableGPIOx, this->EnableGPIO_Pin, GPIO_PIN_SET);

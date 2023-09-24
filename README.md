@@ -58,9 +58,9 @@ Steer[5]
 tim5 CH2: PH11/C  
 
 ## 通信
-蓝牙串口    
-USART2_Tx: PD5  
-USART2_Rx: PD6  
+巡线模块
+USART6_RX: PG9  
+USART6_TX: PG14  
 
 ## 直线滑台
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [RunRunRun\RunRunRun.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image RunRunRun\RunRunRun.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Sep 10 03:51:31 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Sep 10 10:32:58 2023
 <BR><P>
 <H3>Maximum Stack Usage =        708 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -699,8 +699,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_Init &rArr; HAL_InitTick &rArr; HAL_NVIC_SetPriority &rArr; [local to stm32f4xx_hal_cortex_c]::__NVIC_SetPriority(IRQn_Type, unsigned)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
-<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
 </UL>
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -832,12 +832,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[9e]"></a>HAL_TIM_ConfigClockSource</STRONG> (Thumb, 268 bytes, Stack size 24 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_ConfigClockSource))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; [local to stm32f4xx_hal_tim_c]::TIM_TI2_ConfigInputStage(TIM_TypeDef*, unsigned, unsigned)
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; TIM_ETR_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_TI2_ConfigInputStage(TIM_TypeDef*, unsigned, unsigned)
+<BR>[Calls]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_TI2_ConfigInputStage(TIM_TypeDef*, unsigned, unsigned)
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_TI1_ConfigInputStage(TIM_TypeDef*, unsigned, unsigned)
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_ITRx_SetConfig(TIM_TypeDef*, unsigned)
-<LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM9_Init
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM8_Init
@@ -860,12 +860,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a6]"></a>HAL_TIM_OC_ConfigChannel</STRONG> (Thumb, 112 bytes, Stack size 24 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_OC_ConfigChannel))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_OC_ConfigChannel &rArr; [local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_OC_ConfigChannel &rArr; TIM_OC2_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
+<BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
+<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC3_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC1_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM9_Init
 </UL>
@@ -892,12 +892,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[af]"></a>HAL_TIM_PWM_ConfigChannel</STRONG> (Thumb, 260 bytes, Stack size 24 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_PWM_ConfigChannel))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_PWM_ConfigChannel &rArr; [local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_PWM_ConfigChannel &rArr; TIM_OC2_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
+<BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
+<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC4_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC3_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;[local to stm32f4xx_hal_tim_c]::TIM_OC1_SetConfig(TIM_TypeDef*, TIM_OC_InitTypeDef*)
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM8_Init
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM5_Init
@@ -1107,7 +1107,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[c4]"></a>LinePatrol_Decide(unsigned char*)</STRONG> (Thumb, 328 bytes, Stack size 8 bytes, linepatrol.o(i._Z17LinePatrol_DecidePh))
+<P><STRONG><a name="[c4]"></a>LinePatrol_Decide(unsigned char*)</STRONG> (Thumb, 236 bytes, Stack size 8 bytes, linepatrol.o(i._Z17LinePatrol_DecidePh))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = LinePatrol_Decide(unsigned char*) &rArr; Class_Chassis::Calculate_TIM_PeriodElapsedCallback() &rArr; Class_Motor_With_Hall_Encoder::Calculate_TIM_PeriodElapsedCallback() &rArr; Class_PID::Adjust_TIM_PeriodElapsedCallback()
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
@@ -1140,8 +1140,8 @@ Global Symbols
 <P><STRONG><a name="[c8]"></a>Class_Motor::Init(TIM_HandleTypeDef, unsigned char, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*)</STRONG> (Thumb, 138 bytes, Stack size 48 bytes, motor.o(i._ZN11Class_Motor4InitE17TIM_HandleTypeDefhtP12GPIO_TypeDeftS2_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = Class_Motor::Init(TIM_HandleTypeDef, unsigned char, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*) &rArr; HAL_TIM_PWM_Start &rArr; TIM_CCxChannelCmd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<BR>[Calls]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Class_Chassis::R_Init(TIM_HandleTypeDef, TIM_HandleTypeDef)
 </UL>
@@ -1165,8 +1165,8 @@ Global Symbols
 <P><STRONG><a name="[cc]"></a>Class_Steer::Init(TIM_HandleTypeDef, unsigned char)</STRONG> (Thumb, 116 bytes, Stack size 32 bytes, steer.o(i._ZN11Class_Steer4InitE17TIM_HandleTypeDefh))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = Class_Steer::Init(TIM_HandleTypeDef, unsigned char) &rArr; HAL_TIM_PWM_Start &rArr; TIM_CCxChannelCmd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<BR>[Calls]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
 </UL>
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1251,8 +1251,8 @@ Global Symbols
 <P><STRONG><a name="[d4]"></a>Class_Motor_With_Hall_Encoder::Init(TIM_HandleTypeDef, unsigned char, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*, TIM_HandleTypeDef, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*)</STRONG> (Thumb, 254 bytes, Stack size 56 bytes, motor.o(i._ZN29Class_Motor_With_Hall_Encoder4InitE17TIM_HandleTypeDefhtP12GPIO_TypeDeftS2_S0_tS2_tS2_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = Class_Motor_With_Hall_Encoder::Init(TIM_HandleTypeDef, unsigned char, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*, TIM_HandleTypeDef, unsigned short, GPIO_TypeDef*, unsigned short, GPIO_TypeDef*) &rArr; HAL_TIM_PWM_Start &rArr; TIM_CCxChannelCmd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<BR>[Calls]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Class_Chassis::Init(TIM_HandleTypeDef, TIM_HandleTypeDef)
 </UL>
