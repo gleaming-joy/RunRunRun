@@ -50,14 +50,40 @@
 /**
  * @brief 巡线模块信息接收
  *
- * @param uint8_t __LP_Receive[]
+ * @param uint8_t __LP_Receive
+ * @param UART_HandleTypeDef *__huart
  */
-void LinePatrol_Receive(uint8_t __LP_Receive[])
+void LinePatrol_Receive(UART_HandleTypeDef *__huart, uint8_t *__LP_Receive)
 {
-  HAL_UART_Receive(&huart6, __LP_Receive, sizeof(__LP_Receive), HAL_MAX_DELAY);
+  HAL_UART_Receive(__huart, __LP_Receive, sizeof(__LP_Receive), HAL_MAX_DELAY);
 }
 
+/**
+ * @brief 巡线模块根据接收到的信息判断前进方向
+ *
+ * @param uint8_t *__LP_Receive_front
+ * @param uint8_t *__LP_Receive_back
+ */
 
+void LinePatrol_Decide(uint8_t *__LP_Receive_front, uint8_t *__LP_Receive_back)
+{
+  uint8_t derection[4];
+  derection[0] == 0b00111100;
+  derection[1] == 0b00111111;
+  derection[2] == 0b11111100;
+  derection[4] == 0b00000000;
+  //向前运动
+  if (*__LP_Receive_back == derection[0])
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  //右转
+  else if (*__LP_Receive_front == derection[4] && *__LP_Receive_back == derection[1])
+  {
+    
+  }
+}
 
 // /**
 //  * @brief 巡线模块判断

@@ -59,7 +59,8 @@ Class_Steer Claw_Steer;
 Class_Steer Box_Steer;
 
 // uint8_t LP_Detect_Bool[4];
-uint8_t LP_Receive[10];
+uint8_t LP_Receive_front;
+uint8_t LP_Receive_back;
 
 SpeedTypeDef v0=
   {
@@ -133,6 +134,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM9_Init();
   MX_USART6_UART_Init();
+  MX_UART7_Init();
   /* USER CODE BEGIN 2 */
 
   //底盘初始化
@@ -165,9 +167,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     //巡线模块信息接受
-    LinePatrol_Receive(LP_Receive);
+    LinePatrol_Receive(&huart6, &LP_Receive_front);
+    LinePatrol_Receive(&huart7, &LP_Receive_back);
 
-    // //巡线模块判断
+    //根据巡线模块判断行进方向
+    LinePatrol_Decide(&LP_Receive_front, &LP_Receive_back);
+
+    //巡线模块判断
     // LinePatrol_Judge(LP_Detect_Bool);
 
     // //根据巡线模块决定前进方向
