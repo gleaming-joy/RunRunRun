@@ -107,15 +107,15 @@ void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_H
   while (1)
   {
     //左右巡线检测结果不一致，调整车的偏转
-    if (*__LP_Receive_yl != *__LP_Receive_yr && *__LP_Receive_yl != (uint8_t)0b00000000)
+    if (*__LP_Receive_yl != *__LP_Receive_yr && *__LP_Receive_yl != (uint8_t)0x00)
     {
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
-      LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr);
+      LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr, __huart_yl, __huart_yr);
       //调整后车偏后
-      if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00010000)
+      if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
       {
-        while ((*__LP_Receive_yl & (uint8_t)0b00011000) != (uint8_t)0b00011000)
+        while ((*__LP_Receive_yl & (uint8_t)0x18) != (uint8_t)0x18)
         {
           Chassis.Set_Velocity(v_front);
           Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -124,7 +124,7 @@ void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_H
         }
       }
       //调整后车偏前
-      else if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00001000)
+      else if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
       {
         Chassis.Set_Velocity(v_back);
         Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -135,7 +135,7 @@ void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_H
     else
     {
       //左侧巡线识别到黑线，持续向左平移
-      if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00011000)
+      if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x18)
       {
         Chassis.Set_Velocity(v_left);
         Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -143,7 +143,7 @@ void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_H
         LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
       }
       //左侧巡线识别到空白，停止运动
-      else if (*__LP_Receive_yl == (uint8_t)0b00000000)
+      else if (*__LP_Receive_yl == (uint8_t)0x00)
       {
         Chassis.Set_Velocity(v_stop);
         Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -168,10 +168,12 @@ void Berry_Receive(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
 /**
  * @brief 障碍识别及位置调整
  *
- * @param UART_HandleTypeDef *__huart
+ * @param UART_HandleTypeDef *__B_huart
  * @param uint8_t *__B_Receive
+ * @param UART_HandleTypeDef *__LP_x_huart
+ * @param uint8_t *__LP_x_Receive
  */
-void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
+void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_x_huart, uint8_t *__LP_x_Receive)
 {
   //移动到左侧
   Chassis.Set_Velocity(v_left);
@@ -179,9 +181,9 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
   HAL_Delay(200);
 
   //第一次识别
-  Berry_Receive(__huart, __B_Receive);
+  Berry_Receive(__B_huart, __B_Receive);
   //第一次左侧有障碍物
-  if (*__B_Receive == (uint8_t)0b00000000)
+  if (*__B_Receive == (uint8_t)0x00)
   {
     //向右移动避开障碍物前进
     Chassis.Set_Velocity(v_right);
@@ -194,9 +196,9 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
     Chassis.Calculate_TIM_PeriodElapsedCallback();
 
     //第二次识别
-    Berry_Receive(__huart, __B_Receive);
+    Berry_Receive(__B_huart, __B_Receive);
     //第二次右侧有障碍物
-    if (*__B_Receive == (uint8_t)0b00000000)
+    if (*__B_Receive == (uint8_t)0x00)
     {
       //向左移动避开障碍物前进
       Chassis.Set_Velocity(v_left);
@@ -205,6 +207,14 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
       Chassis.Set_Velocity(v_front);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
       HAL_Delay(300);
+      //向前移动到采矿区
+      LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      while (*__LP_x_Receive != 0xFF)
+      {
+        Chassis.Set_Velocity(v_front);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      }
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
     }
@@ -215,6 +225,17 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
       Chassis.Set_Velocity(v_front);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
       HAL_Delay(300);
+      //向前再向左移动到采矿区
+      LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      while (*__LP_x_Receive != 0xFF)
+      {
+        Chassis.Set_Velocity(v_front);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      }
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(250);
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
     }
@@ -230,9 +251,9 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
     Chassis.Calculate_TIM_PeriodElapsedCallback();
     
     //第二次识别
-    Berry_Receive(__huart, __B_Receive);
+    Berry_Receive(__B_huart, __B_Receive);
     //第二次左侧有障碍物
-    if (*__B_Receive == (uint8_t)0b00000000)
+    if (*__B_Receive == (uint8_t)0x00)
     {
       //向右移动避开障碍物前进
       Chassis.Set_Velocity(v_right);
@@ -241,8 +262,20 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
       Chassis.Set_Velocity(v_front);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
       HAL_Delay(300);
+      //向前再向左移动到采矿区
+      LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      while (*__LP_x_Receive != 0xFF)
+      {
+        Chassis.Set_Velocity(v_front);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      }
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(250);
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+
     }
     //第二次右侧有障碍物
     else
@@ -251,11 +284,74 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
       Chassis.Set_Velocity(v_front);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
       HAL_Delay(300);
+      //向前移动到采矿区
+      LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      while (*__LP_x_Receive != 0xFF)
+      {
+        Chassis.Set_Velocity(v_front);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
+      }
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
     }
   }
 }
+
+/**
+ * @brief 采集左侧晶体矿
+ *
+ * @param __Arm_Steer 机械臂舵机
+ * @param __Claw_Steer 机械爪舵机
+ * @param UART_HandleTypeDef *__B_huart
+ * @param uint8_t *__B_Receive
+ * @param UART_HandleTypeDef *__LP_yl_huart
+ * @param uint8_t *__LP_yl_Receive
+ */
+void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive)
+{
+  Berry_Receive(__B_huart, __B_Receive);
+  //识别到橙色之前一直前进
+  while (*__B_Receive != 0x01)
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    Berry_Receive(__B_huart, __B_Receive);
+  }
+  //识别到橙色后向前移动到前一根线处
+  LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  while (*__LP_yl_Receive != 0x60)//0110,0000
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  }
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  //进行一次抓取
+  Arm_Catch(__Arm_Steer, __Claw_Steer);
+  //判断是否抓取成功，若不成功再次进行抓取
+  while (1)
+  {
+    Berry_Receive(__B_huart, __B_Receive);
+    //识别到橙色矿，抓取不成功
+    if (*__B_Receive == 0x01)
+    {
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(100);
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      Arm_Catch(__Arm_Steer, __Claw_Steer);
+    }
+    //抓取成功
+    else
+    {
+      break;
+    }
+  }
+}
+
 
 // /**
 //  * @brief 巡线模块判断

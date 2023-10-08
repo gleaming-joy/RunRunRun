@@ -36,3 +36,5 @@ runrunrun\linepatrol.o: ..\USER\Chassis\chassis.hpp
 runrunrun\linepatrol.o: ..\USER\Motor\motor.hpp
 runrunrun\linepatrol.o: ..\USER\PID\PID.hpp
 runrunrun\linepatrol.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h
+runrunrun\linepatrol.o: ..\USER\Arm\arm.hpp
+runrunrun\linepatrol.o: ..\USER\Steer\steer.hpp

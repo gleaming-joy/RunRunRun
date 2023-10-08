@@ -91,3 +91,22 @@ void Box_Steer_Rotate(Class_Steer __Box_Steer, float location)
     __Box_Steer.Set_Out(location, 350);
     __Box_Steer.Output();
 }
+
+/**
+ * @brief 完成一次抓取
+ *
+ * @param __Arm_Steer 机械臂舵机
+ * @param __Claw_Steer 机械爪舵机
+ */
+void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
+{
+    Claw_Steer_Open(__Claw_Steer);
+    HAL_Delay(200);
+    Arm_Steer_Output_Get_Locate(__Arm_Steer);
+	HAL_Delay(1000);
+    Claw_Steer_Close(__Claw_Steer);
+    HAL_Delay(500);
+    Arm_Steer_Output_Store_Locate(__Arm_Steer);
+    HAL_Delay(1000);
+    Claw_Steer_Open(__Claw_Steer);
+}

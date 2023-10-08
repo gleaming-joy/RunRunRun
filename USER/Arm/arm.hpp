@@ -21,4 +21,6 @@ void Claw_Steer_Open(Class_Steer __Claw_Steer);
 void Claw_Steer_Close(Class_Steer __Claw_Steer);
 
 void Box_Steer_Rotate(Class_Steer __Box_Steer, float location);
+
+void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
 #endif

@@ -240,11 +240,17 @@ int main(void)
     //从启动区移动到低平面的采矿区
     LinePatrol_Start(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
 
-    //避障
-    LinePatrol_Barrier(&B_HUART, &B_Receive);
-    
-    //采矿
+    //避障并移动到采矿区巡线处
+    LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x);
 
+    //采晶体矿
+    Box_Steer_Rotate(Box_Steer, 200.0f);
+    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
+    Box_Steer_Rotate(Box_Steer, 90.0f);
+    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
+    Box_Steer_Rotate(Box_Steer, 0.0f);
+
+    //采燃料矿
 
   }
   /* USER CODE END 3 */
