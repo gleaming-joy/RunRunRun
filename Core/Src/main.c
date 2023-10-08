@@ -64,6 +64,8 @@ uint8_t LP_Receive_yr;
 uint8_t LP_Receive_x;
 uint8_t B_Receive;
 
+uint8_t Barrier_Location;
+
 SpeedTypeDef v0=
   {
     0, 0.6, 0
@@ -155,7 +157,6 @@ int main(void)
   Box_Steer.Init(htim5, TIM_CHANNEL_2);
 	//步进电机初始化
 	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
-
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
@@ -238,10 +239,10 @@ int main(void)
     // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
 
     //从启动区移动到低平面的采矿区
-    LinePatrol_Start(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
+    LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
 
     //避障并移动到采矿区巡线处
-    LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x);
+    LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
 
     //采晶体矿
     Box_Steer_Rotate(Box_Steer, 200.0f);
@@ -251,7 +252,11 @@ int main(void)
     Box_Steer_Rotate(Box_Steer, 0.0f);
 
     //采燃料矿
+    LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 
+    //返回启动区
+    LinePatrol_Back_Low(&Barrier_Location);
+    
   }
   /* USER CODE END 3 */
 }

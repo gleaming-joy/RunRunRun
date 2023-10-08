@@ -16,6 +16,7 @@
 
 void Arm_Steer_Output_Get_Locate(Class_Steer __Arm_Steer[]);
 void Arm_Steer_Output_Store_Locate(Class_Steer __Arm_Steer[]);
+void Arm_Steer_Output_Go_Locate(Class_Steer __Arm_Steer[]);
 
 void Claw_Steer_Open(Class_Steer __Claw_Steer);
 void Claw_Steer_Close(Class_Steer __Claw_Steer);

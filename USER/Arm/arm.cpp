@@ -47,6 +47,24 @@ void Arm_Steer_Output_Store_Locate(Class_Steer __Arm_Steer[])
 }
 
 /**
+ * @brief 设定机械臂行进时的位置
+ *
+ * @param __Arm_Steer[]  机械臂舵机
+ */
+
+void Arm_Steer_Output_Go_Locate(Class_Steer __Arm_Steer[])
+{
+    __Arm_Steer[0].Set_Out(-10.0f, 270);
+    __Arm_Steer[0].Output();
+    __Arm_Steer[1].Set_Out(-70.0f, 180);
+    __Arm_Steer[1].Output();
+    __Arm_Steer[2].Set_Out(0.0f, 270);
+    __Arm_Steer[2].Output();
+    __Arm_Steer[3].Set_Out(0.0f, 270);
+    __Arm_Steer[3].Output();
+}
+
+/**
  * @brief 设定机械爪打开
  *
  * @param __Claw_Steer  机械爪舵机
@@ -109,4 +127,5 @@ void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
     Arm_Steer_Output_Store_Locate(__Arm_Steer);
     HAL_Delay(1000);
     Claw_Steer_Open(__Claw_Steer);
+    Arm_Steer_Output_Go_Locate(__Arm_Steer);
 }

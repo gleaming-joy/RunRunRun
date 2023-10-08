@@ -99,7 +99,7 @@ void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_
  * @param UART_HandleTypeDef *__huart_yr
  */
 
-void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
+void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
 {
   LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
   LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
@@ -172,8 +172,9 @@ void Berry_Receive(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
  * @param uint8_t *__B_Receive
  * @param UART_HandleTypeDef *__LP_x_huart
  * @param uint8_t *__LP_x_Receive
+ * @param uint8_t *__Barrier_Location
  */
-void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_x_huart, uint8_t *__LP_x_Receive)
+void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_x_huart, uint8_t *__LP_x_Receive, uint8_t *__Barrier_Location)
 {
   //移动到左侧
   Chassis.Set_Velocity(v_left);
@@ -217,6 +218,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
       }
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+      *__Barrier_Location = 1;
     }
     //第二次左侧有障碍物
     else
@@ -238,6 +240,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
       HAL_Delay(250);
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+      *__Barrier_Location = 0;
     }
   }
   //第一次右侧有障碍物
@@ -275,7 +278,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
       HAL_Delay(250);
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
-
+      *__Barrier_Location = 2;
     }
     //第二次右侧有障碍物
     else
@@ -294,6 +297,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
       }
       Chassis.Set_Velocity(v_stop);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
+      *__Barrier_Location = 3;
     }
   }
 }
@@ -320,7 +324,7 @@ void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Stee
   }
   //识别到橙色后向前移动到前一根线处
   LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
-  while (*__LP_yl_Receive != 0x60)//0110,0000
+  while ((*__LP_yl_Receive & 0x70) != 0x70)//0111,0000
   {
     Chassis.Set_Velocity(v_front);
     Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -352,6 +356,198 @@ void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Stee
   }
 }
 
+/**
+ * @brief 采集燃料矿
+ *
+ * @param __Arm_Steer 机械臂舵机
+ * @param __Claw_Steer 机械爪舵机
+ * @param UART_HandleTypeDef *__B_huart
+ * @param uint8_t *__B_Receive
+ * @param UART_HandleTypeDef *__LP_yl_huart
+ * @param uint8_t *__LP_yl_Receive
+ * @param UART_HandleTypeDef *__LP_yr_huart
+ * @param uint8_t *__LP_yr_Receive
+ */
+void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive, UART_HandleTypeDef *__LP_yr_huart, uint8_t *__LP_yr_Receive)
+{
+  //向前移动
+  LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  while ((*__LP_yl_Receive & (uint8_t)0xFE) != (uint8_t)0x00)//1111,1110
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  }
+  //顺时针旋转
+  Chassis.Set_Velocity(v_rotate);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(200);
+  //向前移动到中线
+  LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  LinePatrol_Receive(__LP_yr_huart, __LP_yr_Receive);
+  while (((*__LP_yl_Receive & 0x70) != (uint8_t)0x70) || ((*__LP_yr_Receive & (uint8_t)0x70) != (uint8_t)0x70))//0111,0000
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  //停下，开始识别
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  Berry_Receive(__B_huart, __B_Receive);
+  //识别到燃料矿进行抓取
+  if (*__B_Receive == 0x02)
+  {
+    Arm_Catch(__Arm_Steer, __Claw_Steer);
+    //判断是否抓取成功
+    while (1)
+    {
+      Berry_Receive(__B_huart, __B_Receive);
+      //识别到燃料矿，抓取不成功
+      if (*__B_Receive == 0x02)
+      {
+        Chassis.Set_Velocity(v_left);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(100);
+        Chassis.Set_Velocity(v_stop);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        Arm_Catch(__Arm_Steer, __Claw_Steer);
+      }
+      //抓取成功
+      else
+      {
+        break;
+      }
+    }
+  }
+  //未识别到燃料矿，向前移动再抓取
+  else
+  {
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    Arm_Catch(__Arm_Steer, __Claw_Steer);
+    //判断是否抓取成功
+    while (1)
+    {
+      Berry_Receive(__B_huart, __B_Receive);
+      //识别到燃料矿，抓取不成功
+      if (*__B_Receive == 0x02)
+      {
+        Chassis.Set_Velocity(v_left);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(100);
+        Chassis.Set_Velocity(v_stop);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        Arm_Catch(__Arm_Steer, __Claw_Steer);
+      }
+      //抓取成功
+      else
+      {
+        break;
+      }
+    }
+    //退回中线
+    Chassis.Set_Velocity(v_back);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+}
+
+/**
+ * @brief 从采矿区返回启动区
+ *
+ * @param uint8_t *__Barrier_Location
+ */
+void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
+{
+  Chassis.Set_Velocity(v_rotate);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(200);
+  Chassis.Set_Velocity(v_front);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(400);
+  if (*__Barrier_Location == 0)
+  {
+    Chassis.Set_Velocity(v_left);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(1000);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  else if (*__Barrier_Location == 1)
+  {
+    Chassis.Set_Velocity(v_right);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(500);
+    Chassis.Set_Velocity(v_left);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(200);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(500);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  else if (*__Barrier_Location == 2)
+  {
+    Chassis.Set_Velocity(v_left);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(500);
+    Chassis.Set_Velocity(v_right);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(200);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(500);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  else if (*__Barrier_Location ==  3)
+  {
+    Chassis.Set_Velocity(v_right);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(150);
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(1000);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+  }
+  Chassis.Set_Velocity(v_crotate);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(150);
+  Chassis.Set_Velocity(v_front);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(400);
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+}
+
+/**
+ * @brief 在启动区调整位置并放矿
+ *
+ * @param UART_HandleTypeDef *__LP_yl_huart
+ * @param uint8_t *__LP_yl_Receive
+ * @param UART_HandleTypeDef *__LP_yr_huart
+ * @param uint8_t *__LP_yr_Receive 
+ */
+void LinePatrol_Ad_Drop(UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive, UART_HandleTypeDef *__LP_yr_huart, uint8_t *__LP_yr_Receive)
+{
+                                                                                                                                                                                                              
+}
 
 // /**
 //  * @brief 巡线模块判断
