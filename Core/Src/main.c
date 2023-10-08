@@ -59,8 +59,10 @@ Class_Steer Claw_Steer;
 Class_Steer Box_Steer;
 
 // uint8_t LP_Detect_Bool[4];
-uint8_t LP_Receive_front;
-uint8_t LP_Receive_back;
+uint8_t LP_Receive_yl;
+uint8_t LP_Receive_yr;
+uint8_t LP_Receive_x;
+uint8_t B_Receive;
 
 SpeedTypeDef v0=
   {
@@ -135,6 +137,8 @@ int main(void)
   MX_TIM9_Init();
   MX_USART6_UART_Init();
   MX_UART7_Init();
+  MX_UART8_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   //底盘初始化
@@ -167,11 +171,9 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     //巡线模块信息接受
-    LinePatrol_Receive(&huart6, &LP_Receive_front);
-    LinePatrol_Receive(&huart7, &LP_Receive_back);
+    // LinePatrol_Receive(&huart6, &LP_Receive_y);
+    // LinePatrol_Receive(&huart7, &LP_Receive_x);
 
-    //根据巡线模块判断行进方向
-    LinePatrol_Decide(&LP_Receive_front, &LP_Receive_back);
 
     //巡线模块判断
     // LinePatrol_Judge(LP_Detect_Bool);
@@ -234,6 +236,14 @@ int main(void)
     // // 控制胶轮
     // RChassis.R_Set_Velocity(-1.0f);
     // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+
+    //从启动区移动到低平面的采矿区
+    LinePatrol_Start(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
+
+    //避障
+    LinePatrol_Barrier(&B_HUART, &B_Receive);
+    
+    //采矿
 
 
   }

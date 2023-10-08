@@ -53,6 +53,11 @@ extern TIM_HandleTypeDef htim4;
 #define CHASSIS_MOTOR_PWM_DRIVER_TIM htim4
 #define CHASSIS_MOTOR_CALCULATE_TIM htim4
 #define RMOTOR_PWM_DRIVER_TIM htim2
+//´®¿ÚÍ¨ÐÅ
+#define LP_YL_HUART huart6
+#define LP_YR_HUART huart3
+#define LP_X_HUART huart7
+#define B_HUART huart8
 
 /* USER CODE END EM */
 

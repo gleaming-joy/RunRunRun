@@ -54,13 +54,21 @@ Steer[5]
 tim5 CH2: PH11/C  
 
 ## 通信
-- 巡线模块（前）
+- 巡线模块（竖左）
 USART6_RX: PG9  
 USART6_TX: PG14 
 
-- 巡线模块（后）
+- 巡线模块 （竖右）
+USART3_RX: PC11  
+USART3_TX: PC10
+
+- 巡线模块（横）
 UART7_RX: PF6  
 UART7_TX: PF7  
+
+- 树莓派
+UART8_RX: PE0  
+UART8_TX: PE1  
 
 ## 直线滑台
 

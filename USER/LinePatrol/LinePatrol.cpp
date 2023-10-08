@@ -55,33 +55,205 @@
  */
 void LinePatrol_Receive(UART_HandleTypeDef *__huart, uint8_t *__LP_Receive)
 {
-  HAL_UART_Receive(__huart, __LP_Receive, sizeof(__LP_Receive), HAL_MAX_DELAY);
+  HAL_UART_Receive(__huart, __LP_Receive, 1, HAL_MAX_DELAY);
 }
 
 /**
- * @brief 巡线模块根据接收到的信息判断前进方向
+ * @brief 调整偏移
  *
- * @param uint8_t *__LP_Receive_front
- * @param uint8_t *__LP_Receive_back
+ * @param uint8_t *__LP_Receive_yl
+ * @param uint8_t *__LP_Receive_yr
+ * @param UART_HandleTypeDef *__huart_yl
+ * @param UART_HandleTypeDef *__huart_yr
+ */
+void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
+{
+  while (*__LP_Receive_yl != *__LP_Receive_yr)
+  {
+    //需要顺时针旋转
+    if (*__LP_Receive_yl > *__LP_Receive_yr)
+    {
+      Chassis.Set_Velocity(v_rotate);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+      LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+    }
+    //需要逆时针旋转
+    else
+    {
+      Chassis.Set_Velocity(v_crotate);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+      LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+    }
+  }
+}  
+  
+
+/**
+ * @brief 从启动区平移到采矿区
+ *
+ * @param uint8_t *__LP_Receive_yl
+ * @param uint8_t *__LP_Receive_yr
+ * @param UART_HandleTypeDef *__huart_yl
+ * @param UART_HandleTypeDef *__huart_yr
  */
 
-void LinePatrol_Decide(uint8_t *__LP_Receive_front, uint8_t *__LP_Receive_back)
+void LinePatrol_Start(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
 {
-  uint8_t derection[4];
-  derection[0] == 0b00111100;
-  derection[1] == 0b00111111;
-  derection[2] == 0b11111100;
-  derection[4] == 0b00000000;
-  //向前运动
-  if (*__LP_Receive_back == derection[0])
+  LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+  LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+
+  while (1)
   {
+    //左右巡线检测结果不一致，调整车的偏转
+    if (*__LP_Receive_yl != *__LP_Receive_yr && *__LP_Receive_yl != (uint8_t)0b00000000)
+    {
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr);
+      //调整后车偏后
+      if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00010000)
+      {
+        while ((*__LP_Receive_yl & (uint8_t)0b00011000) != (uint8_t)0b00011000)
+        {
+          Chassis.Set_Velocity(v_front);
+          Chassis.Calculate_TIM_PeriodElapsedCallback();
+          LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+          LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+        }
+      }
+      //调整后车偏前
+      else if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00001000)
+      {
+        Chassis.Set_Velocity(v_back);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+        LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+      }
+    }
+    else
+    {
+      //左侧巡线识别到黑线，持续向左平移
+      if ((*__LP_Receive_yl & (uint8_t)0b00011000) == (uint8_t)0b00011000)
+      {
+        Chassis.Set_Velocity(v_left);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
+        LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
+      }
+      //左侧巡线识别到空白，停止运动
+      else if (*__LP_Receive_yl == (uint8_t)0b00000000)
+      {
+        Chassis.Set_Velocity(v_stop);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * @brief 从树莓派接收信息
+ *
+ * @param UART_HandleTypeDef *__huart
+ * @param uint8_t *__B_Receive
+ */
+
+void Berry_Receive(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
+{
+  HAL_UART_Receive(__huart, __B_Receive, 1, HAL_MAX_DELAY);
+}
+
+/**
+ * @brief 障碍识别及位置调整
+ *
+ * @param UART_HandleTypeDef *__huart
+ * @param uint8_t *__B_Receive
+ */
+void LinePatrol_Barrier(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
+{
+  //移动到左侧
+  Chassis.Set_Velocity(v_left);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(200);
+
+  //第一次识别
+  Berry_Receive(__huart, __B_Receive);
+  //第一次左侧有障碍物
+  if (*__B_Receive == (uint8_t)0b00000000)
+  {
+    //向右移动避开障碍物前进
+    Chassis.Set_Velocity(v_right);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(400);
     Chassis.Set_Velocity(v_front);
     Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(300);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+
+    //第二次识别
+    Berry_Receive(__huart, __B_Receive);
+    //第二次右侧有障碍物
+    if (*__B_Receive == (uint8_t)0b00000000)
+    {
+      //向左移动避开障碍物前进
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(400);
+      Chassis.Set_Velocity(v_front);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(300);
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
+    //第二次左侧有障碍物
+    else
+    {
+      //直接前进
+      Chassis.Set_Velocity(v_front);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(300);
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
   }
-  //右转
-  else if (*__LP_Receive_front == derection[4] && *__LP_Receive_back == derection[1])
+  //第一次右侧有障碍物
+  else
   {
+    //直接前进
+    Chassis.Set_Velocity(v_front);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(300);
+    Chassis.Set_Velocity(v_stop);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
     
+    //第二次识别
+    Berry_Receive(__huart, __B_Receive);
+    //第二次左侧有障碍物
+    if (*__B_Receive == (uint8_t)0b00000000)
+    {
+      //向右移动避开障碍物前进
+      Chassis.Set_Velocity(v_right);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(400);
+      Chassis.Set_Velocity(v_front);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(300);
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
+    //第二次右侧有障碍物
+    else
+    {
+      //直接前进
+      Chassis.Set_Velocity(v_front);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+      HAL_Delay(300);
+      Chassis.Set_Velocity(v_stop);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
   }
 }
 
