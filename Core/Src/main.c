@@ -257,6 +257,8 @@ int main(void)
     //返回启动区
     LinePatrol_Back_Low(&Barrier_Location);
     
+    //放矿
+    LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
   }
   /* USER CODE END 3 */
 }

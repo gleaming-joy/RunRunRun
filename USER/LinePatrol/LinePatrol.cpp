@@ -539,14 +539,40 @@ void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
 /**
  * @brief 在启动区调整位置并放矿
  *
+ * @param Class_Steer __Box_Steer
  * @param UART_HandleTypeDef *__LP_yl_huart
  * @param uint8_t *__LP_yl_Receive
  * @param UART_HandleTypeDef *__LP_yr_huart
  * @param uint8_t *__LP_yr_Receive 
  */
-void LinePatrol_Ad_Drop(UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive, UART_HandleTypeDef *__LP_yr_huart, uint8_t *__LP_yr_Receive)
+void LinePatrol_Ad_Drop(Class_Steer __Box_Steer, UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive, UART_HandleTypeDef *__LP_yr_huart, uint8_t *__LP_yr_Receive)
 {
-                                                                                                                                                                                                              
+  LinePatrol_Receive(__LP_yl_huart, __LP_yl_Receive);
+  LinePatrol_Receive(__LP_yr_huart, __LP_yr_Receive);
+  LinePatrol_Adjust(__LP_yl_Receive, __LP_yr_Receive, __LP_yl_huart, __LP_yr_huart);
+  //向前移动到燃料框
+  Chassis.Set_Velocity(v_front);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(200);
+  Chassis.Set_Velocity(v_right);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(70);
+  //停下，放燃料矿
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  Box_Steer_Rotate(__Box_Steer, -90.0f);
+  HAL_Delay(100);
+  //向后移动到货框
+  Chassis.Set_Velocity(v_back);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(100);
+  //停下，放晶体矿
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  Box_Steer_Rotate(__Box_Steer, -180.0f);
+  HAL_Delay(100);
+  Box_Steer_Rotate(__Box_Steer, 200.0f);
+  HAL_Delay(100);
 }
 
 // /**
