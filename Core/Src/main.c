@@ -241,24 +241,24 @@ int main(void)
     //从启动区移动到低平面的采矿区
     LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
 
-    //避障并移动到采矿区巡线处
-    LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
+    // //避障并移动到采矿区巡线处
+    // LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
 
-    //采晶体矿
-    Box_Steer_Rotate(Box_Steer, 200.0f);
-    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
-    Box_Steer_Rotate(Box_Steer, 90.0f);
-    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
-    Box_Steer_Rotate(Box_Steer, 0.0f);
+    // //采晶体矿
+    // Box_Steer_Rotate(Box_Steer, 200.0f);
+    // LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
+    // Box_Steer_Rotate(Box_Steer, 90.0f);
+    // LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
+    // Box_Steer_Rotate(Box_Steer, 0.0f);
 
-    //采燃料矿
-    LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
+    // //采燃料矿
+    // LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 
-    //返回启动区
-    LinePatrol_Back_Low(&Barrier_Location);
+    // //返回启动区
+    // LinePatrol_Back_Low(&Barrier_Location);
     
-    //放矿
-    LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
+    // //放矿
+    // LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
   }
   /* USER CODE END 3 */
 }

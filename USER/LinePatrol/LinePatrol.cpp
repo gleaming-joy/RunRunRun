@@ -156,13 +156,46 @@ void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UA
 /**
  * @brief 从树莓派接收信息
  *
- * @param UART_HandleTypeDef *__huart
+ * @param UART_HandleTypeDef *__B_huart
  * @param uint8_t *__B_Receive
  */
 
-void Berry_Receive(UART_HandleTypeDef *__huart, uint8_t *__B_Receive)
+void Berry_Receive(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive)
 {
-  HAL_UART_Receive(__huart, __B_Receive, 1, HAL_MAX_DELAY);
+  HAL_UART_Receive(__B_huart, __B_Receive, 1, HAL_MAX_DELAY);
+}
+
+/**
+ * @brief 向树莓派发送信息使其开启障碍物识别
+ *
+ * @param UART_HandleTypeDef *__B_huart
+ */
+void Berry_Barrier_Open(UART_HandleTypeDef *__B_huart)
+{
+  uint8_t __B_Transmit = 0x01;
+  HAL_UART_Transmit(__B_huart, &__B_Transmit, 1, HAL_MAX_DELAY);
+}
+
+/**
+ * @brief 向树莓派发送信息使其开启扫描橙色
+ *
+ * @param UART_HandleTypeDef *__B_huart
+ */
+void Berry_Orange_Open(UART_HandleTypeDef *__B_huart)
+{
+  uint8_t __B_Transmit = 0x02;
+  HAL_UART_Transmit(__B_huart, &__B_Transmit, 1, HAL_MAX_DELAY);
+}
+
+/**
+ * @brief 向树莓派发送信息使其开启识别前方是否有矿
+ *
+ * @param UART_HandleTypeDef *__B_huart
+ */
+void Berry_Exsit_Open(UART_HandleTypeDef *__B_huart)
+{
+  uint8_t __B_Transmit = 0x03;
+  HAL_UART_Transmit(__B_huart, &__B_Transmit, 1, HAL_MAX_DELAY);
 }
 
 /**
@@ -182,6 +215,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
   HAL_Delay(200);
 
   //第一次识别
+  Berry_Barrier_Open(__B_huart);
   Berry_Receive(__B_huart, __B_Receive);
   //第一次左侧有障碍物
   if (*__B_Receive == (uint8_t)0x00)
@@ -197,6 +231,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
     Chassis.Calculate_TIM_PeriodElapsedCallback();
 
     //第二次识别
+    Berry_Barrier_Open(__B_huart);
     Berry_Receive(__B_huart, __B_Receive);
     //第二次右侧有障碍物
     if (*__B_Receive == (uint8_t)0x00)
@@ -254,6 +289,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
     Chassis.Calculate_TIM_PeriodElapsedCallback();
     
     //第二次识别
+    Berry_Barrier_Open(__B_huart);
     Berry_Receive(__B_huart, __B_Receive);
     //第二次左侧有障碍物
     if (*__B_Receive == (uint8_t)0x00)
@@ -314,6 +350,7 @@ void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UAR
  */
 void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_yl_huart, uint8_t *__LP_yl_Receive)
 {
+  Berry_Orange_Open(__B_huart);
   Berry_Receive(__B_huart, __B_Receive);
   //识别到橙色之前一直前进
   while (*__B_Receive != 0x01)
@@ -337,9 +374,10 @@ void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Stee
   //判断是否抓取成功，若不成功再次进行抓取
   while (1)
   {
+    Berry_Exsit_Open(__B_huart);
     Berry_Receive(__B_huart, __B_Receive);
-    //识别到橙色矿，抓取不成功
-    if (*__B_Receive == 0x01)
+    //识别到有矿，抓取不成功
+    if (*__B_Receive == 0x02)
     {
       Chassis.Set_Velocity(v_left);
       Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -393,6 +431,7 @@ void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer
   //停下，开始识别
   Chassis.Set_Velocity(v_stop);
   Chassis.Calculate_TIM_PeriodElapsedCallback();
+  Berry_Exsit_Open(__B_huart);
   Berry_Receive(__B_huart, __B_Receive);
   //识别到燃料矿进行抓取
   if (*__B_Receive == 0x02)
@@ -401,8 +440,9 @@ void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer
     //判断是否抓取成功
     while (1)
     {
+      Berry_Exsit_Open(__B_huart);
       Berry_Receive(__B_huart, __B_Receive);
-      //识别到燃料矿，抓取不成功
+      //识别到有矿，抓取不成功
       if (*__B_Receive == 0x02)
       {
         Chassis.Set_Velocity(v_left);
@@ -431,6 +471,7 @@ void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer
     //判断是否抓取成功
     while (1)
     {
+      Berry_Exsit_Open(__B_huart);
       Berry_Receive(__B_huart, __B_Receive);
       //识别到燃料矿，抓取不成功
       if (*__B_Receive == 0x02)
