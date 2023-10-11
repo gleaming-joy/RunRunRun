@@ -338,7 +338,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\USER\Chassis;..\USER\LinePatrol;..\USER\Motor;..\USER\PID;..\USER\Steer;..\USER\Arm;..\USER\StepMotor</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\USER\Arm;..\USER\Chassis;..\USER\LinePatrol;..\USER\Motor;..\USER\PID;..\USER\Steer;..\USER\StepMotor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -403,6 +403,11 @@
               <FilePath>../Core/Src/gpio.c</FilePath>
             </File>
             <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/dma.c</FilePath>
+            </File>
+            <File>
               <FileName>tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/tim.c</FilePath>
@@ -423,6 +428,11 @@
               <FilePath>../Core/Src/stm32f4xx_hal_msp.c</FilePath>
             </File>
             <File>
+              <FileName>arm.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\Arm\arm.cpp</FilePath>
+            </File>
+            <File>
               <FileName>chassis.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\USER\Chassis\chassis.cpp</FilePath>
@@ -441,11 +451,6 @@
               <FileName>PID.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\USER\PID\PID.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>arm.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\USER\Arm\arm.cpp</FilePath>
             </File>
             <File>
               <FileName>steer.cpp</FileName>

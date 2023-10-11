@@ -56,15 +56,15 @@ tim5 CH2: PH11/C
 ## 通信
 - 巡线模块（竖左）
 USART6_RX: PG9  
-USART6_TX: PG14 
+USART6_TX: PG14  
 
 - 巡线模块 （竖右）
-USART3_RX: PC11  
-USART3_TX: PC10
+USART3_RX: PD9  
+USART3_TX: PD8
 
 - 巡线模块（横）
-UART7_RX: PF6  
-UART7_TX: PF7  
+UART7_RX: PE7  
+UART7_TX: PE8  
 
 - 树莓派
 UART8_RX: PE0  
@@ -72,10 +72,10 @@ UART8_TX: PE1
 
 ## 直线滑台
 
-- 步进电机（右） TestMotor1
-PUL: tim9 CH1: PA2/U
-ENA: PF10/Q1
-DIR: PI9/Q2
+- 步进电机（右） TestMotor1  
+PUL: tim9 CH1: PA2/U  
+ENA: PF10/Q1  
+DIR: PI9/Q2  
 
 ## 巡线
 

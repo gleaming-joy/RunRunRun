@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -67,29 +68,29 @@ uint8_t B_Receive;
 uint8_t Barrier_Location;
 
 SpeedTypeDef v0=
-  {
-    0, 0.6, 0
-  };
+ {
+   0, 0.6, 0
+ };
 SpeedTypeDef v1=
-  {
-    0, 0, 1
-  };
+ {
+   0, 0, 1
+ };
 SpeedTypeDef v2=
-  {
-    0, 0, -1
-  };
+ {
+   0, 0, -1
+ };
 SpeedTypeDef v3=
-  {
-    0.6, 0, 0
-  };	
+ {
+   0.6, 0, 0
+ };	
 SpeedTypeDef v4=
-  {
-    -0.6, 0, 0
-  };
+ {
+   -0.6, 0, 0
+ };
 SpeedTypeDef v5=
-  {
-    0, -0.6, 0
-  };
+ {
+   0, -0.6, 0
+ };
 
 /* USER CODE END PV */
 
@@ -132,6 +133,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
   MX_TIM5_Init();
   MX_TIM8_Init();
@@ -141,7 +143,10 @@ int main(void)
   MX_UART7_Init();
   MX_UART8_Init();
   MX_USART3_UART_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
+  //定时器中断使能
+  HAL_TIM_Base_Start_IT(&htim10);
 
   //底盘初始化
   Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
@@ -156,7 +161,7 @@ int main(void)
   Claw_Steer.Init(htim8, TIM_CHANNEL_1);
   Box_Steer.Init(htim5, TIM_CHANNEL_2);
 	//步进电机初始化
-	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
+	// TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
@@ -240,6 +245,7 @@ int main(void)
 
     //从启动区移动到低平面的采矿区
     LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
+		HAL_Delay(1000);
 
     // //避障并移动到采矿区巡线处
     // LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
