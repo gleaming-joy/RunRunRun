@@ -62,8 +62,10 @@ public:
 
     void Hall_Encoder_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
     void Calculate_TIM_PeriodElapsedCallback();
-    void R_Calculate_TIM_PeriodElapsedCallback();
+    // void R_Calculate_TIM_PeriodElapsedCallback();
 
+    void Velocity_Control(float x, float y, float omega);
+    void R_Velocity_Control(float vl,float vr);
 protected:
 
     //电机PWM驱动定时器

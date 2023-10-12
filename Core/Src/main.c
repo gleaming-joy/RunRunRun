@@ -67,31 +67,6 @@ uint8_t B_Receive;
 
 uint8_t Barrier_Location;
 
-SpeedTypeDef v0=
- {
-   0, 1, 0
- };
-SpeedTypeDef v1=
- {
-   0, 0, 1
- };
-SpeedTypeDef v2=
- {
-   0, 0, -1
- };
-SpeedTypeDef v3=
- {
-   0.6, 0, 0
- };	
-SpeedTypeDef v4=
- {
-   -0.6, 0, 0
- };
-SpeedTypeDef v5=
- {
-   0, -0.2, 0
- };
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -168,6 +143,11 @@ int main(void)
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
+  //巡线启动
+  LinePatrol_Receive(&LP_YL_HUART);
+  LinePatrol_Receive(&LP_YR_HUART);
+  LinePatrol_Receive(&LP_X_HUART);
+
 
   /* USER CODE END 2 */
 
@@ -190,8 +170,8 @@ int main(void)
     // //根据巡线模块决定前进方向
     // LinePatrol_Decide(LP_Detect_Bool);
 
-    Chassis.Set_Velocity(v0);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    // Chassis.Set_Velocity(v0);
+    // Chassis.Calculate_TIM_PeriodElapsedCallback();
 		// HAL_Delay(1000);
 		// Chassis.Set_Velocity(v1);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -234,11 +214,11 @@ int main(void)
 //		HAL_Delay(4000);
 
     // // 控制胶轮
-    RChassis.R_Set_Velocity(100.0f);
-    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+    // RChassis.R_Set_Velocity(100.0f);
+    // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
 
-    // //从启动区移动到低平面的采矿区
-    // LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
+    //从启动区移动到低平面的采矿区
+    LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr);
 		// HAL_Delay(1000);
 
     // //避障并移动到采矿区巡线处
@@ -261,6 +241,40 @@ int main(void)
     
     // //放矿
     // LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
+
+            TestMotor1.Set_Motor_Running_Status(1,1);
+        Chassis.Set_Velocity(v_front_slow);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        RChassis.R_Set_Velocity(0.3f);
+        RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(5000);
+        Chassis.Set_Velocity(v_stop_main);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        RChassis.R_Set_Velocity(0.0f);
+        RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(9000);
+        
+        TestMotor1.Set_Motor_Running_Status(0,0);
+        Chassis.Set_Velocity(v_front_fast);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        RChassis.R_Set_Velocity(5.0f);
+        RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(2200);
+        
+        TestMotor1.Set_Motor_Running_Status(1,0);
+        Chassis.Set_Velocity(v_stop_main);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        RChassis.R_Set_Velocity(0.0f);
+        RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(14000);
+
+        Chassis.Set_Velocity(v_left_medium);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        while((LP_Receive_yl & (uint8_t)0x38) != (uint8_t)0x38){}
+        HAL_Delay(2200);
+        Chassis.Set_Velocity(v_stop_main);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+        HAL_Delay(10000);
   }
   /* USER CODE END 3 */
 }

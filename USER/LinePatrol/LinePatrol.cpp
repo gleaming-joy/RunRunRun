@@ -65,12 +65,11 @@ extern TIM_HandleTypeDef htim10;
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  //uint8_t Data_to_Send = 0x57;
-  if (htim == &htim10)
+  if (htim == &UART_TRANSMIT_TIM)
   {
-    HAL_UART_Transmit_IT(&huart3, &Data_to_Send, 1);
-    HAL_UART_Transmit_IT(&huart6, &Data_to_Send, 1);
-    HAL_UART_Transmit_IT(&huart7, &Data_to_Send, 1);
+    HAL_UART_Transmit_IT(&LP_YL_HUART, &Data_to_Send, 1);
+    HAL_UART_Transmit_IT(&LP_YR_HUART, &Data_to_Send, 1);
+    HAL_UART_Transmit_IT(&LP_X_HUART, &Data_to_Send, 1);
   }
 }
 
@@ -82,25 +81,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  */
 void LinePatrol_Receive(UART_HandleTypeDef *__huart)
 {
-	if (__huart == &huart6)
+	if (__huart == &LP_YL_HUART)
 	{
 		HAL_UART_Receive_IT(__huart, &LP_Receive_yl, 1);
 	}
-	else if (__huart == &huart3)
+	else if (__huart == &LP_YR_HUART)
 	{
 		HAL_UART_Receive_IT(__huart, &LP_Receive_yr, 1);
 	}
-	else if (__huart == &huart7)
+	else if (__huart == &LP_X_HUART)
 	{
 		HAL_UART_Receive_IT(__huart, &LP_Receive_x, 1);
 	}
-  
-	//HAL_UART_Receive(__huart, __LP_Receive, 1, HAL_MAX_DELAY);
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if (huart == &huart6 || huart == &huart3 || huart == &huart7)
+	if (huart == &LP_YL_HUART || huart == &LP_YR_HUART || huart == &LP_X_HUART)
 	{
 		LinePatrol_Receive(huart);
 	}
@@ -113,28 +110,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  * @param UART_HandleTypeDef *__huart_yl
  * @param UART_HandleTypeDef *__huart_yr
  */
-// void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
-// {
-//   while ((*__LP_Receive_yl & (uint8_t)0xDB) != (*__LP_Receive_yr & (uint8_t)0xDB)) //1101,1011
-//   {
-//     //需要顺时针旋转
-//     if (*__LP_Receive_yl > *__LP_Receive_yr)
-//     {
-//       Chassis.Set_Velocity(v_rotate);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
-//       LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
-//     }
-//     //需要逆时针旋转
-//     else
-//     {
-//       Chassis.Set_Velocity(v_crotate);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
-//       LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
-//     }
-//   }
-// }  
+void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
+{
+  while ((*__LP_Receive_yl & (uint8_t)0x55) != (*__LP_Receive_yr & (uint8_t)0x55)) //0101,0101
+  {
+    //需要顺时针旋转
+    if ((*__LP_Receive_yl & (uint8_t)0x55) > (*__LP_Receive_yr & (uint8_t)0x55))
+    {
+      Chassis.Set_Velocity(v_rotate);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
+    //需要逆时针旋转
+    else
+    {
+      Chassis.Set_Velocity(v_crotate);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+    }
+  }
+}  
   
 
 /**
@@ -146,46 +139,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  * @param UART_HandleTypeDef *__huart_yr
  */
 
-void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yl, UART_HandleTypeDef *__huart_yr)
+void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
 {
-  LinePatrol_Receive(__huart_yl);
-  LinePatrol_Receive(__huart_yr);
-
   while (1)
   {
     //左右巡线检测结果不一致，调整车的偏转
-//    if (((*__LP_Receive_yl & (uint8_t)0xDB) != (*__LP_Receive_yr & (uint8_t)0xDB)) && *__LP_Receive_yl != (uint8_t)0x00)
-//    {
-//      Chassis.Set_Velocity(v_stop);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-//      LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr, __huart_yl, __huart_yr);
-//      //调整后车偏后
-//      if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
-//      {
-//        while ((*__LP_Receive_yl & (uint8_t)0x18) != (uint8_t)0x18)
-//        {
-//          Chassis.Set_Velocity(v_front);
-//          Chassis.Calculate_TIM_PeriodElapsedCallback();
-//          LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
-//          LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
-//        }
-//      }
-//      //调整后车偏前
-//      else if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
-//      {
-//        Chassis.Set_Velocity(v_back);
-//        Chassis.Calculate_TIM_PeriodElapsedCallback();
-//        LinePatrol_Receive(__huart_yl, __LP_Receive_yl);
-//        LinePatrol_Receive(__huart_yr, __LP_Receive_yr);
-//      }
-//    }
-//    else
-//    {
+   if (((*__LP_Receive_yl & (uint8_t)0xDB) != (*__LP_Receive_yr & (uint8_t)0xDB)) && *__LP_Receive_yl != (uint8_t)0x00)
+   {
+     Chassis.Set_Velocity(v_stop);
+     Chassis.Calculate_TIM_PeriodElapsedCallback();
+     LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr);
+     //调整后车偏后
+     if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
+     {
+       while ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
+       {
+         Chassis.Set_Velocity(v_front);
+         Chassis.Calculate_TIM_PeriodElapsedCallback();
+       }
+       Chassis.Set_Velocity(v_stop);
+       Chassis.Calculate_TIM_PeriodElapsedCallback();
+     }
+     //调整后车偏前
+     else if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
+     {
+       while ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
+       {
+         Chassis.Set_Velocity(v_back);
+         Chassis.Calculate_TIM_PeriodElapsedCallback();
+       }
+       Chassis.Set_Velocity(v_stop);
+       Chassis.Calculate_TIM_PeriodElapsedCallback();
+     }
+   }
+   else
+   {
       //左侧巡线识别到黑线，持续向左平移
       if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x18)
       {
-        //Chassis.Set_Velocity(v_left);
-        //Chassis.Calculate_TIM_PeriodElapsedCallback();
+        Chassis.Set_Velocity(v_left);
+        Chassis.Calculate_TIM_PeriodElapsedCallback();
       }
       //左侧巡线识别到空白，停止运动
       else if (*__LP_Receive_yl == (uint8_t)0x00)
@@ -194,7 +187,7 @@ void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr, UA
         Chassis.Calculate_TIM_PeriodElapsedCallback();
         break;
       }
-//    }
+    }
   }
 }
 
@@ -661,79 +654,6 @@ void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
 //   HAL_Delay(100);
 // }
 
-// /**
-//  * @brief 巡线模块判断
-//  *
-//  * @param uint8_t __LP_Detect_Bool[]
-//  */
-// void LinePatrol_Judge(uint8_t __LP_Detect_Bool[])
-// {
-//   __LP_Detect_Bool[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
-//   __LP_Detect_Bool[1] = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1);
-//   __LP_Detect_Bool[2] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4);
-//   __LP_Detect_Bool[3] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0);
-// }
-
-// /**
-//  * @brief 巡线模块决定前进方向
-//  *
-//  * @param uint8_t __LP_Detect_Bool[]
-//  */
-// void LinePatrol_Decide(uint8_t __LP_Detect_Bool[])
-// {
-//     //向前运动
-//     if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
-//     {
-//         Chassis.Set_Velocity(v_front);
-//         Chassis.Calculate_TIM_PeriodElapsedCallback();
-//     }
-//     //左转弯
-//     else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 1)
-//     {
-//       Chassis.Set_Velocity(v_crotate);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(4000);
-//       Chassis.Set_Velocity(v_right);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(1500);
-//       // while (1)
-//       // {
-//       //   LinePatrol_Judge(__LP_Detect_Bool);
-//       //   if(__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
-//       //     break;
-//       // }
-//       // HAL_Delay(30);
-      
-//     }
-//     //右转弯
-//     else if (__LP_Detect_Bool[0] == 1 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
-//     {
-//       Chassis.Set_Velocity(v_rotate);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(4000);
-//       Chassis.Set_Velocity(v_left);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-// 			HAL_Delay(1500);
-//     }
-    // //车头向右转
-    // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 0 && __LP_Detect_Bool[2] == 1 && __LP_Detect_Bool[3] == 0)
-    // {
-    //   Chassis.Set_Velocity(v_crotate);
-    //   Chassis.Calculate_TIM_PeriodElapsedCallback();
-    // }
-    // //车头向左转
-    // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 1 && __LP_Detect_Bool[2] == 0 && __LP_Detect_Bool[3] == 0)
-    // {
-    //   Chassis.Set_Velocity(v_rotate);
-    //   Chassis.Calculate_TIM_PeriodElapsedCallback();
-    // }
-    // //停下
-    // else if (__LP_Detect_Bool[0] == 0 && __LP_Detect_Bool[1] == 0 && __LP_Detect_Bool[2] == 0 && __LP_Detect_Bool[3] == 0)
-    // {
-    //   Chassis.Set_Velocity(v_stop);
-    //   Chassis.Calculate_TIM_PeriodElapsedCallback();
-    // }
-//}
 
 /**
  * @brief 简易采集右侧晶体矿
@@ -750,7 +670,7 @@ void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_
 {
 	uint16_t counter=0;
 	LinePatrol_Receive(__huart_yr);
-	Arm_Steer_Output_Get_High_Locate(__Arm_Steer, __Claw_Steer);
+	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);
 	
 	while(counter<5)
 	{

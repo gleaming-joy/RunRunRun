@@ -8,6 +8,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+SpeedTypeDef v_now=
+{
+    0, 0, 0
+};
+
 /* Private function declarations ---------------------------------------------*/
 
 /**
@@ -178,18 +183,48 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
 
 }
 
-void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
-{
-    Math_Constrain(&RVelocity, -R_MAX, R_MAX);
-    RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
-    RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+// void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
+// {
+//     Math_Constrain(&RVelocity, -R_MAX, R_MAX);
+//     RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+//     RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
 
-    //输出
-    for (int i = 0; i < 2; i++)
+//     //输出
+//     for (int i = 0; i < 2; i++)
+//     {
+//         RMotor[i].R_Output();
+//     }
+// }
+
+/**
+ * @brief 将传入的参数设定为底盘速度
+ * 
+ * @param float x
+ * @param float y
+ * @param float omega
+*/
+void Class_Chassis::Velocity_Control(float x, float y, float omega)
+{
+    v_now = 
     {
-        RMotor[i].R_Output();
-    }
+        x, y, omega
+    };
+    Chassis.Set_Velocity(v_now);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
 }
 
-
+/**
+ * @brief 将传入的参数设定为胶轮速度
+ * 
+ * @param
+*/
+void Class_Chassis::R_Velocity_Control(float vl,float vr)
+{
+    Math_Constrain(&vl, -R_MAX, R_MAX);
+    Math_Constrain(&vr, -R_MAX, R_MAX);
+    RMotor[0].R_Set_Out(vl / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+    RMotor[1].R_Set_Out(vr / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+    RMotor[0].R_Output();
+    RMotor[1].R_Output();
+}   
 /* Function prototypes -------------------------------------------------------*/

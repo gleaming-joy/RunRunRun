@@ -53,6 +53,9 @@ extern TIM_HandleTypeDef htim4;
 #define CHASSIS_MOTOR_PWM_DRIVER_TIM htim4
 #define CHASSIS_MOTOR_CALCULATE_TIM htim4
 #define RMOTOR_PWM_DRIVER_TIM htim2
+
+//串口发送定时器
+#define UART_TRANSMIT_TIM htim10
 //串口通信
 #define LP_YL_HUART huart6
 #define LP_YR_HUART huart3
