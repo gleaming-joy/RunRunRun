@@ -41,6 +41,8 @@ public:
 
     void Output();
 
+		void Stop();
+
 protected:
 
     //舵机驱动定时器编号

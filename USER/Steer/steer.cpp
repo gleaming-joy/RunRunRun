@@ -80,4 +80,9 @@ void Class_Steer::Output()
     __HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, Out);
 }
 
+void Class_Steer::Stop()
+{
+		__HAL_TIM_SetCompare(&Driver_PWM_TIM, Driver_PWM_TIM_Channel_x, 0);
+}
+
 /* Function prototypes -------------------------------------------------------*/

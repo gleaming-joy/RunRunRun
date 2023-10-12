@@ -69,7 +69,7 @@ uint8_t Barrier_Location;
 
 SpeedTypeDef v0=
  {
-   0, 0.6, 0
+   0, 1, 0
  };
 SpeedTypeDef v1=
  {
@@ -89,7 +89,7 @@ SpeedTypeDef v4=
  };
 SpeedTypeDef v5=
  {
-   0, -0.6, 0
+   0, -0.2, 0
  };
 
 /* USER CODE END PV */
@@ -161,7 +161,10 @@ int main(void)
   Claw_Steer.Init(htim8, TIM_CHANNEL_1);
   Box_Steer.Init(htim5, TIM_CHANNEL_2);
 	//步进电机初始化
-	// TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
+	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
+	TestMotor1.Set_Motor_Running_Speed(6400, 6400);
+  HAL_TIM_OC_DelayElapsedCallback(&htim9);
+	TestMotor1.Set_Motor_Running_Status(0,0);
   //使能计算时钟
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
@@ -187,8 +190,8 @@ int main(void)
     // //根据巡线模块决定前进方向
     // LinePatrol_Decide(LP_Detect_Bool);
 
-    // Chassis.Set_Velocity(v0);
-    // Chassis.Calculate_TIM_PeriodElapsedCallback();
+    Chassis.Set_Velocity(v0);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
 		// HAL_Delay(1000);
 		// Chassis.Set_Velocity(v1);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
@@ -211,44 +214,37 @@ int main(void)
 
     // Box_Steer_Rotate(Box_Steer, 200.0f);
     // HAL_Delay(3000);
-    // Arm_Steer_Output_Get_Locate(Arm_Steer);
-		// HAL_Delay(3000);
-    // Claw_Steer_Close(Claw_Steer);
-    // HAL_Delay(2000);
-    // Arm_Steer_Output_Store_Locate(Arm_Steer);
-    // HAL_Delay(3000);
-    // Claw_Steer_Open(Claw_Steer);
-    // HAL_Delay(2000);
-		// Arm_Steer_Output_Get_Locate(Arm_Steer);
-		// HAL_Delay(2000);
-    
+    // Arm_Catch(Arm_Steer,Claw_Steer);
+		// Arm_Claw_Steer_Control(-30.0f, -90.0f, 10.0f, 0.0f, 1, Arm_Steer, Claw_Steer);
     // Box_Steer_Rotate(Box_Steer, 90.0f);
     // HAL_Delay(2000);
     // Box_Steer_Rotate(Box_Steer, 0.0f);
     // HAL_Delay(2000);
     // Box_Steer_Rotate(Box_Steer, -90.0f);
     // HAL_Delay(2000);
-		// Box_Steer_Rotate(Box_Steer, -180.0f);
+		// Box_Steer_Rotate(Box_Steer, -180.0f);0
 		// HAL_Delay(2000);
 		
-		// //控制步进电机 
-		// TestMotor1.Set_Motor_Running_Status(6400, 6400, 1);
-    // HAL_TIM_OC_DelayElapsedCallback(&htim9);
-		// HAL_Delay(1000);
-    // TestMotor1.Set_Motor_Running_Status(6400, 6400, 0);
-		// HAL_Delay(1000);
-		// HAL_Delay(1000);
+		// //控制步进电机 1down 0up
+//		TestMotor1.Set_Motor_Running_Status(1,1);
+//		HAL_Delay(4000);
+//		TestMotor1.Set_Motor_Running_Status(1,0);
+//		HAL_Delay(4000);
+//		TestMotor1.Set_Motor_Running_Status(0,0);
+//		HAL_Delay(4000);
 
     // // 控制胶轮
-    // RChassis.R_Set_Velocity(-1.0f);
-    // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+    RChassis.R_Set_Velocity(100.0f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
 
-    //从启动区移动到低平面的采矿区
-    LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
-		HAL_Delay(1000);
+    // //从启动区移动到低平面的采矿区
+    // LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr, &LP_YL_HUART, &LP_YR_HUART);
+		// HAL_Delay(1000);
 
     // //避障并移动到采矿区巡线处
     // LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
+		
+		// LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yr, &LP_YR_HUART);
 
     // //采晶体矿
     // Box_Steer_Rotate(Box_Steer, 200.0f);

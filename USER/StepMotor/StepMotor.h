@@ -20,8 +20,9 @@ private:
     uint16_t DirectionGPIO_Pin;
     
 public:
-    void Set_Motor_Running_Status(uint32_t step_per_second, uint32_t max_running_steps, uint8_t direction);
-    void Set_Timer_Output();
+    void Set_Motor_Running_Speed(uint32_t step_per_second, uint32_t max_running_steps);
+		void Set_Motor_Running_Status(uint16_t enable, uint16_t direction);
+    void Set_Motor_Timer_Output();
     void init(TIM_HandleTypeDef *htim,
                     uint32_t TIM_Channel, 
                     uint32_t TIM_Rate, 

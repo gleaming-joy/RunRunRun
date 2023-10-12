@@ -23,12 +23,12 @@ extern TIM_HandleTypeDef htim10;
 
   SpeedTypeDef v_front=
   {
-    0, 0.6, 0
+    0, 0.4, 0
   };
   
   SpeedTypeDef v_back=
   {
-    0, -0.6, 0
+    0, -0.4, 0
   };
 
   SpeedTypeDef v_right=
@@ -734,5 +734,41 @@ void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
     //   Chassis.Calculate_TIM_PeriodElapsedCallback();
     // }
 //}
+
+/**
+ * @brief 简易采集右侧晶体矿
+ *
+ * @param __Arm_Steer 机械臂舵机
+ * @param __Claw_Steer 机械爪舵机
+ * @param UART_HandleTypeDef *__B_huart
+ * @param uint8_t *__B_Receive
+ * @param UART_HandleTypeDef *__LP_yl_huart
+ * @param uint8_t *__LP_yl_Receive
+ */
+ 
+void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yr)
+{
+	uint16_t counter=0;
+	LinePatrol_Receive(__huart_yr);
+	Arm_Steer_Output_Get_High_Locate(__Arm_Steer, __Claw_Steer);
+	
+	while(counter<5)
+	{
+		Chassis.Set_Velocity(v_back);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+		if ((*__LP_Receive_yr & (uint8_t)0x7F) == (uint8_t)0x38)
+		{
+			Chassis.Set_Velocity(v_stop);
+			Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Arm_Catch(__Arm_Steer, __Claw_Steer);
+			counter++;
+			Chassis.Set_Velocity(v_back);
+			Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(300);
+		}
+	}
+	Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+}
 
 /* Function prototypes -------------------------------------------------------*/
