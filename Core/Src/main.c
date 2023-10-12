@@ -120,30 +120,30 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-  //¶¨Ê±Æ÷ÖÐ¶ÏÊ¹ÄÜ
+  //ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ð¶ï¿½Ê¹ï¿½ï¿½
   HAL_TIM_Base_Start_IT(&htim10);
 
-  //µ×ÅÌ³õÊ¼»¯
+  //ï¿½ï¿½ï¿½Ì³ï¿½Ê¼ï¿½ï¿½
   Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   Chassis.Set_Control_Method(Control_Method_OPENLOOP);
-  //½ºÂÖ³õÊ¼»¯
+  //ï¿½ï¿½ï¿½Ö³ï¿½Ê¼ï¿½ï¿½
   RChassis.R_Init(RMOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
-  //¶æ»ú³õÊ¼»¯
+  //ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
   Arm_Steer[0].Init(htim5, TIM_CHANNEL_1);
   Arm_Steer[1].Init(htim8, TIM_CHANNEL_4);
   Arm_Steer[2].Init(htim8, TIM_CHANNEL_3);
   Arm_Steer[3].Init(htim8, TIM_CHANNEL_2);
   Claw_Steer.Init(htim8, TIM_CHANNEL_1);
   Box_Steer.Init(htim5, TIM_CHANNEL_2);
-	//²½½øµç»ú³õÊ¼»¯
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
 	TestMotor1.Set_Motor_Running_Speed(6400, 6400);
   HAL_TIM_OC_DelayElapsedCallback(&htim9);
 	TestMotor1.Set_Motor_Running_Status(0,0);
-  //Ê¹ÄÜ¼ÆËãÊ±ÖÓ
+  //Ê¹ï¿½Ü¼ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
   HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
 
-  //Ñ²ÏßÆô¶¯
+  //Ñ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   LinePatrol_Receive(&LP_YL_HUART);
   LinePatrol_Receive(&LP_YR_HUART);
   LinePatrol_Receive(&LP_X_HUART);
@@ -159,15 +159,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    //Ñ²ÏßÄ£¿éÐÅÏ¢½ÓÊÜ
+    //Ñ²ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
     // LinePatrol_Receive(&huart6, &LP_Receive_y);
     // LinePatrol_Receive(&huart7, &LP_Receive_x);
 
 
-    //Ñ²ÏßÄ£¿éÅÐ¶Ï
+    //Ñ²ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ð¶ï¿½
     // LinePatrol_Judge(LP_Detect_Bool);
 
-    // //¸ù¾ÝÑ²ÏßÄ£¿é¾ö¶¨Ç°½ø·½Ïò
+    // //ï¿½ï¿½ï¿½ï¿½Ñ²ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     // LinePatrol_Decide(LP_Detect_Bool);
 
     // Chassis.Set_Velocity(v0);
@@ -189,7 +189,7 @@ int main(void)
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
 		// HAL_Delay(3000);
 
-    // // ¿ØÖÆ¶æ»ú
+    // // ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½
 
 
     // Box_Steer_Rotate(Box_Steer, 200.0f);
@@ -205,7 +205,7 @@ int main(void)
 		// Box_Steer_Rotate(Box_Steer, -180.0f);0
 		// HAL_Delay(2000);
 		
-		// //¿ØÖÆ²½½øµç»ú 1down 0up
+		// //ï¿½ï¿½ï¿½Æ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1down 0up
 //		TestMotor1.Set_Motor_Running_Status(1,1);
 //		HAL_Delay(4000);
 //		TestMotor1.Set_Motor_Running_Status(1,0);
@@ -213,33 +213,33 @@ int main(void)
 //		TestMotor1.Set_Motor_Running_Status(0,0);
 //		HAL_Delay(4000);
 
-    // // ¿ØÖÆ½ºÂÖ
+    // // ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½
     // RChassis.R_Set_Velocity(100.0f);
     // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
 
-    //´ÓÆô¶¯ÇøÒÆ¶¯µ½µÍÆ½ÃæµÄ²É¿óÇø
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Ä²É¿ï¿½ï¿½ï¿½
     LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr);
 		// HAL_Delay(1000);
 
-    // //±ÜÕÏ²¢ÒÆ¶¯µ½²É¿óÇøÑ²Ïß´¦
+    // //ï¿½ï¿½ï¿½Ï²ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½É¿ï¿½ï¿½ï¿½Ñ²ï¿½ß´ï¿½
     // LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
 		
 		// LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yr, &LP_YR_HUART);
 
-    // //²É¾§Ìå¿ó
+    // //ï¿½É¾ï¿½ï¿½ï¿½ï¿½
     // Box_Steer_Rotate(Box_Steer, 200.0f);
     // LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
     // Box_Steer_Rotate(Box_Steer, 90.0f);
     // LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
     // Box_Steer_Rotate(Box_Steer, 0.0f);
 
-    // //²ÉÈ¼ÁÏ¿ó
+    // //ï¿½ï¿½È¼ï¿½Ï¿ï¿½
     // LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 
-    // //·µ»ØÆô¶¯Çø
+    // //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     // LinePatrol_Back_Low(&Barrier_Location);
     
-    // //·Å¿ó
+    // //ï¿½Å¿ï¿½
     // LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 
             TestMotor1.Set_Motor_Running_Status(1,1);
