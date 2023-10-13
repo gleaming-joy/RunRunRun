@@ -183,18 +183,18 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
 
 }
 
-// void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
-// {
-//     Math_Constrain(&RVelocity, -R_MAX, R_MAX);
-//     RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
-//     RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+ void Class_Chassis::R_Calculate_TIM_PeriodElapsedCallback()
+ {
+     Math_Constrain(&RVelocity, -R_MAX, R_MAX);
+     RMotor[0].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+     RMotor[1].R_Set_Out(RVelocity / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
 
-//     //输出
-//     for (int i = 0; i < 2; i++)
-//     {
-//         RMotor[i].R_Output();
-//     }
-// }
+     //输出
+     for (int i = 0; i < 2; i++)
+     {
+         RMotor[i].R_Output();
+     }
+ }
 
 /**
  * @brief 将传入的参数设定为底盘速度
@@ -203,12 +203,15 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
  * @param float y
  * @param float omega
 */
-void Class_Chassis::Velocity_Control(float x, float y, float omega)
+void Class_Chassis::Velocity_Control(float __x, float __y, float __omega)
 {
-    v_now = 
-    {
-        x, y, omega
-    };
+//    v_now = 
+//    {
+//        x, y, omega
+//    };
+		v_now.X = __x;
+		v_now.Y = __y;
+		v_now.Omega = __omega;
     Chassis.Set_Velocity(v_now);
     Chassis.Calculate_TIM_PeriodElapsedCallback();
 }

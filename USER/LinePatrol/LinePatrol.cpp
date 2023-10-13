@@ -55,6 +55,27 @@ extern TIM_HandleTypeDef htim10;
   {
     0, 0, 0
   };
+	
+	SpeedTypeDef v_rotate_left=
+  {
+    0.6, 0, -0.3
+  };
+
+  SpeedTypeDef v_crotate_left=
+  {
+    0.6, 0, 0.3
+  };
+	
+	SpeedTypeDef v_front_left=
+	{
+		0.6,0.2,0
+	};
+	
+	SpeedTypeDef v_back_left=
+	{
+		
+		0.6,-0.2,0
+	};
 
 /* Private function declarations ---------------------------------------------*/
 
@@ -139,56 +160,80 @@ void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
  * @param UART_HandleTypeDef *__huart_yr
  */
 
-void LinePatrol_Start_Low(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
+void LinePatrol_Start_Low(uint8_t *__LP_Receive_x, uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
 {
-  while (1)
+  // //顺时针旋转90度
+  // Chassis.Set_Velocity(v_rotate);
+  // Chassis.Calculate_TIM_PeriodElapsedCallback();
+  // HAL_Delay(500);
+  // while (1)
+  // {
+  //   if ((*__LP_Receive_x & (uint8_t)0x18) == 0x18)
+  //   {
+  //     break;
+  //   }
+  // }
+	// HAL_Delay(500);
+	
+  //前进
+  while (*__LP_Receive_yl != (uint8_t)0x00)
   {
-    //左右巡线检测结果不一致，调整车的偏转
-   if (((*__LP_Receive_yl & (uint8_t)0xDB) != (*__LP_Receive_yr & (uint8_t)0xDB)) && *__LP_Receive_yl != (uint8_t)0x00)
-   {
-     Chassis.Set_Velocity(v_stop);
-     Chassis.Calculate_TIM_PeriodElapsedCallback();
-     LinePatrol_Adjust(__LP_Receive_yl, __LP_Receive_yr);
-     //调整后车偏后
-     if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
-     {
-       while ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x10)
-       {
-         Chassis.Set_Velocity(v_front);
-         Chassis.Calculate_TIM_PeriodElapsedCallback();
-       }
-       Chassis.Set_Velocity(v_stop);
-       Chassis.Calculate_TIM_PeriodElapsedCallback();
-     }
-     //调整后车偏前
-     else if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
-     {
-       while ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x08)
-       {
-         Chassis.Set_Velocity(v_back);
-         Chassis.Calculate_TIM_PeriodElapsedCallback();
-       }
-       Chassis.Set_Velocity(v_stop);
-       Chassis.Calculate_TIM_PeriodElapsedCallback();
-     }
-   }
-   else
-   {
-      //左侧巡线识别到黑线，持续向左平移
-      if ((*__LP_Receive_yl & (uint8_t)0x18) == (uint8_t)0x18)
-      {
-        Chassis.Set_Velocity(v_left);
-        Chassis.Calculate_TIM_PeriodElapsedCallback();
-      }
-      //左侧巡线识别到空白，停止运动
-      else if (*__LP_Receive_yl == (uint8_t)0x00)
-      {
-        Chassis.Set_Velocity(v_stop);
-        Chassis.Calculate_TIM_PeriodElapsedCallback();
-        break;
-      }
+    if (*__LP_Receive_yl < (uint8_t)0x70) //0111,0000
+    {
+      Chassis.Set_Velocity(v_front_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
+    }
+    else if (*__LP_Receive_yl > (uint8_t)0x78)
+    {
+      Chassis.Set_Velocity(v_back_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
+    }
+		else
+    {
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
+    }
+		if (*__LP_Receive_yl > *__LP_Receive_yr)
+		{
+			Chassis.Set_Velocity(v_crotate_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
+		}
+		else if (*__LP_Receive_yl < *__LP_Receive_yr)
+		{
+			Chassis.Set_Velocity(v_rotate_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
+		}
+    else
+    {
+      Chassis.Set_Velocity(v_left);
+      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			HAL_Delay(100);
     }
   }
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(2000);
+	
+  //顺时针旋转90度
+  // Chassis.Set_Velocity(v_rotate);
+  // Chassis.Calculate_TIM_PeriodElapsedCallback();
+  // HAL_Delay(500);
+  // while (1)
+  // {
+  //   if (*__LP_Receive_yr  == 0x01)
+  //   {
+  //     break;
+  //   }
+  // }
+	//HAL_Delay(500);
+  Chassis.Set_Velocity(v_stop);
+  Chassis.Calculate_TIM_PeriodElapsedCallback();
+  HAL_Delay(2000);
 }
 
 /**
@@ -672,17 +717,20 @@ void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_
 	LinePatrol_Receive(__huart_yr);
 	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);
 	
-	while(counter<5)
+	while(1)
 	{
-		Chassis.Set_Velocity(v_back);
+		Chassis.Set_Velocity(v_front);
     Chassis.Calculate_TIM_PeriodElapsedCallback();
 		if ((*__LP_Receive_yr & (uint8_t)0x7F) == (uint8_t)0x38)
 		{
 			Chassis.Set_Velocity(v_stop);
 			Chassis.Calculate_TIM_PeriodElapsedCallback();
 			Arm_Catch(__Arm_Steer, __Claw_Steer);
+			HAL_Delay(1000);
+			Arm_Catch_Back(__Arm_Steer, __Claw_Steer);
 			counter++;
-			Chassis.Set_Velocity(v_back);
+			if(counter==5) break;
+			Chassis.Set_Velocity(v_front);
 			Chassis.Calculate_TIM_PeriodElapsedCallback();
 			HAL_Delay(300);
 		}

@@ -8,7 +8,7 @@ runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f427xx.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Include/core_cm4.h
-runrunrun\linepatrol.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stdint.h
+runrunrun\linepatrol.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stdint.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Include/cmsis_version.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ runrunrun\linepatrol.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 runrunrun\linepatrol.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-runrunrun\linepatrol.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stddef.h
+runrunrun\linepatrol.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stddef.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -35,6 +35,6 @@ runrunrun\linepatrol.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 runrunrun\linepatrol.o: ..\USER\Chassis\chassis.hpp
 runrunrun\linepatrol.o: ..\USER\Motor\motor.hpp
 runrunrun\linepatrol.o: ..\USER\PID\PID.hpp
-runrunrun\linepatrol.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h
+runrunrun\linepatrol.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\limits.h
 runrunrun\linepatrol.o: ..\USER\Arm\arm.hpp
 runrunrun\linepatrol.o: ..\USER\Steer\steer.hpp

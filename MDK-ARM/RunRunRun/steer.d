@@ -8,7 +8,7 @@ runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 runrunrun\steer.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 runrunrun\steer.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f427xx.h
 runrunrun\steer.o: ../Drivers/CMSIS/Include/core_cm4.h
-runrunrun\steer.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stdint.h
+runrunrun\steer.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stdint.h
 runrunrun\steer.o: ../Drivers/CMSIS/Include/cmsis_version.h
 runrunrun\steer.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 runrunrun\steer.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ runrunrun\steer.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 runrunrun\steer.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-runrunrun\steer.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stddef.h
+runrunrun\steer.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stddef.h
 runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 runrunrun\steer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
