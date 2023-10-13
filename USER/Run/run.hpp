@@ -1,11 +1,13 @@
-#ifndef LINEPATROL_HPP
-#define LINEPATROL_HPP
+#ifndef RUN_HPP
+#define RUN_HPP
 
 /* Includes ------------------------------------------------------------------*/
 
 #include "main.h"
 #include "chassis.hpp"
 #include "arm.hpp"
+#include "StepMotor.h"
+#include "LinePatrol.hpp"
 
 /* Exported macros -----------------------------------------------------------*/
 
@@ -15,11 +17,13 @@
 
 /* Exported function declarations --------------------------------------------*/
 
-void LinePatrol_Receive(UART_HandleTypeDef *__huart);
-void Berry_Receive();
-void Berry_Barrier_Open();
-void Berry_Orange_Open();
-void Berry_Exsit_Open();
-void Berry_Close();
+//局部动作
+void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
 
+//整体运动
+void Start_to_High(Class_Steer __Arm_Steer[] ,Class_Steer __Claw_Steer);
+void Start_to_Barrier();
+void Cross_Barrier();
+void Back_Cross_Barrier();
+void Barrier_to_Start();
 #endif

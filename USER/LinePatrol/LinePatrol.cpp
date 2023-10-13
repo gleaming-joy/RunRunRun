@@ -8,11 +8,16 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-uint8_t Data_to_Send = 0x57;
+uint8_t Send_to_LinePatrol = 0x57;
 extern uint8_t LP_Receive_yl;
 extern uint8_t LP_Receive_yr;
 extern uint8_t LP_Receive_x;;
-//extern uint8_t Received_Data;
+
+uint8_t Send_Barrier = 0x01;
+uint8_t Send_Orange = 0x02;
+uint8_t Send_Exsit = 0x03;
+uint8_t Send_Close == 0x00;
+extern uint8_t B_Receive;
 
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
@@ -80,7 +85,7 @@ extern TIM_HandleTypeDef htim10;
 /* Private function declarations ---------------------------------------------*/
 
 /**
- * @brief 使用定时器不断向巡线发送信息
+ * @brief 定时器中断回调函数
  *
  * @param TIM_HandleTypeDef *htim
  */
@@ -88,9 +93,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim == &UART_TRANSMIT_TIM)
   {
-    HAL_UART_Transmit_IT(&LP_YL_HUART, &Data_to_Send, 1);
-    HAL_UART_Transmit_IT(&LP_YR_HUART, &Data_to_Send, 1);
-    HAL_UART_Transmit_IT(&LP_X_HUART, &Data_to_Send, 1);
+    HAL_UART_Transmit_IT(&LP_YL_HUART, &Send_to_LinePatrol, 1);
+    HAL_UART_Transmit_IT(&LP_YR_HUART, &Send_to_LinePatrol, 1);
+    HAL_UART_Transmit_IT(&LP_X_HUART, &Send_to_LinePatrol, 1);
   }
 }
 
@@ -116,6 +121,11 @@ void LinePatrol_Receive(UART_HandleTypeDef *__huart)
 	}
 }
 
+/**
+ * @brief 串口接收中断回调函数
+ *
+ * @param UART_HandleTypeDef *__huart
+ */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart == &LP_YL_HUART || huart == &LP_YR_HUART || huart == &LP_X_HUART)
@@ -123,128 +133,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		LinePatrol_Receive(huart);
 	}
 }
-/**
- * @brief 调整偏移
- *
- * @param uint8_t *__LP_Receive_yl
- * @param uint8_t *__LP_Receive_yr
- * @param UART_HandleTypeDef *__huart_yl
- * @param UART_HandleTypeDef *__huart_yr
- */
-void LinePatrol_Adjust(uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
-{
-  while ((*__LP_Receive_yl & (uint8_t)0x55) != (*__LP_Receive_yr & (uint8_t)0x55)) //0101,0101
-  {
-    //需要顺时针旋转
-    if ((*__LP_Receive_yl & (uint8_t)0x55) > (*__LP_Receive_yr & (uint8_t)0x55))
-    {
-      Chassis.Set_Velocity(v_rotate);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-    }
-    //需要逆时针旋转
-    else
-    {
-      Chassis.Set_Velocity(v_crotate);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-    }
-  }
-}  
-  
-
-/**
- * @brief 从启动区平移到采矿区
- *
- * @param uint8_t *__LP_Receive_yl
- * @param uint8_t *__LP_Receive_yr
- * @param UART_HandleTypeDef *__huart_yl
- * @param UART_HandleTypeDef *__huart_yr
- */
-
-void LinePatrol_Start_Low(uint8_t *__LP_Receive_x, uint8_t *__LP_Receive_yl, uint8_t *__LP_Receive_yr)
-{
-  // //顺时针旋转90度
-  // Chassis.Set_Velocity(v_rotate);
-  // Chassis.Calculate_TIM_PeriodElapsedCallback();
-  // HAL_Delay(500);
-  // while (1)
-  // {
-  //   if ((*__LP_Receive_x & (uint8_t)0x18) == 0x18)
-  //   {
-  //     break;
-  //   }
-  // }
-	// HAL_Delay(500);
-	
-  //前进
-  while (*__LP_Receive_yl != (uint8_t)0x00)
-  {
-		if (*__LP_Receive_yl < (uint8_t)0x60) //0110,0000
-    {
-//      Chassis.Set_Velocity(v_front_left);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Chassis.Velocity_Control(0.6,0.2,0);
-			HAL_Delay(200);
-    }
-    else if (*__LP_Receive_yl > (uint8_t)0x70)
-    {
-//      Chassis.Set_Velocity(v_back_left);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Chassis.Velocity_Control(0.6,-0.2,0);
-			HAL_Delay(200);
-    }	
-		else if (*__LP_Receive_yl > *__LP_Receive_yr || *__LP_Receive_yl == (uint8_t)0x00)
-		{
-//			Chassis.Set_Velocity(v_crotate_left);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Chassis.Velocity_Control(0.6,0,0.3);
-			HAL_Delay(200);
-		}
-		else if (*__LP_Receive_yl < *__LP_Receive_yr || *__LP_Receive_yr == (uint8_t)0x00)
-		{
-//			Chassis.Set_Velocity(v_rotate_left);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Chassis.Velocity_Control(0.6,0,-0.3);
-			HAL_Delay(200);
-		}
-    else
-    {
-//      Chassis.Set_Velocity(v_left);
-//      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Chassis.Velocity_Control(0.6,0,0);
-			HAL_Delay(400);
-    }
-  }
-  Chassis.Set_Velocity(v_stop);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(2000);
-	
-  //顺时针旋转90度
-  // Chassis.Set_Velocity(v_rotate);
-  // Chassis.Calculate_TIM_PeriodElapsedCallback();
-  // HAL_Delay(500);
-  // while (1)
-  // {
-  //   if (*__LP_Receive_yr  == 0x01)
-  //   {
-  //     break;
-  //   }
-  // }
-	//HAL_Delay(500);
-  Chassis.Set_Velocity(v_stop);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(2000);
-}
 
 /**
  * @brief 从树莓派接收信息
  *
- * @param UART_HandleTypeDef *__B_huart
- * @param uint8_t *__B_Receive
+ * @param 
  */
-
-void Berry_Receive(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive)
+void Berry_Receive()
 {
-  HAL_UART_Receive_IT(__B_huart, __B_Receive, 1);
+  HAL_UART_Receive_IT(&B_HUART, &B_Receive, 1);
 }
 
 /**
@@ -252,173 +149,40 @@ void Berry_Receive(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive)
  *
  * @param UART_HandleTypeDef *__B_huart
  */
-void Berry_Barrier_Open(UART_HandleTypeDef *__B_huart)
+void Berry_Barrier_Open()
 {
-  uint8_t __B_Transmit = 0x01;
-  HAL_UART_Transmit_IT(__B_huart, &__B_Transmit, 1);
+  HAL_UART_Transmit_IT(&B_HUART, &Send_Barrier, 1);
 }
 
 /**
  * @brief 向树莓派发送信息使其开启扫描橙色
  *
- * @param UART_HandleTypeDef *__B_huart
+ * @param
  */
-void Berry_Orange_Open(UART_HandleTypeDef *__B_huart)
+void Berry_Orange_Open()
 {
-  uint8_t __B_Transmit = 0x02;
-  HAL_UART_Transmit_IT(__B_huart, &__B_Transmit, 1);
+  HAL_UART_Transmit_IT(&B_HUART, &Send_Orange, 1);
 }
 
 /**
  * @brief 向树莓派发送信息使其开启识别前方是否有矿
  *
- * @param UART_HandleTypeDef *__B_huart
+ * @param
  */
-void Berry_Exsit_Open(UART_HandleTypeDef *__B_huart)
+void Berry_Exsit_Open()
 {
-  uint8_t __B_Transmit = 0x03;
-  HAL_UART_Transmit_IT(__B_huart, &__B_Transmit, 1);
+  HAL_UART_Transmit_IT(&B_HUART, &Send_Exsit, 1);
 }
 
 /**
- * @brief 障碍识别及位置调整
+ * @brief 向树莓派发送信息使其关闭摄像头
  *
- * @param UART_HandleTypeDef *__B_huart
- * @param uint8_t *__B_Receive
- * @param UART_HandleTypeDef *__LP_x_huart
- * @param uint8_t *__LP_x_Receive
- * @param uint8_t *__Barrier_Location
+ * @param
  */
-// void LinePatrol_Barrier(UART_HandleTypeDef *__B_huart, uint8_t *__B_Receive, UART_HandleTypeDef *__LP_x_huart, uint8_t *__LP_x_Receive, uint8_t *__Barrier_Location)
-// {
-//   //移动到左侧
-//   Chassis.Set_Velocity(v_left);
-//   Chassis.Calculate_TIM_PeriodElapsedCallback();
-//   HAL_Delay(200);
-
-//   //第一次识别
-//   Berry_Barrier_Open(__B_huart);
-//   Berry_Receive(__B_huart, __B_Receive);
-//   //第一次左侧有障碍物
-//   if (*__B_Receive == (uint8_t)0x00)
-//   {
-//     //向右移动避开障碍物前进
-//     Chassis.Set_Velocity(v_right);
-//     Chassis.Calculate_TIM_PeriodElapsedCallback();
-//     HAL_Delay(400);
-//     Chassis.Set_Velocity(v_front);
-//     Chassis.Calculate_TIM_PeriodElapsedCallback();
-//     HAL_Delay(300);
-//     Chassis.Set_Velocity(v_stop);
-//     Chassis.Calculate_TIM_PeriodElapsedCallback();
-
-//     //第二次识别
-//     Berry_Barrier_Open(__B_huart);
-//     Berry_Receive(__B_huart, __B_Receive);
-//     //第二次右侧有障碍物
-//     if (*__B_Receive == (uint8_t)0x00)
-//     {
-//       //向左移动避开障碍物前进
-//       Chassis.Set_Velocity(v_left);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(400);
-//       Chassis.Set_Velocity(v_front);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(300);
-//       //向前移动到采矿区
-//       LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       while (*__LP_x_Receive != 0xFF)
-//       {
-//         Chassis.Set_Velocity(v_front);
-//         Chassis.Calculate_TIM_PeriodElapsedCallback();
-//         LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       }
-//       Chassis.Set_Velocity(v_stop);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       *__Barrier_Location = 1;
-//     }
-//     //第二次左侧有障碍物
-//     else
-//     {
-//       //直接前进
-//       Chassis.Set_Velocity(v_front);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(300);
-//       //向前再向左移动到采矿区
-//       LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       while (*__LP_x_Receive != 0xFF)
-//       {
-//         Chassis.Set_Velocity(v_front);
-//         Chassis.Calculate_TIM_PeriodElapsedCallback();
-//         LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       }
-//       Chassis.Set_Velocity(v_left);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(250);
-//       Chassis.Set_Velocity(v_stop);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       *__Barrier_Location = 0;
-//     }
-//   }
-//   //第一次右侧有障碍物
-//   else
-//   {
-//     //直接前进
-//     Chassis.Set_Velocity(v_front);
-//     Chassis.Calculate_TIM_PeriodElapsedCallback();
-//     HAL_Delay(300);
-//     Chassis.Set_Velocity(v_stop);
-//     Chassis.Calculate_TIM_PeriodElapsedCallback();
-    
-//     //第二次识别
-//     Berry_Barrier_Open(__B_huart);
-//     Berry_Receive(__B_huart, __B_Receive);
-//     //第二次左侧有障碍物
-//     if (*__B_Receive == (uint8_t)0x00)
-//     {
-//       //向右移动避开障碍物前进
-//       Chassis.Set_Velocity(v_right);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(400);
-//       Chassis.Set_Velocity(v_front);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(300);
-//       //向前再向左移动到采矿区
-//       LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       while (*__LP_x_Receive != 0xFF)
-//       {
-//         Chassis.Set_Velocity(v_front);
-//         Chassis.Calculate_TIM_PeriodElapsedCallback();
-//         LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       }
-//       Chassis.Set_Velocity(v_left);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(250);
-//       Chassis.Set_Velocity(v_stop);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       *__Barrier_Location = 2;
-//     }
-//     //第二次右侧有障碍物
-//     else
-//     {
-//       //直接前进
-//       Chassis.Set_Velocity(v_front);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       HAL_Delay(300);
-//       //向前移动到采矿区
-//       LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       while (*__LP_x_Receive != 0xFF)
-//       {
-//         Chassis.Set_Velocity(v_front);
-//         Chassis.Calculate_TIM_PeriodElapsedCallback();
-//         LinePatrol_Receive(__LP_x_huart, __LP_x_Receive);
-//       }
-//       Chassis.Set_Velocity(v_stop);
-//       Chassis.Calculate_TIM_PeriodElapsedCallback();
-//       *__Barrier_Location = 3;
-//     }
-//   }
-// }
+void Berry_Close()
+{
+  HAL_UART_Transmit_IT(&B_HUART, &Send_Close, 1);
+}
 
 /**
  * @brief 采集左侧晶体矿
@@ -580,84 +344,7 @@ void Berry_Exsit_Open(UART_HandleTypeDef *__B_huart)
 //   }
 // }
 
-/**
- * @brief 从采矿区返回启动区
- *
- * @param uint8_t *__Barrier_Location
- */
-void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
-{
-  Chassis.Set_Velocity(v_rotate);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(200);
-  Chassis.Set_Velocity(v_front);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(400);
-  if (*__Barrier_Location == 0)
-  {
-    Chassis.Set_Velocity(v_left);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(150);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(1000);
-    Chassis.Set_Velocity(v_stop);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-  }
-  else if (*__Barrier_Location == 1)
-  {
-    Chassis.Set_Velocity(v_right);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(150);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(500);
-    Chassis.Set_Velocity(v_left);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(200);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(500);
-    Chassis.Set_Velocity(v_stop);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-  }
-  else if (*__Barrier_Location == 2)
-  {
-    Chassis.Set_Velocity(v_left);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(150);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(500);
-    Chassis.Set_Velocity(v_right);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(200);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(500);
-    Chassis.Set_Velocity(v_stop);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-  }
-  else if (*__Barrier_Location ==  3)
-  {
-    Chassis.Set_Velocity(v_right);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(150);
-    Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-    HAL_Delay(1000);
-    Chassis.Set_Velocity(v_stop);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-  }
-  Chassis.Set_Velocity(v_crotate);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(150);
-  Chassis.Set_Velocity(v_front);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-  HAL_Delay(400);
-  Chassis.Set_Velocity(v_stop);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-}
+
 
 /**
  * @brief 在启动区调整位置并放矿
@@ -697,45 +384,5 @@ void LinePatrol_Back_Low(uint8_t *__Barrier_Location)
 //   Box_Steer_Rotate(__Box_Steer, 200.0f);
 //   HAL_Delay(100);
 // }
-
-
-/**
- * @brief 简易采集右侧晶体矿
- *
- * @param __Arm_Steer 机械臂舵机
- * @param __Claw_Steer 机械爪舵机
- * @param UART_HandleTypeDef *__B_huart
- * @param uint8_t *__B_Receive
- * @param UART_HandleTypeDef *__LP_yl_huart
- * @param uint8_t *__LP_yl_Receive
- */
- 
-void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, uint8_t *__LP_Receive_yr, UART_HandleTypeDef *__huart_yr)
-{
-	uint16_t counter=0;
-	LinePatrol_Receive(__huart_yr);
-	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);
-	
-	while(1)
-	{
-		Chassis.Set_Velocity(v_front);
-    Chassis.Calculate_TIM_PeriodElapsedCallback();
-		if ((*__LP_Receive_yr & (uint8_t)0x7F) == (uint8_t)0x38)
-		{
-			Chassis.Set_Velocity(v_stop);
-			Chassis.Calculate_TIM_PeriodElapsedCallback();
-			Arm_Catch(__Arm_Steer, __Claw_Steer);
-			HAL_Delay(1000);
-			Arm_Catch_Back(__Arm_Steer, __Claw_Steer);
-			counter++;
-			if(counter==5) break;
-			Chassis.Set_Velocity(v_front);
-			Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(300);
-		}
-	}
-	Chassis.Set_Velocity(v_stop);
-  Chassis.Calculate_TIM_PeriodElapsedCallback();
-}
 
 /* Function prototypes -------------------------------------------------------*/

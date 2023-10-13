@@ -90,3 +90,16 @@ DIR: PI9/Q2
 
 串口  
 波特率：9600
+
+2023/10/13  tg_to_htk:  
+
+你的LinePatrol_Easy_Catch_Orange和完整的上坡抓取动作(现在叫Start_to_High)都放在了run里面  
+测试一下这两个函数是否还能正常运行，因为我进行了一些形式上的更改  
+如果有需要改回去的地方，完整的上坡抓取在主函数里(注释掉了)，LinePatrol_Easy_Catch_Orange你原来的函数放在了现在的下面(也注释掉了)
+
+修改了树莓派的通信，现在不用传参了，但是如果wkh没有搞好的话应该是调不了的
+
+写了Cross_Barrier(),Back_Cross_Barrier两个函数，包含了视觉但是可以用一些略微抽象的方式调试  
+比如说Cross_Barrier()你可以在它停在萤石前面后手动用电脑给它发一个0x00(存在障碍物)，波特率为115200，用串口调试助手发（微软商店有），现场应该有USB转TTL，可以找找看  
+或者有稍微不那么抽象一点的方法，简单改一下if else的条件  
+Back_Cross_Barrier()就好说了，你直接在初始化的时候给Barrier_Location赋个值，main.c里定义的

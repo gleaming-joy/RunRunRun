@@ -1,7 +1,5 @@
 #include "StepMotor.h"
 
-StepMotor TestMotor1;
-
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if(htim == TestMotor1.Get_htim())
