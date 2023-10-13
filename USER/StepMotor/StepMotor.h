@@ -21,7 +21,7 @@ private:
     
 public:
     void Set_Motor_Running_Speed(uint32_t step_per_second, uint32_t max_running_steps);
-		void Set_Motor_Running_Status(uint16_t enable, uint16_t direction);
+		void Set_Motor_Running_Status(uint32_t enable, uint32_t direction);
     void Set_Motor_Timer_Output();
     void init(TIM_HandleTypeDef *htim,
                     uint32_t TIM_Channel, 

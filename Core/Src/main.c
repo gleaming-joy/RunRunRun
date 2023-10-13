@@ -96,6 +96,8 @@ extern SpeedTypeDef v_rotate_left;
 
 uint8_t Barrier_Location;
 
+uint32_t HCSR04_tim;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -279,7 +281,10 @@ int main(void)
 //    HAL_Delay(10000);
 
 //	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
-				
+
+		HCSR04_tim = HCSR04_Run();
+		HAL_Delay(2000);
+
 //		//理论上完整上平台的代码
 		// Arm_Catch(Arm_Steer, Claw_Steer);
 

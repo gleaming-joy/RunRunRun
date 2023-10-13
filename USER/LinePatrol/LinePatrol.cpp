@@ -16,7 +16,7 @@ extern uint8_t LP_Receive_x;;
 uint8_t Send_Barrier = 0x01;
 uint8_t Send_Orange = 0x02;
 uint8_t Send_Exsit = 0x03;
-uint8_t Send_Close == 0x00;
+uint8_t Send_Close = 0x00;
 extern uint8_t B_Receive;
 
 extern UART_HandleTypeDef huart3;
@@ -183,6 +183,48 @@ void Berry_Close()
 {
   HAL_UART_Transmit_IT(&B_HUART, &Send_Close, 1);
 }
+
+/**
+ * @brief 微秒级延时
+ *
+ * @param us 微秒数
+ */
+void HAL_Delay_us(uint32_t us)
+{       
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000000);
+    HAL_Delay(us-1);
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+}
+
+/**
+ * @brief HC_SR04测量距离
+ *
+ * @param
+ */
+
+uint32_t HCSR04_Run()
+{
+	uint32_t i = 0;
+	uint32_t uc=1;
+	HAL_GPIO_WritePin(HCSR04_Trig_GPIO_Port, HCSR04_Trig_GPIO_PIN, GPIO_PIN_SET);
+	HAL_Delay_us(20);
+	HAL_GPIO_WritePin(HCSR04_Trig_GPIO_Port, HCSR04_Trig_GPIO_PIN, GPIO_PIN_RESET);
+	while(HAL_GPIO_ReadPin(HCSR04_Echo_GPIO_Port, HCSR04_Echo_GPIO_PIN) == GPIO_PIN_RESET)
+	{
+		uc++;
+		if(uc>8000000)
+		{
+			return 9999;
+			// break;
+		}
+	}
+	while(HAL_GPIO_ReadPin(HCSR04_Echo_GPIO_Port, HCSR04_Echo_GPIO_PIN) != GPIO_PIN_RESET)
+	{
+		i++;
+	}
+	return (uint32_t)i/35;
+}
+	
 
 /**
  * @brief 采集左侧晶体矿

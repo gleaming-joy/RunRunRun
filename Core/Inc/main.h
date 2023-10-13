@@ -101,6 +101,16 @@ void Error_Handler(void);
 #define RMotorDirectionB1_GPIO_Port GPIOC
 #define RMotorDirectionB2_Pin GPIO_PIN_4
 #define RMotorDirectionB2_GPIO_Port GPIOA
+// GPIO of HC_SR04
+#define HCSR04_Trig_GPIO_Port GPIOC
+#define HCSR04_Trig_GPIO_PIN GPIO_PIN_4
+#define HCSR04_Echo_GPIO_Port GPIOC
+#define HCSR04_Echo_GPIO_PIN GPIO_PIN_0
+// Stepmotor direction
+#define STEPMOTOR_DIRECTION_UP 0
+#define STEPMOTOR_DIRECTION_DOWN 1
+#define STEPMOTOR_STATUS_ENABLE 1
+#define STEPMOTOR_STATUS_DISABLE 0
 
 // »ô¶û±àÂëÆ÷ÖÐ¶Ï£¨ÂÒÉèµÄ£©
 #define Pin_Exti_HallEncoderA1_Pin GPIO_PIN_7

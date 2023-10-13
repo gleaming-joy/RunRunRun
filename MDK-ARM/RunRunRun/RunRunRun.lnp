@@ -14,6 +14,7 @@
 "runrunrun\pid.o"
 "runrunrun\steer.o"
 "runrunrun\stepmotor.o"
+"runrunrun\run.o"
 "runrunrun\stm32f4xx_hal_tim.o"
 "runrunrun\stm32f4xx_hal_tim_ex.o"
 "runrunrun\stm32f4xx_hal_rcc.o"

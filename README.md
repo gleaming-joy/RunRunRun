@@ -70,6 +70,10 @@ UART7_TX: PE8
 UART8_RX: PE0  
 UART8_TX: PE1  
 
+- 超声波测距
+Trig: PC4/N1
+Echo: PC0/N2
+
 ## 直线滑台
 
 - 步进电机（右） TestMotor1  
@@ -103,3 +107,17 @@ DIR: PI9/Q2
 比如说Cross_Barrier()你可以在它停在萤石前面后手动用电脑给它发一个0x00(存在障碍物)，波特率为115200，用串口调试助手发（微软商店有），现场应该有USB转TTL，可以找找看  
 或者有稍微不那么抽象一点的方法，简单改一下if else的条件  
 Back_Cross_Barrier()就好说了，你直接在初始化的时候给Barrier_Location赋个值，main.c里定义的
+
+2023/10/14 4:30 htk_to_tg:
+
+首先，定义了步进电机方向STEPMOTOR_DIRECTION_UP和STEPMOTOR_DIRECTION_DOWN，分别代表上和下；步进电机状态STEPMOTOR_STATUS_ENABLE和STEPMOTOR_STATUS_DISABLE，分别对应开启和关闭
+后面调用的时候可以用，前面的我懒得改了
+
+我手动init了PC4和PC0，在gpio里面改了，不知道你重新跑cube的时候会不会覆盖掉，最好是重新跑一次然后把输入设置好
+
+然后什么东西都调不出来
+
+干你妈的超声波
+
+超声波测距最好要求不要有中断，能不能试着解决一下
+要不然就给我分配一个用不到的TIM我用来计时

@@ -15,7 +15,7 @@ void StepMotor::Set_Motor_Running_Speed(uint32_t step_per_second, uint32_t max_r
     this->tim_counts_per_half_pulse = TIM_Rate / (step_per_second * 2);
 }
 
-void StepMotor::Set_Motor_Running_Status(uint16_t enable, uint16_t direction)
+void StepMotor::Set_Motor_Running_Status(uint32_t enable, uint32_t direction)
 {
 		if (direction)
     {
