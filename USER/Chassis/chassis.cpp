@@ -8,11 +8,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-SpeedTypeDef v_now=
-{
-    0, 0, 0
-};
-
 /* Private function declarations ---------------------------------------------*/
 
 /**
@@ -197,7 +192,7 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
  }
 
 /**
- * @brief 将传入的参数设定为底盘速度
+ * @brief ?????????????
  * 
  * @param float x
  * @param float y
@@ -205,14 +200,11 @@ void Class_Chassis::Calculate_TIM_PeriodElapsedCallback()
 */
 void Class_Chassis::Velocity_Control(float __x, float __y, float __omega)
 {
-//    v_now = 
-//    {
-//        x, y, omega
-//    };
-		v_now.X = __x;
-		v_now.Y = __y;
-		v_now.Omega = __omega;
-    Chassis.Set_Velocity(v_now);
+   SpeedTypeDef __v_now = 
+   {
+       __x, __y, __omega
+   };
+    Chassis.Set_Velocity(__v_now);
     Chassis.Calculate_TIM_PeriodElapsedCallback();
 }
 

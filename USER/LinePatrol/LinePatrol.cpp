@@ -178,41 +178,40 @@ void LinePatrol_Start_Low(uint8_t *__LP_Receive_x, uint8_t *__LP_Receive_yl, uin
   //前进
   while (*__LP_Receive_yl != (uint8_t)0x00)
   {
-    if (*__LP_Receive_yl < (uint8_t)0x70) //0111,0000
+		if (*__LP_Receive_yl < (uint8_t)0x60) //0110,0000
     {
-      Chassis.Set_Velocity(v_front_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
+//      Chassis.Set_Velocity(v_front_left);
+//      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Chassis.Velocity_Control(0.6,0.2,0);
+			HAL_Delay(200);
     }
-    else if (*__LP_Receive_yl > (uint8_t)0x78)
+    else if (*__LP_Receive_yl > (uint8_t)0x70)
     {
-      Chassis.Set_Velocity(v_back_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
-    }
-		else
-    {
-      Chassis.Set_Velocity(v_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
-    }
-		if (*__LP_Receive_yl > *__LP_Receive_yr)
+//      Chassis.Set_Velocity(v_back_left);
+//      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Chassis.Velocity_Control(0.6,-0.2,0);
+			HAL_Delay(200);
+    }	
+		else if (*__LP_Receive_yl > *__LP_Receive_yr || *__LP_Receive_yl == (uint8_t)0x00)
 		{
-			Chassis.Set_Velocity(v_crotate_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
+//			Chassis.Set_Velocity(v_crotate_left);
+//      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Chassis.Velocity_Control(0.6,0,0.3);
+			HAL_Delay(200);
 		}
-		else if (*__LP_Receive_yl < *__LP_Receive_yr)
+		else if (*__LP_Receive_yl < *__LP_Receive_yr || *__LP_Receive_yr == (uint8_t)0x00)
 		{
-			Chassis.Set_Velocity(v_rotate_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
+//			Chassis.Set_Velocity(v_rotate_left);
+//      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Chassis.Velocity_Control(0.6,0,-0.3);
+			HAL_Delay(200);
 		}
     else
     {
-      Chassis.Set_Velocity(v_left);
-      Chassis.Calculate_TIM_PeriodElapsedCallback();
-			HAL_Delay(100);
+//      Chassis.Set_Velocity(v_left);
+//      Chassis.Calculate_TIM_PeriodElapsedCallback();
+			Chassis.Velocity_Control(0.6,0,0);
+			HAL_Delay(400);
     }
   }
   Chassis.Set_Velocity(v_stop);

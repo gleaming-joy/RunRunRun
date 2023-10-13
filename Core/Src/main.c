@@ -276,84 +276,84 @@ int main(void)
 //    Chassis.Velocity_Control(0,0,0);
 //    HAL_Delay(10000);
 
-	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
+//	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
 				
 //		//理论上完整上平台的代码
-//		Arm_Catch(Arm_Steer, Claw_Steer);
+		Arm_Catch(Arm_Steer, Claw_Steer);
 
-//    TestMotor1.Set_Motor_Running_Status(1,1);
-//    Chassis.Set_Velocity(v_front_slow);
-//    Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    Chassis.R_Set_Velocity(0.3f);
-//    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
-//    HAL_Delay(3500);
-//    Chassis.Set_Velocity(v_stop_main);
-//    Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    Chassis.R_Set_Velocity(0.0f);
-//    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
-//    HAL_Delay(10500);
-//        
-//    TestMotor1.Set_Motor_Running_Status(0,0);
-//    Chassis.Set_Velocity(v_front_medium);
-//    Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    RChassis.R_Set_Velocity(0.9f);
-//    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
-//		while((LP_Receive_x | (uint8_t)0x66) != (uint8_t) 0xe7) {}
-//		while(LP_Receive_x != (uint8_t) 0x00) {}
-//		HAL_Delay(2500);
-//        
-//    TestMotor1.Set_Motor_Running_Status(1,0);
-//    Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    RChassis.R_Set_Velocity(0.0f);
-//    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
-//    HAL_Delay(14000);
-//				
-//		TestMotor1.Set_Motor_Running_Status(0,0);
-//    Chassis.Set_Velocity(v_left_medium);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    while((LP_Receive_yl & (uint8_t)0x38) != (uint8_t)0x38){}
-//    HAL_Delay(1800);
-//    Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//    HAL_Delay(14000);
-//					
-//		LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yl, &LP_YL_HUART);
-//		HAL_Delay(2000);
-//		
-//		Chassis.Set_Velocity(v_turn);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		HAL_Delay(800);
-//		while(LP_Receive_yl != LP_Receive_yr) {}
-//		Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		HAL_Delay(500);
-//		Chassis.Set_Velocity(v_left_medium);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		while(LP_Receive_yl != 0xFF) {}
-//		while(LP_Receive_yl == 0xFF) {}
-//		HAL_Delay(100);
-//		Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		HAL_Delay(500);
-//		Chassis.Set_Velocity(v_front_slow);
-//    Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-//		Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		Arm_Catch(Arm_Steer, Claw_Steer);
-//		HAL_Delay(1000);
-//		Arm_Catch_Back(Arm_Steer, Claw_Steer);
-//		Chassis.Set_Velocity(v_front_slow);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		HAL_Delay(300);
-//		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-//		Chassis.Set_Velocity(v_stop_main);
-//		Chassis.Calculate_TIM_PeriodElapsedCallback();
-//		Arm_Catch(Arm_Steer, Claw_Steer);
-//		HAL_Delay(1000);
-//		Arm_Catch_Back(Arm_Steer, Claw_Steer);
-//		HAL_Delay(20000);
+    TestMotor1.Set_Motor_Running_Status(1,1);
+    Chassis.Set_Velocity(v_front_slow);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    Chassis.R_Set_Velocity(0.3f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(3500);
+    Chassis.Set_Velocity(v_stop_main);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    Chassis.R_Set_Velocity(0.0f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(10500);
+        
+    TestMotor1.Set_Motor_Running_Status(0,0);
+    Chassis.Set_Velocity(v_front_medium);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+    RChassis.R_Set_Velocity(0.9f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+		while((LP_Receive_x & (uint8_t)0x99) != (uint8_t) 0x18) {}
+		while(LP_Receive_x != (uint8_t) 0xFF) {}
+		HAL_Delay(2500);
+        
+    TestMotor1.Set_Motor_Running_Status(1,0);
+    Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+    RChassis.R_Set_Velocity(0.0f);
+    RChassis.R_Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(14000);
+				
+		TestMotor1.Set_Motor_Running_Status(0,0);
+    Chassis.Set_Velocity(v_left_medium);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+    while((LP_Receive_yl & (uint8_t)0x38) != (uint8_t)0x38){}
+    HAL_Delay(1800);
+    Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+    HAL_Delay(14000);
+					
+		LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yl, &LP_YL_HUART);
+		HAL_Delay(2000);
+		
+		Chassis.Set_Velocity(v_turn);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		HAL_Delay(800);
+		while(LP_Receive_yl != LP_Receive_yr) {}
+		Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		HAL_Delay(500);
+		Chassis.Set_Velocity(v_left_medium);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		while(LP_Receive_yl != 0xFF) {}
+		while(LP_Receive_yl == 0xFF) {}
+		HAL_Delay(100);
+		Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		HAL_Delay(500);
+		Chassis.Set_Velocity(v_front_slow);
+    Chassis.Calculate_TIM_PeriodElapsedCallback();
+		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+		Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		Arm_Catch(Arm_Steer, Claw_Steer);
+		HAL_Delay(1000);
+		Arm_Catch_Back(Arm_Steer, Claw_Steer);
+		Chassis.Set_Velocity(v_front_slow);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		HAL_Delay(300);
+		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+		Chassis.Set_Velocity(v_stop_main);
+		Chassis.Calculate_TIM_PeriodElapsedCallback();
+		Arm_Catch(Arm_Steer, Claw_Steer);
+		HAL_Delay(1000);
+		Arm_Catch_Back(Arm_Steer, Claw_Steer);
+		HAL_Delay(20000);
 					
 //		//上平台测试
 //		Chassis.Set_Velocity(v_stop_main);
