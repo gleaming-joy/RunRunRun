@@ -17,10 +17,8 @@
 
 void LinePatrol_Receive(UART_HandleTypeDef *__huart);
 void Berry_Receive();
-void Berry_Barrier_Open();
 void Berry_Orange_Open();
-void Berry_Exsit_Open();
-void Berry_Close();
+void Berry_Purple_Open();
 
 void HAL_Delay_us(uint32_t us);
 uint32_t HCSR04_Run();

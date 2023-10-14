@@ -4,6 +4,11 @@
 
 /* Private macros ------------------------------------------------------------*/
 
+#define blue 0x04
+#define orange 0x01
+#define purple 0x02
+#define empty 0x03 
+
 /* Private types -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -28,19 +33,33 @@ void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Stee
 {
 	uint16_t counter = 0;
 	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);
-	
+	B_Receive = 0x00;
 	while(1)
 	{
     Chassis.Velocity_Control(0, 0.4, 0);
 		if ((LP_Receive_yl & (uint8_t)0x7F) == (uint8_t)0x38)
 		{
-      Chassis.Velocity_Control(0, 0, 0);
-			Arm_Catch(__Arm_Steer, __Claw_Steer);
-			HAL_Delay(1000);
-			Arm_Catch_Back(__Arm_Steer, __Claw_Steer);
-			counter++;
-			if(counter == 5)
+      counter++;
+			if(counter == 6)
         break;
+      Chassis.Velocity_Control(0, 0, 0);
+      Berry_Orange_Open();
+      HAL_Delay(500);
+      Berry_Receive();
+      if (B_Receive == blue)
+      {
+        continue;
+      }
+      else if(B_Receive == orange)
+      {
+        Arm_Catch(__Arm_Steer, __Claw_Steer);
+			  HAL_Delay(1000);
+			  Arm_Catch_Back(__Arm_Steer, __Claw_Steer);
+      }
+      else
+      {
+        Chassis.Velocity_Control(0, 0, 0);
+      }
       Chassis.Velocity_Control(0, 0.4, 0);
 			HAL_Delay(300);
 		}
@@ -180,7 +199,7 @@ void Start_to_High(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
     Chassis.Velocity_Control(0, 0, 0);
     HAL_Delay(14000);
 					
-	LinePatrol_Easy_Catch_Orange(__Arm_Steer, __Claw_Steer);
+	LinePatrol_Catch_LOrange(__Arm_Steer, __Claw_Steer);
 	HAL_Delay(2000);
 
 
@@ -227,6 +246,59 @@ void Start_to_Barrier()
 }
 
 /**
+ * @brief 第二次避障后前进到采矿区
+ *
+ * @param uint8_t model  0：表示车在左侧， 1：表示车在右侧
+ */
+void Barrier_to_Catch(uint8_t model)
+{
+  //前进到采矿区
+  Chassis.Velocity_Control(0, 0.6, 0);
+  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
+  if (model == 0)
+  {
+    Chassis.Velocity_Control(0.4, 0, 0);
+    HAL_Delay(2000);
+  }
+  else if (model == 1)
+  {
+    //向左平移到中间线
+    Chassis.Velocity_Control(0.4, 0, 0);
+    while ((LP_Receive_yr & (uint8_t)0x7F) != (uint8_t)0x3F)
+    {
+	    if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+      {
+		    Chassis.Velocity_Control(0.6,0.2,0);
+		    HAL_Delay(200);
+      }
+      else if (LP_Receive_yl > (uint8_t)0x70)
+      {
+		    Chassis.Velocity_Control(0.6,-0.2,0);
+		    HAL_Delay(200);
+      }	
+	    else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
+	    {
+		    Chassis.Velocity_Control(0.6,0,0.3);
+		    HAL_Delay(200);
+	    }
+	    else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
+	    {
+		      Chassis.Velocity_Control(0.6,0,-0.3);
+		      HAL_Delay(200);
+	    }
+      else
+      {
+		    Chassis.Velocity_Control(0.6,0,0);
+		    HAL_Delay(400);
+      }
+    } 
+    HAL_Delay(2000);
+  }
+  Chassis.Velocity_Control(0, 0, 0);
+  HAL_Delay(20000);
+}
+
+/**
  * @brief 障碍识别及位置调整
  *
  * @param 
@@ -262,12 +334,8 @@ void Cross_Barrier()
 			Chassis.Velocity_Control(0, 0.3, 0);
       while ((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t)0x18 && (LP_Receive_yr & (uint8_t) 0xDB) != (uint8_t)0x18) {}
 			Barrier_Position_Adjust();
-      //向左前移动到采矿区
-      while (LP_Receive_x != 0xFF)
-      {
-        Chassis.Velocity_Control(0.5, 0.25, 0);
-      }
-      Chassis.Velocity_Control(0, 0, 0);
+      //移动到采矿区
+      Barrier_to_Catch(1);
       Barrier_Location = 1; //右左 01
     }
     //第二个障碍物在右侧（此时车在左侧）
@@ -277,11 +345,8 @@ void Cross_Barrier()
 			HAL_Delay(500);
 			while ((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t)0x18 && (LP_Receive_yr & (uint8_t) 0xDB) != (uint8_t)0x18) {}
 			Barrier_Position_Adjust();
-      //直接前进到采矿区
-      while (LP_Receive_x != 0xFF)
-      {
-        Chassis.Velocity_Control(0, 0.6, 0);
-      }
+      
+      Barrier_to_Catch(0);
       Chassis.Velocity_Control(0, 0, 0);
       Barrier_Location = 0; //右右 00
     }
@@ -312,11 +377,7 @@ void Cross_Barrier()
       while ((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t)0x18 && (LP_Receive_yr & (uint8_t) 0xDB) != (uint8_t)0x18) {}
 			Barrier_Position_Adjust();
       //向前移动到采矿区
-      while (LP_Receive_x != 0xFF)
-      {
-        Chassis.Velocity_Control(0, 0.6, 0);
-      }
-      Chassis.Velocity_Control(0, 0, 0);
+      Barrier_to_Catch(1);
       Barrier_Location = 2; //左右 10
     }
     //第二个障碍物在左侧（此时车在右侧）
@@ -327,11 +388,7 @@ void Cross_Barrier()
       //向前避开障碍物
       while (LP_Receive_yl != (uint8_t)0x18 || LP_Receive_yr != (uint8_t)0x18){}
       //向左前移动到采矿区
-      while (LP_Receive_x != 0xFF)
-      {
-        Chassis.Velocity_Control(0, 0.6, 0);
-      }
-      Chassis.Velocity_Control(0, 0, 0);
+      Barrier_to_Catch(0);
       Barrier_Location = 3; //左左 11
     }
   }

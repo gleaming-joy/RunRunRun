@@ -18,7 +18,10 @@
 /* Exported function declarations --------------------------------------------*/
 
 //局部动作
-void LinePatrol_Easy_Catch_Orange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void LinePatrol_Catch_ROrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void Barrier_to_Catch(uint8_t model);
 
 //整体运动
 void Start_to_High(Class_Steer __Arm_Steer[] ,Class_Steer __Claw_Steer);

@@ -13,12 +13,11 @@ extern uint8_t LP_Receive_yl;
 extern uint8_t LP_Receive_yr;
 extern uint8_t LP_Receive_x;;
 
-uint8_t Send_Barrier = 0x01;
 uint8_t Send_Orange = 0x02;
-uint8_t Send_Exsit = 0x03;
-uint8_t Send_Close = 0x00;
+uint8_t Send_Purple = 0x03;
 extern uint8_t B_Receive;
 
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 extern UART_HandleTypeDef huart7;
@@ -145,16 +144,6 @@ void Berry_Receive()
 }
 
 /**
- * @brief 向树莓派发送信息使其开启障碍物识别
- *
- * @param UART_HandleTypeDef *__B_huart
- */
-void Berry_Barrier_Open()
-{
-  HAL_UART_Transmit_IT(&B_HUART, &Send_Barrier, 1);
-}
-
-/**
  * @brief 向树莓派发送信息使其开启扫描橙色
  *
  * @param
@@ -165,23 +154,13 @@ void Berry_Orange_Open()
 }
 
 /**
- * @brief 向树莓派发送信息使其开启识别前方是否有矿
+ * @brief 向树莓派发送信息使其开始扫描紫色
  *
  * @param
  */
-void Berry_Exsit_Open()
+void Berry_Purple_Open()
 {
-  HAL_UART_Transmit_IT(&B_HUART, &Send_Exsit, 1);
-}
-
-/**
- * @brief 向树莓派发送信息使其关闭摄像头
- *
- * @param
- */
-void Berry_Close()
-{
-  HAL_UART_Transmit_IT(&B_HUART, &Send_Close, 1);
+  HAL_UART_Transmit_IT(&B_HUART, &Send_Purple, 1);
 }
 
 /**

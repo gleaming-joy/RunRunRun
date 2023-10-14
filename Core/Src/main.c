@@ -150,6 +150,7 @@ int main(void)
   MX_UART8_Init();
   MX_USART3_UART_Init();
   MX_TIM10_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start_IT(&htim10);
@@ -289,7 +290,7 @@ int main(void)
 
 //	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
 
-//		//理论上完整上平台的代�?
+//		//理论上完整上平台的代�??
 //		Arm_Catch(Arm_Steer, Claw_Steer);
 //		HAL_Delay(2000);
 //		Arm_Catch_Back(Arm_Steer, Claw_Steer);
@@ -337,10 +338,11 @@ int main(void)
     // HAL_Delay(14000);
 //		HAL_Delay(2000);
 //		Start_to_High(Arm_Steer, Claw_Steer);
-HAL_Delay(2000);
-TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
-HAL_Delay(14000);
-		
+// HAL_Delay(2000);
+// TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
+// HAL_Delay(14000);
+		//Barrier_to_Catch(1);
+    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer);
 		// LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yl, &LP_YL_HUART);
 		// HAL_Delay(2000);
 		
@@ -378,7 +380,7 @@ HAL_Delay(14000);
 		// Arm_Catch_Back(Arm_Steer, Claw_Steer);
 		// HAL_Delay(20000);
 					
-//		//上平台测�?
+//		//上平台测�??
 //		Chassis.Set_Velocity(v_stop_main);
 //    Chassis.Calculate_TIM_PeriodElapsedCallback();
 //    RChassis.R_Set_Velocity(0.0f);
