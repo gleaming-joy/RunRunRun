@@ -7,7 +7,7 @@
 #include "chassis.hpp"
 #include "arm.hpp"
 #include "StepMotor.h"
-#include "LinePatrol.hpp"
+#include "connect.hpp"
 
 /* Exported macros -----------------------------------------------------------*/
 

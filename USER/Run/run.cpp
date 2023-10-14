@@ -191,11 +191,12 @@ void Start_to_Barrier()
  */
 void Cross_Barrier()
 {
-  Berry_Barrier_Open();
+  //Berry_Barrier_Open();
   //第一次识别（此时车在右侧）
-  Berry_Receive();
+  //Berry_Receive();
   //第一个障碍物在右侧（此时车在右侧）
-  if (B_Receive == (uint8_t)0x00)
+  //if (B_Receive == (uint8_t)0x00)
+  if (HCSR04_Run() < 50)
   {
     //向左前移动避开障碍物
     while (LP_Receive_yl != (uint8_t)0x18 || LP_Receive_yr != (uint8_t)0x18)
@@ -204,9 +205,10 @@ void Cross_Barrier()
     }
     Chassis.Velocity_Control(0, 0, 0);
     //第二次识别（此时车在左侧）
-    Berry_Receive();
+    //Berry_Receive();
     //第二个障碍物在左侧（此时车在左侧）
-    if (B_Receive == (uint8_t)0x00)
+    //if (B_Receive == (uint8_t)0x00)
+    if (HCSR04_Run() < 50)
     {
       //向右前移动避开障碍物
       while (LP_Receive_yl != (uint8_t)0x18 || LP_Receive_yr != (uint8_t)0x18)
@@ -242,9 +244,10 @@ void Cross_Barrier()
         Chassis.Velocity_Control(0, 0.6, 0);
     }
     //第二次识别（此时车在右侧）
-    Berry_Receive();
+    //Berry_Receive();
     //第二个障碍物在右侧（此时车在右侧）
-    if (B_Receive == (uint8_t)0x00)
+    //if (B_Receive == (uint8_t)0x00)
+    if (HCSR04_Run() < 50)
     {
       //向左前移动避开障碍物
       while (LP_Receive_yl != (uint8_t)0x18 || LP_Receive_yr != (uint8_t)0x18)
@@ -277,7 +280,7 @@ void Cross_Barrier()
     }
   }
   //关闭树莓派摄像头
-  Berry_Close();
+  //Berry_Close();
 }
 
 /**

@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "chassis.hpp"
-#include "LinePatrol.hpp"
+#include "connect.hpp"
 #include "steer.hpp"
 #include "arm.hpp"
 #include "StepMotor.h"
@@ -285,7 +285,7 @@ int main(void)
 		HCSR04_tim = HCSR04_Run();
 		HAL_Delay(2000);
 
-//		//理论上完整上平台的代码
+//		//理论上完整上平台的代�?
 		// Arm_Catch(Arm_Steer, Claw_Steer);
 
     // TestMotor1.Set_Motor_Running_Status(1,1);
@@ -362,7 +362,7 @@ int main(void)
 		// Arm_Catch_Back(Arm_Steer, Claw_Steer);
 		// HAL_Delay(20000);
 					
-//		//上平台测试
+//		//上平台测�?
 //		Chassis.Set_Velocity(v_stop_main);
 //    Chassis.Calculate_TIM_PeriodElapsedCallback();
 //    RChassis.R_Set_Velocity(0.0f);

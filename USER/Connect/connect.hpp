@@ -1,5 +1,5 @@
-#ifndef LINEPATROL_HPP
-#define LINEPATROL_HPP
+#ifndef CONNECT_HPP
+#define CONNECT_HPP
 
 /* Includes ------------------------------------------------------------------*/
 
