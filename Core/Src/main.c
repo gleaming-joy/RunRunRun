@@ -181,6 +181,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		// Arm_Catch(Arm_Steer, Claw_Steer);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -338,13 +339,21 @@ int main(void)
     // HAL_Delay(14000);
 //		HAL_Delay(2000);
 //		Start_to_High(Arm_Steer, Claw_Steer);
-// HAL_Delay(2000);
 // TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
-// HAL_Delay(14000);
-		//Barrier_to_Catch(1);
-    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer);
-		// LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yl, &LP_YL_HUART);
-		// HAL_Delay(2000);
+// HAL_Delay(14000);0
+//		HAL_Delay(2000);
+//		Cross_Barrier();
+//    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, Box_Steer);
+//		HAL_Delay(2000);
+//		LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer);
+//		HAL_Delay(4000);
+
+ Arm_Claw_Steer_Control(-20.0f, 75.0f, -90.0f, 90.0f,0, Arm_Steer, Claw_Steer);
+
+//Start_to_High(Arm_Steer, Claw_Steer, Box_Steer);
+//HAL_Delay(2000);
+//LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer);
+//HAL_Delay(4000);
 		
 		// Chassis.Set_Velocity(v_turn);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
