@@ -30,6 +30,7 @@
 #include "connect.hpp"
 #include "steer.hpp"
 #include "arm.hpp"
+#include "run.hpp"
 #include "StepMotor.h"
 
 /* USER CODE END Includes */
@@ -58,6 +59,8 @@ Class_Chassis RChassis;
 Class_Steer Arm_Steer[4];
 Class_Steer Claw_Steer;
 Class_Steer Box_Steer;
+
+uint32_t tim;
 
 StepMotor TestMotor1;
 
@@ -95,9 +98,6 @@ extern SpeedTypeDef v_crotate_left;
 extern SpeedTypeDef v_rotate_left;
 
 uint8_t Barrier_Location;
-
-uint32_t HCSR04_tim;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -233,7 +233,8 @@ int main(void)
     // RChassis.R_Set_Velocity(100.0f);
     // RChassis.R_Calculate_TIM_PeriodElapsedCallback();
 
-    // LinePatrol_Start_Low(&LP_Receive_yl, &LP_Receive_yr);
+//		HAL_Delay(1000);
+//    Start_to_Barrier();
 		// HAL_Delay(1000);
 
     // LinePatrol_Barrier(&B_HUART, &B_Receive, &LP_X_HUART, &LP_Receive_x, &Barrier_Location);
@@ -254,6 +255,12 @@ int main(void)
     
     // //�ſ�
     // LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
+		
+//		HAL_Delay(2000);
+//		Cross_Barrier();
+		
+//		tim=HCSR04_Run();
+//		HAL_Delay(2000);
 
 //    TestMotor1.Set_Motor_Running_Status(1,1);
 //    Chassis.Velocity_Control(0,0.4f,0);
@@ -282,11 +289,15 @@ int main(void)
 
 //	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
 
-		HCSR04_tim = HCSR04_Run();
-		HAL_Delay(2000);
-
 //		//理论上完整上平台的代�?
-		// Arm_Catch(Arm_Steer, Claw_Steer);
+//		Arm_Catch(Arm_Steer, Claw_Steer);
+//		HAL_Delay(2000);
+//		Arm_Catch_Back(Arm_Steer, Claw_Steer);
+//		HAL_Delay(4000);
+//		Arm_Parallel_Catch(Arm_Steer, Claw_Steer);
+//		HAL_Delay(2000);
+//		Arm_Parallel_Catch_Back(Arm_Steer, Claw_Steer);
+//		HAL_Delay(4000);
 
     // TestMotor1.Set_Motor_Running_Status(1,1);
     // Chassis.Set_Velocity(v_front_slow);
@@ -324,7 +335,12 @@ int main(void)
     // Chassis.Set_Velocity(v_stop_main);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
     // HAL_Delay(14000);
-					
+//		HAL_Delay(2000);
+//		Start_to_High(Arm_Steer, Claw_Steer);
+HAL_Delay(2000);
+TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
+HAL_Delay(14000);
+		
 		// LinePatrol_Easy_Catch_Orange(Arm_Steer, Claw_Steer, &LP_Receive_yl, &LP_YL_HUART);
 		// HAL_Delay(2000);
 		

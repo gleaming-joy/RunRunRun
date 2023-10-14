@@ -142,7 +142,7 @@ void Box_Steer_Rotate(Class_Steer __Box_Steer, float location)
  * @param __Arm_Steer 机械臂舵机
  * @param __Claw_Steer 机械爪舵机
  */
-void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
+void Arm_Parallel_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
 {
 	uint16_t i;
 	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);//初始位置
@@ -170,7 +170,7 @@ void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
 	Arm_Claw_Steer_Control(-15.0f, -120.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//待机形态
 }
 
-void Arm_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
+void Arm_Parallel_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
 {
 	Arm_Claw_Steer_Control(-15.0f, -120.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);
 	HAL_Delay(500);
@@ -179,5 +179,44 @@ void Arm_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
 	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);
 	HAL_Delay(800);
 	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 90.0f, 0, __Arm_Steer, __Claw_Steer);
+}
+
+void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
+{
+	uint16_t i;
+	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);//初始位置
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-30.0f, 65.0f, -75.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);//降下
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-30.0f, 65.0f, -75.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//抓取
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-10.0f, 75.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//第一段上升
+	HAL_Delay(200);
+	Arm_Claw_Steer_Control(10.0f, 75.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//第一段上升
+	HAL_Delay(300);
+	Arm_Claw_Steer_Control(10.0f, 70.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//转向
+	HAL_Delay(500);
+	for( i = 80; i > 0; --i)
+	{
+		Arm_Claw_Steer_Control((float)-30.0f+0.5*i, -90.0f + 2*i, (float) -i, 0.0f, 1, __Arm_Steer, __Claw_Steer);
+		HAL_Delay(30);
+	}
+	Arm_Claw_Steer_Control(-30.0f, -90.0f, 10.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);
+	Arm_Claw_Steer_Control(-30.0f, -90.0f, 0.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);//放矿
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-20.0f, -20.0f, 0.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);//防卡死中间形态
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-15.0f, -120.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);//待机形态
+}
+
+void Arm_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer)
+{
+	Arm_Claw_Steer_Control(-15.0f, -120.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 0.0f, 1, __Arm_Steer, __Claw_Steer);
+	HAL_Delay(200);
+	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);
+	HAL_Delay(800);
+	Arm_Claw_Steer_Control(-20.0f, 55.0f, -90.0f, 0.0f, 0, __Arm_Steer, __Claw_Steer);
 }
 

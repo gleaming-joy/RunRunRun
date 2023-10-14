@@ -26,4 +26,5 @@ void Start_to_Barrier();
 void Cross_Barrier();
 void Back_Cross_Barrier();
 void Barrier_to_Start();
+void Barrier_Position_Adjust();
 #endif

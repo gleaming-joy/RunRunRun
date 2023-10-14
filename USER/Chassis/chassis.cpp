@@ -218,7 +218,7 @@ void Class_Chassis::R_Velocity_Control(float vl,float vr)
     Math_Constrain(&vl, -R_MAX, R_MAX);
     Math_Constrain(&vr, -R_MAX, R_MAX);
     RMotor[0].R_Set_Out(vl / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
-    RMotor[1].R_Set_Out(vr / R_WHEEL_RADIUS * ((RMotor[0].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
+    RMotor[1].R_Set_Out(vr / R_WHEEL_RADIUS * ((RMotor[1].Get_Rotate_Direction_Flag() == CW) ? 1 : (-1)) * MOTOR_CALCULATE_PRESCALER / MOTOR_FULL_OMEGA);
     RMotor[0].R_Output();
     RMotor[1].R_Output();
 }   

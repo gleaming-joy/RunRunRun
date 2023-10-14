@@ -26,4 +26,6 @@ void Box_Steer_Rotate(Class_Steer __Box_Steer, float location);
 
 void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
 void Arm_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void Arm_Parallel_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+void Arm_Parallel_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);;
 #endif

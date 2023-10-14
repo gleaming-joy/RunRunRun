@@ -207,7 +207,7 @@ uint32_t HCSR04_Run()
 	uint32_t i = 0;
 	uint32_t uc=1;
   //屏蔽所有中断
-  __set_PRIMASK(1);
+  // __set_PRIMASK(1);
 	HAL_GPIO_WritePin(HCSR04_Trig_GPIO_Port, HCSR04_Trig_GPIO_PIN, GPIO_PIN_SET);
 	HAL_Delay_us(20);
 	HAL_GPIO_WritePin(HCSR04_Trig_GPIO_Port, HCSR04_Trig_GPIO_PIN, GPIO_PIN_RESET);
@@ -225,7 +225,7 @@ uint32_t HCSR04_Run()
 		i++;
 	}
   //取消中断屏蔽
-  __set_PRIMASK(0);
+  // __set_PRIMASK(0);
 	return (uint32_t)i/35;
 }
 	
