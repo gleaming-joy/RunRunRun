@@ -321,8 +321,8 @@ int main(void)
 		// while((LP_Receive_x & (uint8_t)0x99) != (uint8_t) 0x18) {}
 		// while(LP_Receive_x != (uint8_t) 0xFF) {}
 		// HAL_Delay(2500);
-        
-    // TestMotor1.Set_Motor_Running_Status(1,0);
+		
+		// TestMotor1.Set_Motor_Running_Status(1,0);
     // Chassis.Set_Velocity(v_stop_main);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
     // RChassis.R_Set_Velocity(0.0f);
@@ -340,21 +340,70 @@ int main(void)
 //		HAL_Delay(2000);
 //		Start_to_High(Arm_Steer, Claw_Steer);
 // TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
-// HAL_Delay(14000);0
-//		HAL_Delay(2000);
-//		Cross_Barrier();
-//    LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, Box_Steer);
-//		HAL_Delay(2000);
-//		LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer);
-//		HAL_Delay(4000);
+// HAL_Delay(14000);
 
- Arm_Claw_Steer_Control(-20.0f, 75.0f, -90.0f, 90.0f,0, Arm_Steer, Claw_Steer);
+		Box_Steer_Rotate(Box_Steer, 0);
+		Arm_Catch(Arm_Steer, Claw_Steer);
+		Start_to_Barrier();
+		HAL_Delay(2000);
+		Cross_Barrier();
+    LinePatrol_Catch_LOrange_NoVisual(Arm_Steer, Claw_Steer, Box_Steer);
+		HAL_Delay(2000);
+		LinePatrol_Catch_Purple_NoVision(Arm_Steer, Claw_Steer,Box_Steer);
+		HAL_Delay(4000);
+ 
 
-//Start_to_High(Arm_Steer, Claw_Steer, Box_Steer);
-//HAL_Delay(2000);
-//LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer);
-//HAL_Delay(4000);
-		
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+//	Box_Steer_Rotate(Box_Steer, 0);
+//	Arm_Catch(Arm_Steer, Claw_Steer);
+//	Start_to_High(Arm_Steer, Claw_Steer, Box_Steer);
+//	HAL_Delay(500);
+//	LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, Box_Steer);
+//	// LinePatrol_Catch_LOrange_NoVisual(Arm_Steer, Claw_Steer, Box_Steer);
+//	HAL_Delay(500);
+//	LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer);
+//	// LinePatrol_Catch_Purple_NoVisual(Arm_Steer, Claw_Steer);
+//	HAL_Delay(2000);
+//	Chassis.Velocity_Control(-0.3, -0.1, -1);	
+//	HAL_Delay(2000);
+//	Chassis.Velocity_Control(0.5,0.3,0);	
+//	HAL_Delay(1200);
+//	Catch_Position_Adjust();
+//	
+//	TestMotor1.Set_Motor_Running_Status(1,1);
+//    Chassis.Velocity_Control(0, 0.4, 0);
+//    RChassis.R_Velocity_Control(0.3f, 0.3f);
+//    HAL_Delay(3500);
+//    Chassis.Velocity_Control(0, 0, 0);
+//    RChassis.R_Velocity_Control(0.0f, 0.0f);
+//    HAL_Delay(10500);
+//        
+//    TestMotor1.Set_Motor_Running_Status(0,0);
+//    Chassis.Velocity_Control(0, 0.2, 0);
+//    RChassis.R_Velocity_Control(0.2f, 0.2f);
+//	HAL_Delay(6000);
+//        
+//    TestMotor1.Set_Motor_Running_Status(1,0);
+//    Chassis.Velocity_Control(0, 0, 0);
+//    RChassis.R_Velocity_Control(0.0f, 0.0f);
+//    HAL_Delay(14000);
+//		
+//		Chassis.Velocity_Control(-0.2f, 0, -0.8f);
+//		HAL_Delay(5000);
+//		Chassis.Velocity_Control(-0.4f, 0, 0);
+//		HAL_Delay(2000);
+//		Chassis.Velocity_Control(0,0,0);
+//		Box_Steer_Rotate(Box_Steer, -90);
+//		HAL_Delay(3000);
+//		Chassis.Velocity_Control(0, -0.4f, 0);
+//		HAL_Delay(1000);
+//		Chassis.Velocity_Control(0,0,0);
+//		Box_Steer_Rotate(Box_Steer,0);
+//		HAL_Delay(3000);
+//		Box_Steer_Rotate(Box_Steer,90);
+//		HAL_Delay(20000);
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
+
 		// Chassis.Set_Velocity(v_turn);
 		// Chassis.Calculate_TIM_PeriodElapsedCallback();
 		// HAL_Delay(800);

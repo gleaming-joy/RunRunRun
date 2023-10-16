@@ -19,8 +19,10 @@
 
 //局部动作
 void LinePatrol_Catch_LOrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, Class_Steer __Box_Steer);
+void LinePatrol_Catch_LOrange_NoVisual(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, Class_Steer __Box_Steer);
 void LinePatrol_Catch_ROrange(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
 void LinePatrol_Catch_Purple(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
+ void LinePatrol_Catch_Purple_NoVision(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, Class_Steer __Box_Steer);
 void Barrier_to_Catch(uint8_t model);
 
 //整体运动
