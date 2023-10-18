@@ -50,16 +50,16 @@ void Class_Arm::Arm_Claw_Steer_Control(float Arm_Angle_0, float Arm_Angle_1, flo
     Arm_Steer[2].Output();
     Arm_Steer[0].Set_Out(Arm_Angle_3, 270);
     Arm_Steer[0].Output();
-		if(Claw_Stat == 0)
-		{
-			Claw_Steer.Set_Out(10.0f, 270);
-			Claw_Steer.Output();
-		}
-		else if(Claw_Stat==1)
-		{
-			Claw_Steer.Set_Out(-20.0f, 270);
-			Claw_Steer.Output();
-		}
+	if(Claw_Stat == 0)
+	{
+		Claw_Steer.Set_Out(10.0f, 270);
+		Claw_Steer.Output();
+	}
+	else if(Claw_Stat==1)
+	{
+		Claw_Steer.Set_Out(-20.0f, 270);
+		Claw_Steer.Output();
+	}
 }
 
 

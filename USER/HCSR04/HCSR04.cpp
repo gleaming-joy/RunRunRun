@@ -45,7 +45,7 @@ void Class_HCSR04::Init(uint16_t __HCSR04_Trig_GPIO_Pin, GPIO_TypeDef* __HCSR04_
  * @param
  */
 
-void Class_HCSR04::HCSR04_Run()
+uint32_t Class_HCSR04::HCSR04_Run()
 {
 	uint32_t i = 0;
 	uint32_t uc=1;
@@ -57,14 +57,12 @@ void Class_HCSR04::HCSR04_Run()
 		uc++;
 		if(uc>8000000)
 		{
-			// return 9999;
-            Distance = 9999;
-			break;
+			return 9999;
 		}
 	}
 	while(HAL_GPIO_ReadPin(HCSR04_Echo_GPIOx, HCSR04_Echo_GPIO_Pin) != GPIO_PIN_RESET)
 	{
 		i++;
 	}
-	Distance = (uint32_t)i/35;
+	return (uint32_t)i/35;
 }

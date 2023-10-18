@@ -13,9 +13,7 @@ class Class_HCSR04
 {
 public:
     void Init(uint16_t __HCSR04_Trig_GPIO_Pin, GPIO_TypeDef* __HCSR04_Trig_GPIOx, uint16_t __HCSR04_Echo_GPIO_Pin, GPIO_TypeDef* __HCSR04_Echo_GPIOx);
-    void HCSR04_Run();
-
-    uint32_t Distance;
+    uint32_t HCSR04_Run();
 
 protected:
 

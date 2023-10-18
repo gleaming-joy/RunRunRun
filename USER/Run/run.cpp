@@ -411,9 +411,8 @@ void Barrier_to_Catch(uint8_t model)
 void Cross_Barrier()
 {
   //第一次识别（此时车在右侧）
-  HC1.HCSR04_Run();
   //第一个障碍物在右侧（此时车在右侧）
-  if (HC1.Distance < 600)
+  if (HC1.HCSR04_Run() < 600)
   {
 		Chassis.Velocity_Control(0.5, 0.25, 0);
 		HAL_Delay(500);
@@ -423,22 +422,19 @@ void Cross_Barrier()
     Chassis.Velocity_Control(0, 0, 0);
 		HAL_Delay(2000);
     //第二次识别（此时车在左侧）
-	HC1.HCSR04_Run();
     //第二个障碍物在左侧（此时车在左侧）
-    if (HC1.Distance < 1500)
+    if (HC1.HCSR04_Run() < 1500)
     {
       //向右前移动避开障碍物
 	  Chassis.Velocity_Control(0, 0.3, 0);
-	  while(HC1.Distance > 400)
+	  while(HC1.HCSR04_Run() > 400)
 	  {
 		HAL_Delay(10);
-		HC1.HCSR04_Run();
 	  }
 	  Chassis.Velocity_Control(-0.7, 0.2, 0);
-	  while(HC1.Distance < 800) 
+	  while(HC1.HCSR04_Run() < 800) 
 	  {
 		HAL_Delay(10);
-		HC1.HCSR04_Run();
 	  }
 	  HAL_Delay(1400);
 	  Chassis.Velocity_Control(0, 0.3, 0);
@@ -474,22 +470,19 @@ void Cross_Barrier()
     while (((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t)0x18) && ((LP_Receive_yr & (uint8_t) 0xDB) != (uint8_t)0x18)) {}
 		Barrier_Position_Adjust();
     //第二次识别（此时车在右侧）
-	HC1.HCSR04_Run();
     //第二个障碍物在右侧（此时车在右侧）
-    if (HC1.Distance < 1500)
+    if (HC1.HCSR04_Run() < 1500)
     {
       //向左前移动避开障碍物
 	  Chassis.Velocity_Control(0, 0.3, 0);
-	  while(HC1.Distance > 450) 
+	  while(HC1.HCSR04_Run() > 450) 
 	  {
 		HAL_Delay(10);
-		HC1.HCSR04_Run();
 	  }
 	  Chassis.Velocity_Control(0.7, 0, 0);
-	  while(HC1.Distance < 800) 
+	  while(HC1.HCSR04_Run() < 800) 
 	  {
 		HAL_Delay(10);
-		HC1.HCSR04_Run();
 	  }
 	  HAL_Delay(1000);
 	  Chassis.Velocity_Control(0, 0.3, 0);
