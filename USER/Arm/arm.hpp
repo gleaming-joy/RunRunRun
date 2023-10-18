@@ -11,21 +11,28 @@
                                            
 /* Exported types ------------------------------------------------------------*/
 
+class Class_Arm
+{
+public:
+    void Init(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, Class_Steer __Box_Steer);
+
+    void Arm_Claw_Steer_Control(float Arm_Angle_0, float Arm_Angle_1, float Arm_Angle_2, float Arm_Angle_3, uint16_t Claw_Stat);
+
+    void Arm_Rest();
+    void Arm_Catch();
+    void Arm_Catch_Back();
+
+    void Box_Steer_Rotate(float location);
+
+protected:
+    Class_Steer *Arm_Steer;
+    Class_Steer Claw_Steer;
+    Class_Steer Box_Steer;
+};
+
+extern Class_Arm Arm;
 /* Exported variables --------------------------------------------------------*/
 
 /* Exported function declarations --------------------------------------------*/
 
-void Arm_Claw_Steer_Control(float Arm_Angle_0, float Arm_Angle_1, float Arm_Angle_2, float Arm_Angle_3, uint16_t Claw_Stat, Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-
-void Arm_Steer_Output_Get_High_Locate(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Steer_Output_Get_Low_Locate(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Steer_Output_Store_Locate(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Steer_Output_Go_Locate(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-
-void Box_Steer_Rotate(Class_Steer __Box_Steer, float location);
-
-void Arm_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Parallel_Catch(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);
-void Arm_Parallel_Catch_Back(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer);;
 #endif

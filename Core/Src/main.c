@@ -32,6 +32,7 @@
 #include "arm.hpp"
 #include "run.hpp"
 #include "StepMotor.h"
+#include "HCSR04.hpp"
 
 /* USER CODE END Includes */
 
@@ -54,50 +55,30 @@
 
 /* USER CODE BEGIN PV */
 
+//¬Û¬÷µ◊≈Ã∂®“Â
 Class_Chassis Chassis;
+//Ω∫¬÷µ◊≈Ã∂®“Â
 Class_Chassis RChassis;
+//ª˙–µ±€œ‡πÿ∂Êª˙∂®“Â
+Class_Arm Arm;
 Class_Steer Arm_Steer[4];
 Class_Steer Claw_Steer;
 Class_Steer Box_Steer;
+//≤ΩΩ¯µÁª˙∂®“Â
+StepMotor TestMotor1;
+//≥¨…˘≤‚æ‡∂®“Â
+Class_HCSR04 HC1;
 
 uint32_t tim;
-
-StepMotor TestMotor1;
-
-// uint8_t LP_Detect_Bool[4];
+//—≤œﬂΩ” ’∂®“Â
 uint8_t LP_Receive_yl;
 uint8_t LP_Receive_yr;
 uint8_t LP_Receive_x;
+// ˜›Æ≈…Ω” ’∂®“Â
 uint8_t B_Receive;
-
-SpeedTypeDef v_stop_main = 
-{
-	0,0,0
-};
-SpeedTypeDef v_front_slow =
-{
-	0,0.4,0
-};
-SpeedTypeDef v_front_medium =
-{
-	0,0.6,0
-};
-SpeedTypeDef v_front_fast = 
-{
-	0,0.8,0
-};
-SpeedTypeDef v_left_medium =
-{
-	0.6,0,0
-};
-SpeedTypeDef v_turn = 
-{
-	-0.2,0.1,-1
-};
-extern SpeedTypeDef v_crotate_left;
-extern SpeedTypeDef v_rotate_left;
-
+//º«¬º’œ∞≠ŒÔŒª÷√
 uint8_t Barrier_Location;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -153,28 +134,29 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_Base_Start_IT(&htim10);
-
+  //¥Æø⁄Õ®–≈∂® ±∆˜÷–∂œ πƒ‹
+  HAL_TIM_Base_Start_IT(&UART_TRANSMIT_TIM);
+  //µ◊≈Ã∂® ±∆˜÷–∂œ πƒ‹£® µº …œ√ª”–”√µΩ£©
+  HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
+  //µ◊≈Ã≥ı ºªØº∞π§◊˜ƒ£ Ω…Ë÷√
   Chassis.Init(CHASSIS_MOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
   Chassis.Set_Control_Method(Control_Method_OPENLOOP);
   RChassis.R_Init(RMOTOR_PWM_DRIVER_TIM, CHASSIS_MOTOR_CALCULATE_TIM);
-  Arm_Steer[0].Init(htim5, TIM_CHANNEL_1);
-  Arm_Steer[1].Init(htim8, TIM_CHANNEL_4);
-  Arm_Steer[2].Init(htim8, TIM_CHANNEL_3);
-  Arm_Steer[3].Init(htim8, TIM_CHANNEL_2);
-  Claw_Steer.Init(htim8, TIM_CHANNEL_1);
-  Box_Steer.Init(htim5, TIM_CHANNEL_2);
+  //ª˙–µ±€≥ı ºªØ
+  Arm.Init(Arm_Steer, Claw_Steer, Box_Steer);
+  //≤ΩΩ¯µÁª˙≥ı ºªØº∞π§◊˜ƒ£ Ω…Ë÷√
 	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
 	TestMotor1.Set_Motor_Running_Speed(6400, 6400);
   HAL_TIM_OC_DelayElapsedCallback(&htim9);
 	TestMotor1.Set_Motor_Running_Status(0,0);
-  HAL_TIM_Base_Start_IT(&CHASSIS_MOTOR_CALCULATE_TIM);
-
+  //≥¨…˘≤‚æ‡≥ı ºªØ
+  HC1.Init(HCSR04_Trig_GPIO_PIN, HCSR04_Trig_GPIO_Port, HCSR04_Echo_GPIO_PIN, HCSR04_Echo_GPIO_Port);
+  //ø™∆Ù—≤œﬂΩ” ’
   LinePatrol_Receive(&LP_YL_HUART);
   LinePatrol_Receive(&LP_YR_HUART);
   LinePatrol_Receive(&LP_X_HUART);
 
-
+	HAL_Delay(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -249,13 +231,13 @@ int main(void)
     // LinePatrol_Catch_LOrange(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl);
     // Box_Steer_Rotate(Box_Steer, 0.0f);
 
-    // //ÔøΩÔøΩ»ºÔøΩœøÔøΩ
+    // //??????
     // LinePatrol_Catch_Purple(Arm_Steer, Claw_Steer, &B_HUART, &B_Receive, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 
-    // //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+    // //??????????
     // LinePatrol_Back_Low(&Barrier_Location);
     
-    // //ÔøΩ≈øÔøΩ
+    // //???
     // LinePatrol_Ad_Drop(Box_Steer, &LP_YL_HUART, &LP_Receive_yl, &LP_YR_HUART, &LP_Receive_yr);
 		
 //		HAL_Delay(2000);
@@ -291,7 +273,7 @@ int main(void)
 
 //	LinePatrol_Start_Low(&LP_Receive_x, &LP_Receive_yl, &LP_Receive_yr);
 
-//		//ÁêÜËÆ∫‰∏äÂÆåÊï¥‰∏äÂπ≥Âè∞ÁöÑ‰ª£ÔøΩ??
+//		//¿Ì¬€…œÕÍ’˚…œ∆ΩÃ®µƒ¥˙???
 //		Arm_Catch(Arm_Steer, Claw_Steer);
 //		HAL_Delay(2000);
 //		Arm_Catch_Back(Arm_Steer, Claw_Steer);
@@ -342,14 +324,14 @@ int main(void)
 // TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
 // HAL_Delay(14000);
 
-		Box_Steer_Rotate(Box_Steer, 0);
-		Arm_Catch(Arm_Steer, Claw_Steer);
+		Arm.Arm_Catch();
+		Arm.Box_Steer_Rotate(0);
 		Start_to_Barrier();
 		HAL_Delay(2000);
 		Cross_Barrier();
-    LinePatrol_Catch_LOrange_NoVisual(Arm_Steer, Claw_Steer, Box_Steer);
+    LinePatrol_Catch_LOrange_NoVisual();
 		HAL_Delay(2000);
-		LinePatrol_Catch_Purple_NoVision(Arm_Steer, Claw_Steer,Box_Steer);
+		LinePatrol_Catch_Purple_NoVision();
 		HAL_Delay(4000);
  
 
@@ -438,7 +420,7 @@ int main(void)
 		// Arm_Catch_Back(Arm_Steer, Claw_Steer);
 		// HAL_Delay(20000);
 					
-//		//‰∏äÂπ≥Âè∞ÊµãÔøΩ??
+//		//…œ∆ΩÃ®≤‚???
 //		Chassis.Set_Velocity(v_stop_main);
 //    Chassis.Calculate_TIM_PeriodElapsedCallback();
 //    RChassis.R_Set_Velocity(0.0f);

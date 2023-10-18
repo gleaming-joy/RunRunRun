@@ -49,17 +49,18 @@ extern TIM_HandleTypeDef htim4;
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Ä¼ï¿½Ê±ï¿½ï¿½
+//µ×ÅÌÏà¹Ø¶¨Ê±Æ÷
 #define CHASSIS_MOTOR_PWM_DRIVER_TIM htim4
 #define CHASSIS_MOTOR_CALCULATE_TIM htim4
 #define RMOTOR_PWM_DRIVER_TIM htim2
 
-//ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Í¶ï¿½Ê±ï¿½ï¿½
+//´®¿ÚÍ¨ÐÅ¶¨Ê±Æ÷
 #define UART_TRANSMIT_TIM htim10
-//ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+//Ñ²Ïß´®¿Ú½ÓÊÕ
 #define LP_YL_HUART huart6
 #define LP_YR_HUART huart3
 #define LP_X_HUART huart7
+//Ê÷Ý®ÅÉ´®¿Ú½ÓÊÕ
 #define B_HUART huart2
 
 /* USER CODE END EM */
@@ -75,7 +76,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-// ï¿½ï¿½ï¿½Öµï¿½ï¿½GPIO
+//ÂóÂÖµç»úGPIOÉèÖÃ
 #define Pin_Pushpull_MotorDirectionA1_Pin GPIO_PIN_1
 #define Pin_Pushpull_MotorDirectionA1_GPIO_Port GPIOF
 #define Pin_Pushpull_MotorDirectionA2_Pin GPIO_PIN_5
@@ -92,7 +93,7 @@ void Error_Handler(void);
 #define Pin_Pushpull_MotorDirectionB3_GPIO_Port GPIOE
 #define Pin_Pushpull_MotorDirectionB4_Pin GPIO_PIN_0
 #define Pin_Pushpull_MotorDirectionB4_GPIO_Port GPIOB
-// ï¿½ï¿½ï¿½Öµï¿½ï¿½GPIO
+//½ºÂÖµç»úGPIOÉèÖÃ
 #define RMotorDirectionA1_Pin GPIO_PIN_5
 #define RMotorDirectionA1_GPIO_Port GPIOC
 #define RMotorDirectionA2_Pin GPIO_PIN_5
@@ -101,18 +102,18 @@ void Error_Handler(void);
 #define RMotorDirectionB1_GPIO_Port GPIOC
 #define RMotorDirectionB2_Pin GPIO_PIN_4
 #define RMotorDirectionB2_GPIO_Port GPIOA
-// GPIO of HC_SR04
+//³¬Éù²â¾àGPIOÉèÖÃ
 #define HCSR04_Trig_GPIO_Port GPIOC
 #define HCSR04_Trig_GPIO_PIN GPIO_PIN_4
 #define HCSR04_Echo_GPIO_Port GPIOC
 #define HCSR04_Echo_GPIO_PIN GPIO_PIN_0
-// Stepmotor direction
+//²½½øµç»ú·½ÏòÉèÖÃ
 #define STEPMOTOR_DIRECTION_UP 0
 #define STEPMOTOR_DIRECTION_DOWN 1
 #define STEPMOTOR_STATUS_ENABLE 1
 #define STEPMOTOR_STATUS_DISABLE 0
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï£ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½
+//»ô¶û±àÂëÆ÷Ïà¹Ø£¨Ã»ÓÃµ½£©
 #define Pin_Exti_HallEncoderA1_Pin GPIO_PIN_7
 #define Pin_Exti_HallEncoderA1_GPIO_Port GPIOF
 #define Pin_Exti_HallEncoderA1_EXTI_IRQn EXTI7_IRQn
@@ -125,7 +126,6 @@ void Error_Handler(void);
 #define Pin_Exti_HallEncoderA4_Pin GPIO_PIN_15
 #define Pin_Exti_HallEncoderA4_GPIO_Port GPIOE
 #define Pin_Exti_HallEncoderA4_EXTI_IRQn EXTI15_IRQn
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GPIOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½
 #define Pin_PullDown_HallEncoderB1_Pin GPIO_PIN_11
 #define Pin_PullDown_HallEncoderB1_GPIO_Port GPIOF
 #define Pin_PullDown_HallEncoderB2_Pin GPIO_PIN_8

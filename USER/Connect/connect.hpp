@@ -20,7 +20,4 @@ void Berry_Receive();
 void Berry_Orange_Open();
 void Berry_Purple_Open();
 
-void HAL_Delay_us(uint32_t us);
-uint32_t HCSR04_Run();
-
 #endif
