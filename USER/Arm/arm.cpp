@@ -42,14 +42,14 @@ void Class_Arm::Init(Class_Steer __Arm_Steer[], Class_Steer __Claw_Steer, Class_
 
 void Class_Arm::Arm_Claw_Steer_Control(float Arm_Angle_0, float Arm_Angle_1, float Arm_Angle_2, float Arm_Angle_3, uint16_t Claw_Stat)
 {
-    Arm_Steer[3].Set_Out(Arm_Angle_0, 270);
-    Arm_Steer[3].Output();
+    Arm_Steer[0].Set_Out(Arm_Angle_0, 270);
+    Arm_Steer[0].Output();
     Arm_Steer[1].Set_Out(Arm_Angle_1, 180);
     Arm_Steer[1].Output();
     Arm_Steer[2].Set_Out(Arm_Angle_2, 270);
     Arm_Steer[2].Output();
-    Arm_Steer[0].Set_Out(Arm_Angle_3, 270);
-    Arm_Steer[0].Output();
+    Arm_Steer[3].Set_Out(Arm_Angle_3, 270);
+    Arm_Steer[3].Output();
 	if(Claw_Stat == 0)
 	{
 		Claw_Steer.Set_Out(10.0f, 270);

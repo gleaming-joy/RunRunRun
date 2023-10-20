@@ -371,8 +371,10 @@ int main(void)
   // Chassis.Velocity_Control(0,0,0);
   // Catch_Position_Adjust();
 
-  Start_to_High();
+  //Start_to_High();
   // TestMotor1.Set_Motor_Running_Status(1,0);
+	//Arm.Arm_Claw_Steer_Control(0, 0, 0, 0, 0);
+	Arm.Arm_Catch();
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
 //	Box_Steer_Rotate(Box_Steer, 0);
