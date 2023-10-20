@@ -70,10 +70,13 @@ UART7_TX: PE8
 UART8_RX: PE0  
 UART8_TX: PE1  
 
-- 超声波测距
-Trig: PC4/N1
-Echo: PC0/N2
+- 超声波测距（前）
+Trig GPIO_Output: PC4/N1
+Echo GPIO_Input: PC0/N2
 
+- 超声波测距（侧）
+Trig GPIO_Output: PC3/M1  
+Echo GPIO_Input: PB1/M2
 ## 直线滑台
 
 - 步进电机（右） TestMotor1  

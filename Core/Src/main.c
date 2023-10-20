@@ -145,10 +145,10 @@ int main(void)
   //机械臂初始化
   Arm.Init(Arm_Steer, Claw_Steer, Box_Steer);
   //步进电机初始化及工作模式设置
-	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
-	TestMotor1.Set_Motor_Running_Speed(6400, 6400);
-  HAL_TIM_OC_DelayElapsedCallback(&htim9);
-	TestMotor1.Set_Motor_Running_Status(0,0);
+//	TestMotor1.init(&htim9, TIM_CHANNEL_1, 1000000U, GPIOF, GPIO_PIN_10, GPIOI, GPIO_PIN_9);
+//	TestMotor1.Set_Motor_Running_Speed(6400, 6400);
+//  HAL_TIM_OC_DelayElapsedCallback(&htim9);
+//	TestMotor1.Set_Motor_Running_Status(0,0);
   //超声测距初始化
   HC1.Init(HCSR04_Trig_GPIO_PIN, HCSR04_Trig_GPIO_Port, HCSR04_Echo_GPIO_PIN, HCSR04_Echo_GPIO_Port);
   //开启巡线接收
@@ -324,6 +324,13 @@ int main(void)
 // TestMotor1.Set_Motor_Running_Status(STEPMOTOR_STATUS_ENABLE,STEPMOTOR_DIRECTION_UP);
 // HAL_Delay(14000);
 
+
+//现在要用到
+//		Chassis.Velocity_Control(0, 0.4, 0);
+//		HAL_Delay(5000);
+//		Chassis.Velocity_Control(0, 0, 0);
+//		HAL_Delay(10000);
+//		HAL_Delay(1000);
 		Arm.Arm_Catch();
 		Arm.Box_Steer_Rotate(0);
 		Start_to_Barrier();

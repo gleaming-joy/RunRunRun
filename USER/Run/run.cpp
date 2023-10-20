@@ -349,58 +349,97 @@ void Start_to_Barrier()
 void Barrier_to_Catch(uint8_t model)
 {
 	uint32_t tim;
-  //前进到采矿区
-  Chassis.Velocity_Control(0, 0.3, 0);
-	HAL_Delay(500);
-  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
-	Chassis.Velocity_Control(0,0,0);
-	HAL_Delay(500);
-	Catch_Position_Adjust();
-  if (model == 0)
-  {
-    Chassis.Velocity_Control(0.4, 0, 0);
-    HAL_Delay(500);
-  }
-  else if (model == 1)
-  {
-		tim=0;
-    //向左平移到中间线
-    while (tim<110)
+    //前进到采矿区
+    
+    if (model == 0)
     {
-	    if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
-      {
-		    Chassis.Velocity_Control(0.6,0.2,0);
-		    HAL_Delay(50);
-      }
-      else if (LP_Receive_yl > (uint8_t)0x70)
-      {
-		    Chassis.Velocity_Control(0.6,-0.2,0);
-		    HAL_Delay(50);
-      }	
-	    else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
-	    {
-		    Chassis.Velocity_Control(0.6,0,0.3);
-		    HAL_Delay(50);
-	    }
-	    else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
-	    {
-		     Chassis.Velocity_Control(0.6,0,-0.3);
-		     HAL_Delay(50);
-	    }
-      else
-      {
-		    Chassis.Velocity_Control(0.6,0,0);
-		    HAL_Delay(50);
-      }
+		Chassis.Velocity_Control(-0.2, 0.3, 0);
+		HAL_Delay(500);
+    	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
+		Chassis.Velocity_Control(0,0,0);
+		HAL_Delay(500);
+		Catch_Position_Adjust();
+    	tim=0;
+    	//向右平移到中间线
+    	while (tim<110)
+    	{
+			if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+      		{
+		    	Chassis.Velocity_Control(-0.6,0.2,0);
+		    	HAL_Delay(50);
+      		}
+      		else if (LP_Receive_yl > (uint8_t)0x70)
+      		{
+		    	Chassis.Velocity_Control(-0.6,-0.2,0);
+		    	HAL_Delay(50);
+      		}	
+	    	else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
+	    	{
+		    	Chassis.Velocity_Control(-0.6,0,0.3);
+				HAL_Delay(50);
+	    	}
+	    	else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
+	    	{
+		    	Chassis.Velocity_Control(-0.6,0,-0.3);
+		    	HAL_Delay(50);
+	    	}
+      		else
+      		{
+		    	Chassis.Velocity_Control(-0.6,0,0);
+		    	HAL_Delay(50);
+      		}
 			tim++;
 			if((LP_Receive_yr & (uint8_t) 0x06) == (uint8_t)0x06) tim=100;
-    }
+    	}
 		Chassis.Velocity_Control(0, 0, 0);
 		HAL_Delay(2000);
-  }
+  	}
+  	else if (model == 1)
+  	{
+		Chassis.Velocity_Control(0, 0.3, 0);
+		HAL_Delay(500);
+    	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
+		Chassis.Velocity_Control(0,0,0);
+		HAL_Delay(500);
+		Catch_Position_Adjust();
+		tim=0;
+    	//向左平移到中间线
+    	while (tim<110)
+    	{
+	    	if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+      		{
+		    	Chassis.Velocity_Control(0.6,0.2,0);
+		    	HAL_Delay(50);
+      		}
+      		else if (LP_Receive_yl > (uint8_t)0x70)
+      		{
+		    	Chassis.Velocity_Control(0.6,-0.2,0);
+		    	HAL_Delay(50);
+      		}	
+	    	else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
+	    	{
+		    	Chassis.Velocity_Control(0.6,0,0.3);
+		    	HAL_Delay(50);
+	   		}
+	    	else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
+	    	{
+		    	Chassis.Velocity_Control(0.6,0,-0.3);
+		    	HAL_Delay(50);
+	    	}
+      		else
+      		{
+		    	Chassis.Velocity_Control(0.6,0,0);
+		    	HAL_Delay(50);
+      		}
+			tim++;
+			if((LP_Receive_yr & (uint8_t) 0x06) == (uint8_t)0x06) tim=100;
+    	}
+		Chassis.Velocity_Control(0, 0, 0);
+		HAL_Delay(2000);
+  	}
 	Catch_Position_Adjust();
-  Chassis.Velocity_Control(0, 0, 0);
-  HAL_Delay(2000);
+  	Chassis.Velocity_Control(0, 0, 0);
+  	HAL_Delay(2000);
 }
 
 /**
@@ -450,8 +489,8 @@ void Cross_Barrier()
 			Chassis.Velocity_Control(0, 0.6, 0);
 			HAL_Delay(500);
 			while ((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t)0x18 && (LP_Receive_yr & (uint8_t) 0xDB) != (uint8_t)0x18) {}
-			Chassis.Velocity_Control(0.5, 0, 0);
-			HAL_Delay(1000);
+			// Chassis.Velocity_Control(0.4, 0, 0);
+			// HAL_Delay(1000);
 			Barrier_Position_Adjust();
       
       Barrier_to_Catch(0);
