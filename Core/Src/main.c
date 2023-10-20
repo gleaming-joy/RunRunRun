@@ -371,23 +371,77 @@ int main(void)
   // Chassis.Velocity_Control(0,0,0);
   // Catch_Position_Adjust();
 
-	HAL_Delay(2000);
-  Start_to_High();
-  LinePatrol_Catch_LOrange_NoVisual();
- 	HAL_Delay(2000);
- 	LinePatrol_Catch_Purple_NoVision();
- 	HAL_Delay(4000);
-  //高地返回准备代码
-  HAL_Delay(2200);
-  Chassis.Velocity_Control(-0.3, 0, 1);
-	HAL_Delay(2500);
-  Chassis.Velocity_Control(0,0,0);
-  HAL_Delay(2200);
-  Chassis.Velocity_Control(0,-0.5,0);
-  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-  Chassis.Velocity_Control(0,0,0);
-  Catch_Position_Adjust();
+//	HAL_Delay(1000);
+//	Arm.Arm_Claw_Steer_Control(-10.0f, -65.0f, 100.0f, 90.0f,0);
+//	Arm.Box_Steer_Rotate(0);
+//	HAL_Delay(2000);
+//	
+//  Start_to_High();
+//  LinePatrol_Catch_LOrange_NoVisual();
+// 	HAL_Delay(2000);
+// 	LinePatrol_Catch_Purple_NoVision();
+//	
+//  //High_to_Start_Prep
+//	Arm.Arm_Claw_Steer_Control(-10.0f, -65.0f, 100.0f, 90.0f,0);
+//  HAL_Delay(1000);
+//  Chassis.Velocity_Control(-0.3, 0, 1);
+//	HAL_Delay(2200);
+//  Chassis.Velocity_Control(0,0,0);
+//  HAL_Delay(1000);
+//  Chassis.Velocity_Control(0,-0.5,0);
+//  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {};
+//  Chassis.Velocity_Control(0,0,0);
+//  Catch_Position_Adjust();
+//		
+//	//High_to_Start
+//	Chassis.Velocity_Control(0,-0.5,0);
+//	HAL_Delay(2000);
+//	while (LP_Receive_yl != (uint8_t)0x80) {};
+//	Chassis.Velocity_Control(0,0,0);
+//	TestMotor1.Set_Motor_Running_Status(1,1);
+//	HAL_Delay(14000);
+//	TestMotor1.Set_Motor_Running_Status(0,1);
+//	Chassis.Velocity_Control(0,-0.2,0);
+//	RChassis.R_Velocity_Control(-0.2,-0.2);
+//	HAL_Delay(3000);
+//	while((LP_Receive_x & (uint8_t) 0x7E) != (uint8_t) 0x7E) {};
+//	TestMotor1.Set_Motor_Running_Status(1,0);
+//	Chassis.Velocity_Control(0,0,0);
+//	RChassis.R_Velocity_Control(0,0);
+//	HAL_Delay(14000);
+//	TestMotor1.Set_Motor_Running_Status(0,0);
+//	HAL_Delay(2000);
+		
+	//Place_Brick
+	Chassis.Velocity_Control(0,-0.4,0);
+	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {};
+	Chassis.Velocity_Control(0,0,0);
+	Catch_Position_Adjust();
 	
+	HAL_Delay(500);
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(2100);
+	Chassis.Velocity_Control(-0.5,0.3,0);	
+	HAL_Delay(4000);
+	Chassis.Velocity_Control(0,0,0);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0,-0.3,0);
+	while((LP_Receive_x & (uint8_t) 0x7E) != (uint8_t) 0x7E) {};
+	Chassis.Velocity_Control(0,0,0);
+	HAL_Delay(500);
+	Arm.Box_Steer_Rotate(-90);
+	HAL_Delay(1000);
+	Chassis.Velocity_Control(0,-0.4,0);
+	HAL_Delay(2000);
+	Chassis.Velocity_Control(0,0,0);
+	HAL_Delay(500);
+	Arm.Box_Steer_Rotate(0);
+	HAL_Delay(500);
+	Arm.Box_Steer_Rotate(90);
+//	Barrier_to_Catch(1);
+//	HAL_Delay(2000);
+//	LinePatrol_Catch_LOrange_NoVisual();
+//	HAL_Delay(2000);
 	
 //  TestMotor1.Set_Motor_Running_Status(1,0);
 //	HAL_Delay(2000);
