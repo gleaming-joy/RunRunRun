@@ -371,10 +371,30 @@ int main(void)
   // Chassis.Velocity_Control(0,0,0);
   // Catch_Position_Adjust();
 
-  //Start_to_High();
-  // TestMotor1.Set_Motor_Running_Status(1,0);
-	//Arm.Arm_Claw_Steer_Control(0, 0, 0, 0, 0);
-	Arm.Arm_Catch();
+	HAL_Delay(2000);
+  Start_to_High();
+  LinePatrol_Catch_LOrange_NoVisual();
+ 	HAL_Delay(2000);
+ 	LinePatrol_Catch_Purple_NoVision();
+ 	HAL_Delay(4000);
+  //高地返回准备代码
+  HAL_Delay(2200);
+  Chassis.Velocity_Control(-0.3, 0, 1);
+	HAL_Delay(2500);
+  Chassis.Velocity_Control(0,0,0);
+  HAL_Delay(2200);
+  Chassis.Velocity_Control(0,-0.5,0);
+  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0,0,0);
+  Catch_Position_Adjust();
+	
+	
+//  TestMotor1.Set_Motor_Running_Status(1,0);
+//	HAL_Delay(2000);
+//	Arm.Arm_Catch();
+//	HAL_Delay(1000);
+//	Arm.Arm_Claw_Steer_Control(-15.0f, 50.0f, 130.0f, 90.0f,0);
+	
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$//
 //	Box_Steer_Rotate(Box_Steer, 0);

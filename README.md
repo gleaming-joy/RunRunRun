@@ -43,7 +43,7 @@ tim8 CH2: PI6/X
 - 机械爪2 Steer[2]  270  
 tim8 CH3: PI7/Y  
 
-- 机械爪1 Steer[1]  180  
+- 机械爪1 Steer[1]  270  
 tim8 CH4: PI2/Z  
 
 - 机械爪0 Steer[0]  270  

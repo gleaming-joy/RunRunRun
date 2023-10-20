@@ -44,7 +44,7 @@ void Class_Arm::Arm_Claw_Steer_Control(float Arm_Angle_0, float Arm_Angle_1, flo
 {
     Arm_Steer[0].Set_Out(Arm_Angle_0, 270);
     Arm_Steer[0].Output();
-    Arm_Steer[1].Set_Out(Arm_Angle_1, 180);
+    Arm_Steer[1].Set_Out(Arm_Angle_1, 270);
     Arm_Steer[1].Output();
     Arm_Steer[2].Set_Out(Arm_Angle_2, 270);
     Arm_Steer[2].Output();
@@ -93,65 +93,84 @@ void Class_Arm::Box_Steer_Rotate(float location)
 void Class_Arm::Arm_Catch()
 {
 	uint16_t i;
-	Arm_Claw_Steer_Control(-45.0f, 50.0f, 130.0f, 90.0f,0);
+	Arm_Claw_Steer_Control(-15.0f, 50.0f, 130.0f, 90.0f,0);
 	HAL_Delay(1000);
-	Arm_Claw_Steer_Control(-45.0f, 50.0f, 90.0f, 90.0f,0);
+	Arm_Claw_Steer_Control(-15.0f, 50.0f, 90.0f, 90.0f,0);
 	HAL_Delay(1000);
- 	Arm_Claw_Steer_Control(-40.0f, 70.0f, 80.0f, 90.0f,0);
- 	HAL_Delay(500);
- 	Arm_Claw_Steer_Control(-40.0f, 70.0f, 80.0f, 90.0f,1);
- 	HAL_Delay(500);
- 	Arm_Claw_Steer_Control(-40.0f, 45.0f, 90.0f, 90.0f,1);
- 	HAL_Delay(500);
-	Arm_Claw_Steer_Control(-20.0f, 45.0f, 130.0f, 90.0f,1);
+ 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,0);
+ 	HAL_Delay(200);
+ 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,1);
+ 	HAL_Delay(300);
+ 	Arm_Claw_Steer_Control(-10.0f, 45.0f, 90.0f, 90.0f,1);
+ 	HAL_Delay(300);
+	Arm_Claw_Steer_Control(10.0f, 45.0f, 130.0f, 90.0f,1);
 	HAL_Delay(500);
-	for(i=0;i<15;i++)
-	{
-		Arm_Claw_Steer_Control(-20.0f - i, 45.0f - 7.0f * i, 130.0f, 90.0f,1);
-		HAL_Delay(100);
-	}
-	Arm_Claw_Steer_Control(-40.0f, -60.0f, 130.0f, 90.0f,1);
-	HAL_Delay(500);
-	for(i=0;i<15;i++)
-	{
-		Arm_Claw_Steer_Control(-40.0f, -60.0f, 130.0f - 10.0f * i, 90.0f,1);
-		HAL_Delay(100);
-	}
-	Arm_Claw_Steer_Control(-40.0f, -60.0f, -20.0f, 90.0f,1);
-	HAL_Delay(500);
-	Arm_Claw_Steer_Control(-40.0f, -60.0f, -20.0f, 90.0f,0);
-	HAL_Delay(500);
-	for(i=0;i<15;i++)
-	{
-		Arm_Claw_Steer_Control(-40.0f, -60.0f, -20.0f + 10.0f * i, 90.0f,0);
-		HAL_Delay(100);
-	}
-	
-//	for(i=0;i<20;i++)
+//	for(i=0;i<30;i++)
 //	{
-//		Arm_Claw_Steer_Control(30.0f, 50.0f-2.5f*i, 90.0f, 90.0f,1, __Arm_Steer, __Claw_Steer);
+//		Arm_Claw_Steer_Control(10.0f - 0.5f * i, 45.0f - 3.5f * i, 130.0f, 90.0f,1);
 //		HAL_Delay(50);
 //	}
-//	Arm_Claw_Steer_Control(30.0f, 0.0f, 90.0f, 90.0f,1, __Arm_Steer, __Claw_Steer);
-//	for(i=0;i<15;i++)
-//	{
-//		Arm_Claw_Steer_Control(30.0f - 5.0f*i, -4.0f*i, 90.0f-4.5f*i, 90.0f,1, __Arm_Steer, __Claw_Steer);
-//		HAL_Delay(100);
-//	}
-// Arm_Claw_Steer_Control(-45.0f, -90.0f, -10.0f, 90.0f,1, __Arm_Steer, __Claw_Steer);
-// HAL_Delay(500);
-// Arm_Claw_Steer_Control(-45.0f, -90.0f, -10.0f, 90.0f,0, __Arm_Steer, __Claw_Steer);
-// HAL_Delay(500);
-// Arm_Claw_Steer_Control(-30.0f, -70.0f, 80.0f, 90.0f,0, __Arm_Steer, __Claw_Steer);
-// HAL_Delay(1000);
-// Arm_Claw_Steer_Control(-30.0f, -70.0f, 80.0f, 90.0f,1, __Arm_Steer, __Claw_Steer);
+	Arm_Claw_Steer_Control(10.0f, -65.0f, 130.0f, 90.0f,1);
+	HAL_Delay(200);
+	for(i=0;i<30;i++)
+	{
+		Arm_Claw_Steer_Control(5.0f - 0.5f * i, -65.0f, 130.0f - 5.0f * i, 90.0f,1);
+		HAL_Delay(30);
+	}
+	Arm_Claw_Steer_Control(-10.0f, -65.0f, -35.0f, 90.0f,1);
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-10.0f, -65.0f, -35.0f, 90.0f,0);
+	HAL_Delay(500);
+	for(i=0;i<30;i++)
+	{
+		Arm_Claw_Steer_Control(-10.0f, -65.0f, -35.0f + 5.0f * i, 90.0f,0);
+		HAL_Delay(50);
+	}
 }
+
+//void Class_Arm::Arm_Old_Catch()
+//{
+//	uint16_t i;
+//	Arm_Claw_Steer_Control(-15.0f, 50.0f, 130.0f, 90.0f,0);
+//	HAL_Delay(1000);
+//	Arm_Claw_Steer_Control(-15.0f, 50.0f, 90.0f, 90.0f,0);
+//	HAL_Delay(1000);
+// 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,0);
+// 	HAL_Delay(500);
+// 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,1);
+// 	HAL_Delay(500);
+// 	Arm_Claw_Steer_Control(-10.0f, 45.0f, 90.0f, 90.0f,1);
+// 	HAL_Delay(500);
+//	Arm_Claw_Steer_Control(10.0f, 45.0f, 130.0f, 90.0f,1);
+//	HAL_Delay(500);
+//	for(i=0;i<30;i++)
+//	{
+//		Arm_Claw_Steer_Control(10.0f - 0.5f * i, 45.0f - 3.5f * i, 130.0f, 90.0f,1);
+//		HAL_Delay(50);
+//	}
+//	Arm_Claw_Steer_Control(-10.0f, -60.0f, 130.0f, 90.0f,1);
+//	HAL_Delay(500);
+//	for(i=0;i<30;i++)
+//	{
+//		Arm_Claw_Steer_Control(-10.0f, -60.0f, 130.0f - 5.0f * i, 90.0f,1);
+//		HAL_Delay(50);
+//	}
+//	Arm_Claw_Steer_Control(-10.0f, -60.0f, -20.0f, 90.0f,1);
+//	HAL_Delay(500);
+//	Arm_Claw_Steer_Control(-10.0f, -60.0f, -20.0f, 90.0f,0);
+//	HAL_Delay(500);
+//	for(i=0;i<30;i++)
+//	{
+//		Arm_Claw_Steer_Control(-10.0f, -60.0f, -20.0f + 5.0f * i, 90.0f,0);
+//		HAL_Delay(50);
+//	}
+//}
 
 void Class_Arm::Arm_Catch_Back()
 {
-	Arm_Claw_Steer_Control(-40.0f, -60.0f, 130.0f, 90.0f,0);
+	Arm_Claw_Steer_Control(-10.0f, -60.0f, 130.0f, 90.0f,0);
 	HAL_Delay(1000);
-	Arm_Claw_Steer_Control(-45.0f, 30.0f, 130.0f, 90.0f,0);
+	Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
 	HAL_Delay(1000);
 }
 
