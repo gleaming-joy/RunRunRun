@@ -8,7 +8,7 @@ runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 runrunrun\connect.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 runrunrun\connect.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f427xx.h
 runrunrun\connect.o: ../Drivers/CMSIS/Include/core_cm4.h
-runrunrun\connect.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stdint.h
+runrunrun\connect.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stdint.h
 runrunrun\connect.o: ../Drivers/CMSIS/Include/cmsis_version.h
 runrunrun\connect.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 runrunrun\connect.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ runrunrun\connect.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 runrunrun\connect.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-runrunrun\connect.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\stddef.h
+runrunrun\connect.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\stddef.h
 runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -35,6 +35,6 @@ runrunrun\connect.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 runrunrun\connect.o: ..\USER\Chassis\chassis.hpp
 runrunrun\connect.o: ..\USER\Motor\motor.hpp
 runrunrun\connect.o: ..\USER\PID\PID.hpp
-runrunrun\connect.o: F:\Program Files (x86)\MDK5.26\ARM\ARMCC\Bin\..\include\limits.h
+runrunrun\connect.o: D:\software\keil\KEIL5_MDK\ARM\ARMCC\Bin\..\include\limits.h
 runrunrun\connect.o: ..\USER\Arm\arm.hpp
 runrunrun\connect.o: ..\USER\Steer\steer.hpp

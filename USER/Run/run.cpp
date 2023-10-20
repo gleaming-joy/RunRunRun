@@ -227,8 +227,8 @@ void LinePatrol_Catch_ROrange()
  
  void LinePatrol_Catch_Purple_NoVision()
  {
+//	uint32_t count=0;
 //	Arm.Arm_Claw_Steer_Control(-20.0f, 50.0f, 100.0f, 90.0f,0);
-	 .
 //	Chassis.Velocity_Control(-0.3, 0, -1);
 //	while(LP_Receive_yl != (uint8_t) 0xFF) {};
 //	HAL_Delay(100);
@@ -260,27 +260,70 @@ void LinePatrol_Catch_ROrange()
 //	while((LP_Receive_yl & (uint8_t) 0x3C) != 0x3C) {};
 //	while((LP_Receive_yl & (uint8_t) 0x3C) == 0x3C) {};
 	
-//	Chassis.Velocity_Control(-0.3, -0.1, -1);	
-//	HAL_Delay(2000);
-//	Chassis.Velocity_Control(0.5,0.3,0);	
-//	HAL_Delay(1200);
-//	Chassis.Velocity_Control(-0.2, -0.1, -1);
-//	while(LP_Receive_yl != LP_Receive_yr)
-//	{
-//		count++;
-//		HAL_Delay(50);
-//		if(count>20)
-//			Chassis.Velocity_Control(0.2, 0.1, 1);
-//	}
-//    Chassis.Velocity_Control(0, 0, 0);
-//	HAL_Delay(500);
-//    Chassis.Velocity_Control(0.4, 0, 0);
-//	while((LP_Receive_yl & (uint8_t) 0x3C) != 0x3C);
-//	while((LP_Receive_yl & (uint8_t) 0x3C) == 0x3C);
-	HAL_Delay(100);
-  Chassis.Velocity_Control(0, 0, 0);
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(2100);
+	Chassis.Velocity_Control(0.5,0.3,0);	
+	HAL_Delay(1200);
+	// while(LP_Receive_yl != LP_Receive_yr)
+	// {
+	// 	count++;
+	// 	HAL_Delay(20);
+	// 	if(count>50)
+	// 		Chassis.Velocity_Control(0.2, 0.1, 1);
+	// }
+   Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(500);
-    Chassis.Velocity_Control(0, 0.4, 0);
+   Chassis.Velocity_Control(-0.4, 0, 0);
+	while((LP_Receive_yl & (uint8_t) 0x3C) != 0x3C);
+	Chassis.Velocity_Control(0.4, 0, 0);
+	HAL_Delay(300);
+	
+	//巡线向右平移
+	// float x_adjust;
+	// float y_adjust;
+	// float omega_adjust;
+	// while ((LP_Receive_x & (uint8_t)0x3C) != (uint8_t)0x3C)
+	// {
+	// 	// x_adjust=-0.6f;
+	// 	// y_adjust=0;
+	// 	// omega_adjust=0;
+	// 	// if (LP_Receive_yl < (uint8_t)0x30 ) //0110,0000
+	// 	// {
+	// 	// 	y_adjust += 0.2f;
+	// 	// 	if(LP_Receive_yr != (uint8_t)0xFF) omega_adjust -= 0.15f;
+	// 	// }
+	// 	// else if (LP_Receive_yl > (uint8_t)0x38)
+	// 	// {
+	// 	// 	y_adjust -= 0.2f;
+	// 	// 	if(LP_Receive_yr != (uint8_t)0xFF) omega_adjust +=0.15f;
+	// 	// }
+	// 	// if (LP_Receive_yr < (uint8_t)0x30 && LP_Receive_yr != (uint8_t)0xFF) //0110,0000
+	// 	// {
+	// 	// 	y_adjust += 0.2f;
+	// 	// 	omega_adjust +=0.15f;
+	// 	// }
+	// 	// else if (LP_Receive_yr > (uint8_t)0x38 && LP_Receive_yr != (uint8_t)0xFF)
+	// 	// {
+	// 	// 	y_adjust -= 0.2f;
+	// 	// 	omega_adjust -=0.15f;
+	// 	// }
+	// 	// Chassis.Velocity_Control(x_adjust,y_adjust,omega_adjust);
+	// 	// HAL_Delay(50);
+	// 	Chassis.Velocity_Control(0.6,0,0);
+	// }
+	// HAL_Delay(500);
+	// Chassis.Velocity_Control(0, 0, 0);
+	// HAL_Delay(1000);
+	// Catch_Position_Adjust();
+	// //顺时针旋转
+	// Chassis.Velocity_Control(0, 0, 0.6);
+	// HAL_Delay(500);
+	// while ((LP_Receive_x & (uint8_t)0x18) != (uint8_t)0x18); //0001,1000
+	// Chassis.Velocity_Control(0, 0, 0);
+	// HAL_Delay(2000);
+    Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+    Chassis.Velocity_Control(0, -0.4, 0);
 	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
     Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(100);
@@ -290,7 +333,7 @@ void LinePatrol_Catch_ROrange()
 	Arm.Box_Steer_Rotate(-180);
 	HAL_Delay(1000);
 	Chassis.Velocity_Control(0, 0.4, 0);
-	HAL_Delay(200);
+	HAL_Delay(500);
 	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
     Chassis.Velocity_Control(0, 0, 0);
 	Arm.Arm_Catch();
@@ -338,13 +381,16 @@ void Start_to_High()
     TestMotor1.Set_Motor_Running_Status(1,1);
     Chassis.Velocity_Control(0, 0.4, 0);
     RChassis.R_Velocity_Control(0.3f, 0.3f);
-    HAL_Delay(2500);
+    HAL_Delay(3500);
     Chassis.Velocity_Control(0, 0, 0);
     RChassis.R_Velocity_Control(0.0f, 0.0f);
-    HAL_Delay(11500);
+    HAL_Delay(10500);
         
     TestMotor1.Set_Motor_Running_Status(0,0);
-    Chassis.Velocity_Control(0, 1.5, 0);
+	Chassis.Velocity_Control(0, 0.5, 0);
+    RChassis.R_Velocity_Control(0.4f, 0.4f);
+    HAL_Delay(1000);
+    Chassis.Velocity_Control(0, 1.2, 0);
     RChassis.R_Velocity_Control(2.0f, 2.0f);
 	HAL_Delay(1000);
 	while((LP_Receive_yl & (uint8_t) 0xDB) != (uint8_t) 0x18) {};
