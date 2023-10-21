@@ -94,14 +94,14 @@ void Class_Arm::Arm_Catch()
 {
 	uint16_t i;
 	Arm_Claw_Steer_Control(-15.0f, 50.0f, 130.0f, 90.0f,0);
-	HAL_Delay(1000);
-	Arm_Claw_Steer_Control(-15.0f, 50.0f, 90.0f, 90.0f,0);
-	HAL_Delay(1000);
- 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,0);
- 	HAL_Delay(200);
- 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 80.0f, 90.0f,1);
+	HAL_Delay(500);
+	Arm_Claw_Steer_Control(-15.0f, 50.0f, 80.0f, 90.0f,0);
+	HAL_Delay(500);
+ 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 70.0f, 90.0f,0);
+ 	HAL_Delay(400);
+ 	Arm_Claw_Steer_Control(-10.0f, 70.0f, 70.0f, 90.0f,1);
  	HAL_Delay(300);
- 	Arm_Claw_Steer_Control(-10.0f, 45.0f, 90.0f, 90.0f,1);
+ 	Arm_Claw_Steer_Control(-10.0f, 45.0f, 80.0f, 90.0f,1);
  	HAL_Delay(300);
 	Arm_Claw_Steer_Control(10.0f, 45.0f, 130.0f, 90.0f,1);
 	HAL_Delay(500);
@@ -124,9 +124,10 @@ void Class_Arm::Arm_Catch()
 	for(i=0;i<27;i++)
 	{
 		Arm_Claw_Steer_Control(-10.0f, -65.0f, -35.0f + 5.0f * i, 90.0f,0);
-		HAL_Delay(30);
+		HAL_Delay(20);
 	}
 	Arm_Claw_Steer_Control(-10.0f, -65.0f, 100.0f, 90.0f,0);
+	Arm_Claw_Steer_Control(-15.0f, 50.0f, 130.0f, 90.0f,0);
 }
 
 //void Class_Arm::Arm_Old_Catch()

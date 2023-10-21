@@ -28,6 +28,15 @@ extern uint8_t Barrier_Location;
  * @param 
  */
  
+void Arm_Complete_Catch(float location)
+{
+	Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+	Arm.Arm_Catch();
+	HAL_Delay(500);
+	Arm.Box_Steer_Rotate(location);
+}
+ 
 void LinePatrol_Catch_LOrange()
 {
 	uint8_t counter = 1; //记录在第几根线
@@ -35,24 +44,31 @@ void LinePatrol_Catch_LOrange()
 	B_Receive = 0x00;
 	Chassis.Velocity_Control(0, 0, 0);
 	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
-	HAL_Delay(2000);
-	Berry_Orange_Open();
+	HAL_Delay(500);
 	while (1)
 	{
+		Berry_Orange_Open();
 		HAL_Delay(2000);
 		Berry_Receive(); 
-		if (B_Receive == orange)
+		if((counter == 4) && (ocounter == 0))
 		{
-			Arm.Arm_Catch();
-			HAL_Delay(1000);
-			Arm.Arm_Catch_Back();
+			Arm_Complete_Catch(-90);
+			ocounter++;
+		}
+		else if((counter == 5) && (ocounter == 1))
+		{
+			Arm_Complete_Catch(-180);
+			ocounter++;
+		}
+		else if (B_Receive == orange)
+		{
 			if (ocounter == 0)
 			{
-				Arm.Box_Steer_Rotate(-90);
+				Arm_Complete_Catch(-90);
 			}
 			else if (ocounter == 1)
 			{
-				Arm.Box_Steer_Rotate(-180);
+				Arm_Complete_Catch(-180);
 			}
 			ocounter++;
 		}
@@ -64,48 +80,117 @@ void LinePatrol_Catch_LOrange()
 		//向前移动到下一根线
 		Chassis.Velocity_Control(0, 0.4, 0);
 		HAL_Delay(200);
-		while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
 		Chassis.Velocity_Control(0, 0, 0);
+		HAL_Delay(1000);
 		counter++;
 	}
 }
 
-void LinePatrol_Catch_LOrange_NoVisual()
-{
-	Chassis.Velocity_Control(0, 0, 0);
-	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
-	HAL_Delay(2000);
-	
-	HAL_Delay(500);
-	Arm.Arm_Catch();
-	HAL_Delay(1000);
-	Arm.Box_Steer_Rotate(-90);
-	Chassis.Velocity_Control(0, 0.4, 0);
-	HAL_Delay(200);
-	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-		
-	HAL_Delay(200);
-	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-		
-	Chassis.Velocity_Control(0, 0.4, 0);
-	HAL_Delay(200);
-	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-	HAL_Delay(200);
-	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
-	Chassis.Velocity_Control(0, 0, 0);
-	HAL_Delay(1000);
-}
-
-/**
- * @brief 采集右侧晶体矿
- *
- * @param __Arm_Steer 机械臂舵机
- * @param __Claw_Steer 机械爪舵机
- */
- 
 void LinePatrol_Catch_ROrange()
 {
-	
+	uint8_t counter = 1; //记录在第几根线
+	uint8_t ocounter = 0; //记录已经抓了几个橙矿
+	B_Receive = 0x00;
+	Chassis.Velocity_Control(0, 0, 0);
+	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
+	HAL_Delay(500);
+	while (1)
+	{
+		Berry_Orange_Open();
+		HAL_Delay(2000);
+		Berry_Receive(); 
+		if((counter == 4) && (ocounter == 0))
+		{
+			Arm_Complete_Catch(-180);
+			ocounter++;
+		}
+		else if((counter == 5) && (ocounter == 1))
+		{
+			Arm_Complete_Catch(-180);
+			ocounter++;
+		}
+		else if (B_Receive == orange)
+		{
+			if (ocounter == 0)
+			{
+				Arm_Complete_Catch(-180);
+			}
+			else if (ocounter == 1)
+			{
+				Arm_Complete_Catch(-180);
+			}
+			ocounter++;
+		}
+		// 移动到第5根线时退出循环
+		if (counter == 5)
+		{
+			break;
+		}
+		//向前移动到下一根线
+		Chassis.Velocity_Control(0, 0.4, 0);
+		HAL_Delay(200);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+		Chassis.Velocity_Control(0, 0, 0);
+		HAL_Delay(1000);
+		counter++;
+	}
+}
+
+void Catch_Orange_NoVision_1()
+{
+	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
+	Arm_Complete_Catch(-90);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+}
+
+void Catch_Orange_NoVision_2()
+{
+	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-90);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+}
+
+void Catch_Orange_NoVision_3()
+{
+	Arm.Arm_Claw_Steer_Control(-15.0f, 30.0f, 130.0f, 90.0f,0);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	Arm.Box_Steer_Rotate(-90);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	HAL_Delay(500);
 }
 
 /**
@@ -117,16 +202,16 @@ void LinePatrol_Catch_ROrange()
  {
 	//抽象旋转
 	Chassis.Velocity_Control(-0.3, 0.1, -1);	
-	HAL_Delay(2100);
-	Chassis.Velocity_Control(0.5,0.2,0);	
-	HAL_Delay(1200);
-	Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(2000);//switch1
+	Chassis.Velocity_Control(0.5,-0.3,0);	
+	HAL_Delay(1100);//swwitch2
+  Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(500);
-    Chassis.Velocity_Control(0, -0.4, 0);
+	Chassis.Velocity_Control(0, 0.4, 0);
 	HAL_Delay(400);
-	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
-    Chassis.Velocity_Control(0, 0, 0);
-	HAL_Delay(2000);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(200);
 	//第一次识别
 	Berry_Purple_Open();
 	HAL_Delay(2000);
@@ -134,12 +219,12 @@ void LinePatrol_Catch_ROrange()
 	if (B_Receive == purple)
 	{
 		//抓取再移动到下一根线
-		Arm.Arm_Catch();
-		HAL_Delay(1000);
-		Arm.Arm_Catch_Back();
+		Arm_Complete_Catch(-180);
 		Chassis.Velocity_Control(0, 0.4, 0);
-		HAL_Delay(500);
-		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
+		HAL_Delay(400);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+		HAL_Delay(200);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
     	Chassis.Velocity_Control(0, 0, 0);
 	}
 	else if (B_Receive == empty)
@@ -147,41 +232,134 @@ void LinePatrol_Catch_ROrange()
 		//向前移动到下一根线再抓取
 		Chassis.Velocity_Control(0, 0.4, 0);
 		HAL_Delay(500);
-		while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+    Chassis.Velocity_Control(0, 0, 0);
+		Arm_Complete_Catch(-180);
+	}
+ }
+ 
+  void LinePatrol_Catch_Right_Purple()
+ {
+	//抽象旋转
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(2000);//switch1
+	Chassis.Velocity_Control(0.5,-0.3,0);	
+	HAL_Delay(1100);//swwitch2
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(300);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(200);
+	//第一次识别
+	Berry_Purple_Open();
+	HAL_Delay(2000);
+	Berry_Receive();
+	if (B_Receive == purple)
+	{
+		//抓取再移动到下一根线
+		Arm_Complete_Catch(-90);
+		Chassis.Velocity_Control(0, 0.4, 0);
+		HAL_Delay(300);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+		HAL_Delay(200);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
     	Chassis.Velocity_Control(0, 0, 0);
-		Arm.Arm_Catch();
-		HAL_Delay(1000);
-		Arm.Arm_Catch_Back();
+	}
+	else if (B_Receive == empty)
+	{
+		//向前移动到下一根线再抓取
+		Chassis.Velocity_Control(0, 0.4, 0);
+		HAL_Delay(300);
+		while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+    Chassis.Velocity_Control(0, 0, 0);
+		Arm_Complete_Catch(-90);
 	}
  }
  
  void LinePatrol_Catch_Purple_NoVision()
  {
 	Chassis.Velocity_Control(-0.3, 0.1, -1);	
-	HAL_Delay(2100);
-	Chassis.Velocity_Control(0.5,0.2,0);	
+	HAL_Delay(2000);
+	Chassis.Velocity_Control(0.5,-0.3,0);	
 	HAL_Delay(1200);
-    Chassis.Velocity_Control(0, 0, 0);
+  Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(500);
-    Chassis.Velocity_Control(0, -0.4, 0);
-		HAL_Delay(400);
-	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
-    Chassis.Velocity_Control(0, 0, 0);
-	HAL_Delay(100);
-	Arm.Arm_Catch();
-	HAL_Delay(1000);
-	Arm.Arm_Catch_Back();
-	Arm.Box_Steer_Rotate(-180);
-	HAL_Delay(1000);
 	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(500);
-	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
-    Chassis.Velocity_Control(0, 0, 0);
-	Arm.Arm_Catch();
-	HAL_Delay(1000);
-	Arm.Arm_Catch_Back();
  }
 
+void Catch_Purple_NoVision_1()
+{
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(1800);//switch1
+	Chassis.Velocity_Control(0.5,-0.3,0);	
+	HAL_Delay(1100);//swwitch2
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+}
+void Catch_Purple_NoVision_2()
+{
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(1800);
+	Chassis.Velocity_Control(0.5,-0.3,0);	
+	HAL_Delay(1100);
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+}
+void Catch_Purple_NoVision_3()
+{
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(1800);
+	Chassis.Velocity_Control(0.5,-0.3,0);	
+	HAL_Delay(1100);
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(400);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7E) != (uint8_t)0x38) {}
+	Arm_Complete_Catch(-180);
+  Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(500);
+}
 /**
  * @brief 从启动区上坡到高平面采矿区
  *
@@ -189,7 +367,32 @@ void LinePatrol_Catch_ROrange()
  */
 void Start_to_High()
 {
-    TestMotor1.Set_Motor_Running_Status(0,0);
+//mode 1
+//     TestMotor1.Set_Motor_Running_Status(0,0);
+//     Chassis.Velocity_Control(0, 0.4, 0);
+//     RChassis.R_Velocity_Control(0.3f, 0.3f);
+//     HAL_Delay(3000);
+// //    Chassis.Velocity_Control(0, 0, 0);
+// //    RChassis.R_Velocity_Control(0.0f, 0.0f);
+// //    HAL_Delay(8000);
+        
+//     TestMotor1.Set_Motor_Running_Status(1,1);
+// //	Chassis.Velocity_Control(0, 0, 0);
+// //    RChassis.R_Velocity_Control(0, 0);
+// //    HAL_Delay(2000);
+// 	Chassis.Velocity_Control(0, 1.0, 0);
+// 	RChassis.R_Velocity_Control(1.0f, 1.0f);
+// 	HAL_Delay(1500);
+// 	Chassis.Velocity_Control(0, 0.1, 0);
+//     RChassis.R_Velocity_Control(0.1f, 0.1f);
+//     HAL_Delay(12500);
+// 	TestMotor1.Set_Motor_Running_Status(0,0);
+//     Chassis.Velocity_Control(0, 1.5, 0);
+//     RChassis.R_Velocity_Control(2.0f, 2.0f);
+// 	HAL_Delay(2000);
+
+//mode 2
+TestMotor1.Set_Motor_Running_Status(0,0);
     Chassis.Velocity_Control(0, 0.4, 0);
     RChassis.R_Velocity_Control(0.3f, 0.3f);
     HAL_Delay(3500);
@@ -201,16 +404,20 @@ void Start_to_High()
 	Chassis.Velocity_Control(0, 0, 0);
     RChassis.R_Velocity_Control(0, 0);
     HAL_Delay(2000);
-	Chassis.Velocity_Control(0, 0.4, 0);
-	RChassis.R_Velocity_Control(0.4f, 0.4f);
-	HAL_Delay(7000);
-	Chassis.Velocity_Control(0, 0.5, 0);
-    RChassis.R_Velocity_Control(0.8f, 0.8f);
-    HAL_Delay(5000);
+	Chassis.Velocity_Control(0, 0.2, 0);
+	RChassis.R_Velocity_Control(0.2f, 0.2f);
+	HAL_Delay(6000);
+	Chassis.Velocity_Control(0, 0.8, 0);
+    RChassis.R_Velocity_Control(1.0f, 1.0f);
+    HAL_Delay(4000);
+	Chassis.Velocity_Control(0, 0, 0);
+    RChassis.R_Velocity_Control(0,0);
+    HAL_Delay(2000);
 	TestMotor1.Set_Motor_Running_Status(0,0);
     Chassis.Velocity_Control(0, 1.5, 0);
     RChassis.R_Velocity_Control(2.0f, 2.0f);
 	HAL_Delay(1000);
+	
 	while((LP_Receive_x & (uint8_t) 0x3C) != (uint8_t) 0x3C) {};
 //	HAL_Delay(4000);
     TestMotor1.Set_Motor_Running_Status(1,0);
@@ -229,79 +436,86 @@ void Start_to_High()
  */
 void High_Spin()
 {
-	HAL_Delay(2000);
+	float x_adjust;
+	float y_adjust;
+	float omega_adjust;
+	uint8_t tim = 0;
+	HAL_Delay(500);
   	Chassis.Velocity_Control(-0.3, 0.1, -1);
-	HAL_Delay(2200);
-	Chassis.Velocity_Control(0.7,0.3,0);
-	HAL_Delay(1200); 
-  	Chassis.Velocity_Control(0,-0.5,0);
-  	while (LP_Receive_yl != (uint8_t)0x38) {}
-  	Chassis.Velocity_Control(0,0,0);
+	HAL_Delay(2000);
+	Chassis.Velocity_Control(0.5,-0.3,0);
+	HAL_Delay(1100); 
+  	Chassis.Velocity_Control(0,0.5,0);
+  	while (LP_Receive_yl != (uint8_t)0x06) {}
+  	Chassis.Velocity_Control(0,0.3,0);
+		HAL_Delay(200);
   	Catch_Position_Adjust();
 		
 	//same with Barrier_to_Catch(0) but deleted the first adjust
-	uint8_t tim = 0;
-    while (((LP_Receive_yr & (uint8_t) 0x06) != (uint8_t)0x06) && ((LP_Receive_yl & (uint8_t) 0x06) != (uint8_t)0x06))
-    {
-		if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+    while ((LP_Receive_yr & (uint8_t) 0x0F) != (uint8_t)0x0F)
+    	{
+				x_adjust = -0.6;
+				y_adjust = 0;
+				omega_adjust = 0;
+				if (LP_Receive_yl < (uint8_t)0x18) //0110,0000
       	{
-		    Chassis.Velocity_Control(-0.6,0.2,0);
-		    HAL_Delay(50);
+		    	y_adjust += 0.1;
+					omega_adjust -= 0.15;
       	}
-      	else if (LP_Receive_yl > (uint8_t)0x70)
+      	if (LP_Receive_yl > (uint8_t)0x1C)
       	{
-		    Chassis.Velocity_Control(-0.6,-0.2,0);
-		    HAL_Delay(50);
+		    	y_adjust -= 0.1;
+					omega_adjust += 0.15;
       	}	
-	    else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
-	    {
-		    Chassis.Velocity_Control(-0.6,0,0.3);
-			HAL_Delay(50);
-	    }
-	    else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
-	    {
-		    Chassis.Velocity_Control(-0.6,0,-0.3);
-		    HAL_Delay(50);
-	    }
-      	else
+	    	if (LP_Receive_yr < (uint8_t)0x18) //0110,0000
       	{
-		    Chassis.Velocity_Control(-0.6,0,0);
-		    HAL_Delay(50);
+		    	y_adjust += 0.1;
+					omega_adjust += 0.15;
       	}
-    }
-	while (tim<115)
-    {
-	    if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+      	if (LP_Receive_yr > (uint8_t)0x1C)
       	{
-		    Chassis.Velocity_Control(0.6,0.2,0);
+		    	y_adjust -= 0.1;
+					omega_adjust -= 0.15;
+      	}					
+				tim++;
+				Chassis.Velocity_Control(x_adjust, y_adjust, omega_adjust);
 		    HAL_Delay(50);
+    	}
+		Chassis.Velocity_Control(0, 0, 0);
+		HAL_Delay(200);
+		tim=0;
+    	//向左平移到中间线
+    	while (tim<10)
+    	{
+				x_adjust = 0.6;
+				y_adjust = 0;
+				omega_adjust = 0;
+				if (LP_Receive_yl < (uint8_t)0x18) //0110,0000
+      	{
+		    	y_adjust += 0.1;
+					omega_adjust -= 0.15;
       	}
-      	else if (LP_Receive_yl > (uint8_t)0x70)
+      	if (LP_Receive_yl > (uint8_t)0x1C)
       	{
-		    Chassis.Velocity_Control(0.6,-0.2,0);
-		    HAL_Delay(50);
+		    	y_adjust -= 0.1;
+					omega_adjust += 0.15;
       	}	
-	    else if (LP_Receive_yl > LP_Receive_yr || LP_Receive_yl == (uint8_t)0x00)
-	    {
-		    Chassis.Velocity_Control(0.6,0,0.3);
-		    HAL_Delay(50);
-	   	}
-	    else if (LP_Receive_yl < LP_Receive_yr || LP_Receive_yr == (uint8_t)0x00)
-	    {
-		    Chassis.Velocity_Control(0.6,0,-0.3);
-		    HAL_Delay(50);
-	    }
-      	else
+	    	if (LP_Receive_yr < (uint8_t)0x18) //0110,0000
       	{
-		    Chassis.Velocity_Control(0.6,0,0);
-		    HAL_Delay(50);
+		    	y_adjust += 0.1;
+					omega_adjust += 0.15;
       	}
-		tim++;
-		if((LP_Receive_yr & (uint8_t) 0x06) == (uint8_t)0x06) 
-			tim=100;
-    }
-	Chassis.Velocity_Control(0, 0, 0);
-	HAL_Delay(1000);
+      	if (LP_Receive_yr > (uint8_t)0x1C)
+      	{
+		    	y_adjust -= 0.1;
+					omega_adjust -= 0.15;
+      	}
+				tim++;
+				Chassis.Velocity_Control(x_adjust, y_adjust, omega_adjust);
+		    HAL_Delay(50);
+    	}
+		Chassis.Velocity_Control(0, 0, 0);
+		HAL_Delay(1000);
 }
 
 /**
@@ -352,31 +566,80 @@ void High_to_Start()
  */
 void Place_Brick()
 {
+	//Place_Brick
 	Chassis.Velocity_Control(0,-0.4,0);
-	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {};
+	while (((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) && ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x7F)) {};
 	Chassis.Velocity_Control(0,0,0);
-	Catch_Position_Adjust();
+	//Catch_Position_Adjust();
 	
 	HAL_Delay(500);
 	Chassis.Velocity_Control(-0.3, 0.1, -1);	
 	HAL_Delay(2100);
-	Chassis.Velocity_Control(-0.5,0.3,0);	
-	HAL_Delay(4000);
+	Chassis.Velocity_Control(-0.7,-0.4,0);	
+	HAL_Delay(2000);
 	Chassis.Velocity_Control(0,0,0);
 	HAL_Delay(500);
-	Chassis.Velocity_Control(0,-0.3,0);
+	Chassis.Velocity_Control(0,0.3,0);
 	while((LP_Receive_x & (uint8_t) 0x7E) != (uint8_t) 0x7E) {};
+	Chassis.Velocity_Control(-0.5,0,-0.3);	
+	HAL_Delay(500);
 	Chassis.Velocity_Control(0,0,0);
 	HAL_Delay(500);
 	Arm.Box_Steer_Rotate(-90);
 	HAL_Delay(1000);
+	Chassis.Velocity_Control(0.2,-0.4,0);
+	HAL_Delay(2000);
+	Chassis.Velocity_Control(-0.5,0,-0.3);
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0,0,0);
+	HAL_Delay(200);
+	Arm.Box_Steer_Rotate(0);
+	HAL_Delay(1500);
+	Arm.Box_Steer_Rotate(90);
+}
+
+void Place_Brick_Right()
+{
+	//Place_Brick
 	Chassis.Velocity_Control(0,-0.4,0);
+	while (((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) && ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x7F)) {};
+	Chassis.Velocity_Control(0,0,0);
+	//Catch_Position_Adjust();
+	
+	HAL_Delay(500);
+	Chassis.Velocity_Control(-0.3, 0.1, -1);	
+	HAL_Delay(2100);
+	Chassis.Velocity_Control(-0.7,-0.4,0);	
 	HAL_Delay(2000);
 	Chassis.Velocity_Control(0,0,0);
 	HAL_Delay(500);
+	Arm.Box_Steer_Rotate(-90);
+	HAL_Delay(1500);
 	Arm.Box_Steer_Rotate(0);
+	HAL_Delay(1500);
+	Chassis.Velocity_Control(0,0.3,0);
+	while((LP_Receive_x & (uint8_t) 0x7E) != (uint8_t) 0x7E) {};
+	Chassis.Velocity_Control(-0.5,0,-0.3);	
+	HAL_Delay(500);
+	Chassis.Velocity_Control(0,0,0);
 	HAL_Delay(500);
 	Arm.Box_Steer_Rotate(90);
+	HAL_Delay(1500);
+}
+
+void L_Skip()
+{
+	Chassis.Velocity_Control(0, 0.4, 0);
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+	HAL_Delay(200);
+	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {}
+	Chassis.Velocity_Control(0, 0, 0);
+	HAL_Delay(1000);
 }
 
 /**
@@ -508,42 +771,42 @@ void Barrier_to_Catch(uint8_t model)
 		    	HAL_Delay(50);
       		}
 					tim++;
-					if((LP_Receive_yr & (uint8_t) 0x06) == (uint8_t)0x06) tim=100;
+					if((LP_Receive_yr & (uint8_t) 0x0F) == (uint8_t)0x0F) tim=100;
     	}
 			Chassis.Velocity_Control(0, 0, 0);
 			HAL_Delay(2000);
   	}
   	else if (model == 1)
   	{
-		Chassis.Velocity_Control(0, 0.3, 0);
-		HAL_Delay(500);
+		Chassis.Velocity_Control(0, 0.6, 0);
+		//HAL_Delay(200);
     	while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
 		Chassis.Velocity_Control(0,0,0);
-		HAL_Delay(500);
+		HAL_Delay(200);
 		Catch_Position_Adjust();
 		tim=0;
     	//向左平移到中间线
-    	while (tim<115)
+    	while (tim<110)
     	{
 				x_adjust = 0.6;
 				y_adjust = 0;
 				omega_adjust = 0;
-				if (LP_Receive_yl < (uint8_t)0x60) //0110,0000
+				if (LP_Receive_yl < (uint8_t)0x18) //0110,0000
       	{
 		    	y_adjust += 0.1;
 					omega_adjust -= 0.15;
       	}
-      	if (LP_Receive_yl > (uint8_t)0x70)
+      	if (LP_Receive_yl > (uint8_t)0x1C)
       	{
 		    	y_adjust -= 0.1;
 					omega_adjust += 0.15;
       	}	
-	    	if (LP_Receive_yr < (uint8_t)0x60) //0110,0000
+	    	if (LP_Receive_yr < (uint8_t)0x18) //0110,0000
       	{
 		    	y_adjust += 0.1;
 					omega_adjust += 0.15;
       	}
-      	if (LP_Receive_yr > (uint8_t)0x70)
+      	if (LP_Receive_yr > (uint8_t)0x1C)
       	{
 		    	y_adjust -= 0.1;
 					omega_adjust -= 0.15;
@@ -558,14 +821,14 @@ void Barrier_to_Catch(uint8_t model)
 				tim++;
 				Chassis.Velocity_Control(x_adjust, y_adjust, omega_adjust);
 		    HAL_Delay(50);
-				if((LP_Receive_yr & (uint8_t) 0x06) == (uint8_t)0x06) tim=100;
+				if((LP_Receive_yr & (uint8_t) 0x0F) == (uint8_t)0x0F) tim=100;
     	}
 		Chassis.Velocity_Control(0, 0, 0);
-		HAL_Delay(2000);
+		HAL_Delay(1000);
   	}
 	Catch_Position_Adjust();
   	Chassis.Velocity_Control(0, 0, 0);
-  	HAL_Delay(2000);
+  	HAL_Delay(1000);
 }
 
 /**
@@ -908,4 +1171,71 @@ void Barrier_to_Start()
   }
   Chassis.Velocity_Control(0, 0, 0);
   HAL_Delay(2000);
+}
+
+void Whole_Process_Left(uint32_t mode)
+{
+	Start_to_High();
+	if(mode == 1) Catch_Orange_NoVision_1();
+  else if(mode == 2) Catch_Orange_NoVision_2();
+	else if(mode == 3) Catch_Orange_NoVision_3();
+	else if(mode == 0) LinePatrol_Catch_LOrange();
+ 	HAL_Delay(500);
+	if(mode == 1) Catch_Purple_NoVision_1();
+	else if(mode == 2) Catch_Purple_NoVision_2();
+	else if(mode == 3) Catch_Purple_NoVision_3();
+	else if(mode == 0) LinePatrol_Catch_Purple();
+	
+  //High_to_Start_Prep
+	Arm.Arm_Claw_Steer_Control(-10.0f, -65.0f, 100.0f, 90.0f,0);
+  HAL_Delay(1000);
+  Chassis.Velocity_Control(-0.3, 0, 1);
+	HAL_Delay(2000);
+  Chassis.Velocity_Control(0,0,0);
+  HAL_Delay(1000);
+  Chassis.Velocity_Control(0,-0.5,0);
+  while ((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38) {};
+  Chassis.Velocity_Control(0,0,0);
+  Catch_Position_Adjust();
+		
+	//High_to_Start
+	Chassis.Velocity_Control(0,-0.5,0);
+	HAL_Delay(2000);
+	while (LP_Receive_yl != (uint8_t)0x80) {};
+	Chassis.Velocity_Control(0,0,0);
+	TestMotor1.Set_Motor_Running_Status(1,1);
+	HAL_Delay(14000);
+	TestMotor1.Set_Motor_Running_Status(0,1);
+	Chassis.Velocity_Control(0,-0.3,0);
+	RChassis.R_Velocity_Control(-0.3,-0.3);
+	HAL_Delay(3000);
+	while((LP_Receive_x & (uint8_t) 0x7E) != (uint8_t) 0x7E) {};
+	TestMotor1.Set_Motor_Running_Status(1,0);
+	Chassis.Velocity_Control(0,0,0);
+	RChassis.R_Velocity_Control(0,0);
+	HAL_Delay(14000);
+	TestMotor1.Set_Motor_Running_Status(0,0);
+	HAL_Delay(2000);
+		
+	Place_Brick();
+}
+
+void Whole_Process_Right(uint32_t mode)
+{
+	Start_to_High();
+	L_Skip();
+ 	HAL_Delay(500);
+	if(mode == 1) Catch_Purple_NoVision_1();
+	else if(mode==2) Catch_Purple_NoVision_2();
+	else if(mode==3) Catch_Purple_NoVision_3();
+	else if(mode==0) LinePatrol_Catch_Right_Purple();
+	High_Spin();
+	if(mode == 1) Catch_Orange_NoVision_1();
+  else if(mode == 2) Catch_Orange_NoVision_2();
+	else if(mode == 3) Catch_Orange_NoVision_3();
+	else if (mode == 0) LinePatrol_Catch_ROrange();
+	Spin_Back();
+	High_to_Start();
+	
+	Place_Brick_Right();
 }
