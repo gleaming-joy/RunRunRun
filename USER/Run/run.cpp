@@ -263,7 +263,7 @@ void LinePatrol_Catch_ROrange()
 	Chassis.Velocity_Control(-0.3, 0.1, -1);	
 	HAL_Delay(2100);
 	Chassis.Velocity_Control(0.5,0.2,0);	
-	HAL_Delay(1300);
+	HAL_Delay(1200);
 
 //   Chassis.Velocity_Control(0, 0, 0);
 //	HAL_Delay(500);
@@ -320,7 +320,7 @@ void LinePatrol_Catch_ROrange()
     Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(500);
     Chassis.Velocity_Control(0, -0.4, 0);
-		HAL_Delay(500);
+		HAL_Delay(400);
 	while((LP_Receive_yl & (uint8_t)0x7F) != (uint8_t)0x38);
     Chassis.Velocity_Control(0, 0, 0);
 	HAL_Delay(100);
